@@ -1,0 +1,6 @@
+{
+  "name": "SFS Service Desk - Mesa de Ayuda Operativa",
+  "description": "Sistema de gestión de incidentes, soporte técnico corporativo y monitoreo de acuerdos SLA para Software Factory and Services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
