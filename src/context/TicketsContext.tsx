@@ -65,8 +65,8 @@ const TicketsContext = createContext<TicketsContextValue | null>(null);
 export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [allTickets, setAllTickets] = useState<Ticket[]>(INITIAL_TICKETS);
   const [announcements, setAnnouncements] = useState<Announcement[]>(INITIAL_ANNOUNCEMENTS);
-  const [currentUser, setCurrentUser] = useState<User | null>(INITIAL_USERS.supervisor);
-  const [isAuthLoaded, setIsAuthLoaded] = useState<boolean>(true);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isAuthLoaded, setIsAuthLoaded] = useState<boolean>(false);
   const [toast, setToast] = useState<ToastInfo | null>(null);
 
   // Intentar sincronizar sesión real con el backend en montaje

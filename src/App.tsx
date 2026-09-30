@@ -36,6 +36,7 @@ function AppContent() {
     tickets,
     currentUser,
     setCurrentUser,
+    isAuthLoaded,
     logout,
     counts,
     toast,
@@ -45,6 +46,10 @@ function AppContent() {
   } = useTickets();
 
   const [isNewTicketModalOpen, setIsNewTicketModalOpen] = useState(false);
+
+  if (!isAuthLoaded) {
+    return null;
+  }
 
   // ================= MIDDLEWARE Y PROTECCIÓN DE RUTAS (Requirements 1, 4 & 5) =================
   useEffect(() => {
