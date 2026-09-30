@@ -1,4 +1,4 @@
-import { verificarTokenSesion, SessionPayload } from './lib/auth';
+import { verificarTokenSesion, SessionPayload } from './index';
 
 export interface MiddlewareResult {
   redirect?: string;
