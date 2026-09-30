@@ -132,4 +132,10 @@ async function startServer() {
   });
 }
 
-startServer();
+// Vercel imports the Express app as a serverless function instead of starting
+// a long-lived listener. Local development keeps the existing server entrypoint.
+if (process.env.VERCEL !== '1') {
+  startServer();
+}
+
+export { app };
