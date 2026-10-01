@@ -57,6 +57,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
           localStorage.setItem('sfs_token', data.token);
         }
         onLoginSuccess(data.user);
+      } else if (data.code === 'MUST_CHANGE_PASSWORD') {
+        window.history.pushState({}, '', '/cambiar-contrasena');
+        window.dispatchEvent(new PopStateEvent('popstate'));
       } else {
         setErrorMessage(data.error || 'Correo o contraseña incorrectos');
       }

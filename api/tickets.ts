@@ -19,6 +19,8 @@ export default async function handler(req: Request, res: Response) {
 
   // Ruta /api/tickets/bulk
   if (url.includes('/bulk') && method === 'POST') {
+    const teamSession = await requireSession(req, res, { roles: ['agente', 'supervisor', 'admin'] });
+    if (!teamSession) return;
     const result = procesarOperacionLote(session, req.body);
     if (result.errorStatus) {
       return res.status(result.errorStatus).json({ error: result.errorMsg });
@@ -49,7 +51,9 @@ export default async function handler(req: Request, res: Response) {
     }
 
     if (method === 'PATCH') {
-      const result = actualizarTicket(session, ticketId, req.body);
+      const teamSession = await requireSession(req, res, { roles: ['agente', 'supervisor', 'admin'] });
+      if (!teamSession) return;
+      const result = actualizarTicket(teamSession, ticketId, req.body);
       if (result.errorStatus) {
         return res.status(result.errorStatus).json({ error: result.errorMsg });
       }

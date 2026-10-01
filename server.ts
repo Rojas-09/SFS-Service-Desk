@@ -61,17 +61,6 @@ function setSessionCookie(res: express.Response, token: string): void {
   });
 }
 
-function clearSessionCookie(res: express.Response): void {
-  // Requirement 6 (K7): Borra la cookie con Max-Age=0 y los mismos atributos
-  res.cookie(AUTH_COOKIE_NAME, '', {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 0,
-    path: '/'
-  });
-}
-
 // ================= RUTAS DE AUTENTICACIÓN =================
 
 // Iniciar sesión (Server Action / Endpoint con Rate Limit de 5 intentos en 15 min - Requirement 5)
@@ -102,8 +91,7 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Cerrar sesión (Requirement 6 - K7)
 app.post('/api/auth/logout', async (_req, res) => {
-  await cerrarSesion();
-  clearSessionCookie(res);
+  await cerrarSesion(res);
   return res.json({ success: true });
 });
 
@@ -164,7 +152,7 @@ app.post('/api/auth/change-password', async (req, res) => {
 
 // Operación masiva en lote (POST /api/tickets/bulk)
 app.post('/api/tickets/bulk', async (req, res) => {
-  const session = await requireSession(req, res);
+  const session = await requireSession(req, res, { roles: ['agente', 'supervisor', 'admin'] });
   if (!session) return;
   const result = procesarOperacionLote(session, req.body);
   if (result.errorStatus) {
@@ -204,7 +192,7 @@ app.get('/api/tickets/:id', async (req, res) => {
 
 // Modificar ticket (PATCH /api/tickets/:id)
 app.patch('/api/tickets/:id', async (req, res) => {
-  const session = await requireSession(req, res);
+  const session = await requireSession(req, res, { roles: ['agente', 'supervisor', 'admin'] });
   if (!session) return;
   const result = actualizarTicket(session, req.params.id, req.body);
   if (result.errorStatus) {

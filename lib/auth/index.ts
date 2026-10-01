@@ -20,6 +20,11 @@ import {
 
 export const AUTH_COOKIE_NAME = 'sfs_session';
 
+export interface SessionCookieResponse {
+  cookie?: (...args: any[]) => void;
+  setHeader?: (...args: any[]) => void;
+}
+
 // Valor local nuevo para desarrollo (mínimo 32 caracteres, NUNCA el valor anterior)
 const DEV_AUTH_SECRET_FALLBACK = 'sfs_desk_dev_key_2026_super_secure_auth_32_chars!';
 
@@ -198,7 +203,24 @@ export async function obtenerSesion(token?: string | null): Promise<User | null>
 // Cerrar sesión
 // TODO: En el futuro, implementar lista de revocación de tokens (blacklist) mediante claim 'jti' (JWT ID)
 // cuando exista base de datos o Redis para revocación inmediata antes de su expiración.
-export async function cerrarSesion(): Promise<{ success: boolean }> {
+export async function cerrarSesion(response?: SessionCookieResponse): Promise<{ success: boolean }> {
+  if (response?.cookie) {
+    response.cookie(AUTH_COOKIE_NAME, '', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 0,
+      path: '/'
+    });
+  } else if (response?.setHeader) {
+    response.setHeader(
+      'Set-Cookie',
+      `${AUTH_COOKIE_NAME}=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax${
+        process.env.NODE_ENV === 'production' ? '; Secure' : ''
+      }`
+    );
+  }
+
   return { success: true };
 }
 
