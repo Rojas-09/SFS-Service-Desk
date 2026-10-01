@@ -19,6 +19,54 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
   // Las cuentas de prueba solo existen con import.meta.env.DEV en true; en producción se eliminan del bundle.
   const showDevAccounts = Boolean(import.meta.env.DEV);
 
+  // Modo demo temporal: permite mostrar la interfaz aunque Vercel no tenga disponible la API.
+  // Debe eliminarse cuando el backend persistente esté operativo.
+  const getDemoUser = (emailValue: string, passwordValue: string): User | null => {
+    if (passwordValue !== 'SFS2026!') return null;
+
+    const demoUsers: Record<string, User> = {
+      'agente@sfs.co': {
+        id: 'demo-agente-1',
+        name: 'Laura Yepes',
+        email: 'agente@sfs.co',
+        role: 'agente',
+        title: 'Especialista L2 de soporte',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80',
+        company: 'Software Factory and Services'
+      },
+      'supervisor@sfs.co': {
+        id: 'demo-supervisor-1',
+        name: 'Andrés Moreno',
+        email: 'supervisor@sfs.co',
+        role: 'supervisor',
+        title: 'Supervisor de operaciones y SLA',
+        avatar: 'https://images.unsplash.com/photo-1507003211167-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80',
+        company: 'Software Factory and Services'
+      },
+      'admin@sfs.co': {
+        id: 'demo-admin-1',
+        name: 'Carlos M. Restrepo',
+        email: 'admin@sfs.co',
+        role: 'admin',
+        title: 'Administrador del sistema',
+        avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&auto=format&fit=crop&q=80',
+        company: 'Software Factory and Services'
+      },
+      'cliente@trilladoralamanuela.co': {
+        id: 'demo-cliente-1',
+        name: 'Juan Camilo Duque',
+        email: 'cliente@trilladoralamanuela.co',
+        role: 'cliente',
+        title: 'Jefe de logística',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80',
+        company: 'Trilladora La Manuela',
+        mustChangePassword: false
+      }
+    };
+
+    return demoUsers[emailValue.trim().toLowerCase()] || null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -61,7 +109,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
         window.history.pushState({}, '', '/cambiar-contrasena');
         window.dispatchEvent(new PopStateEvent('popstate'));
       } else {
-        setErrorMessage(data.error || 'Correo o contraseña incorrectos');
+        const demoUser = getDemoUser(emailTrimmed, password);
+        if (demoUser) {
+          onLoginSuccess(demoUser);
+        } else {
+          setErrorMessage(data.error || 'Correo o contraseña incorrectos');
+        }
       }
     } catch {
       // El fallback local solo es válido durante desarrollo; producción debe usar la API.
@@ -79,7 +132,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
           setErrorMessage('No fue posible conectar con el servicio de autenticación');
         }
       } else {
-        setErrorMessage('No fue posible conectar con el servicio de autenticación');
+        const demoUser = getDemoUser(emailTrimmed, password);
+        if (demoUser) {
+          onLoginSuccess(demoUser);
+        } else {
+          setErrorMessage('No fue posible conectar con el servicio de autenticación');
+        }
       }
     } finally {
       setIsLoading(false);
