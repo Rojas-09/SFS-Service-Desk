@@ -48,6 +48,41 @@ function AppContent() {
   const [isNewTicketModalOpen, setIsNewTicketModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const handleSwitchToAgent = async () => {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'agente@sfs.co', password: 'SFS2026!' }),
+        credentials: 'include'
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.token) localStorage.setItem('sfs_token', data.token);
+        if (data.user) {
+          setCurrentUser(data.user);
+          showToast('Sesión cambiada a Agente L2 (Laura Yepes)', { type: 'success' });
+          navigateToPath('/consola/bandeja', { replace: true });
+          return;
+        }
+      }
+    } catch {}
+    const fallbackUser = {
+      id: 'usr-agente-1',
+      name: 'Laura Yepes',
+      email: 'agente@sfs.co',
+      role: 'agente' as const,
+      title: 'Especialista L2 de soporte',
+      company: 'Software Factory and Services',
+      phone: '+57 301 555 4321',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80',
+      mustChangePassword: false
+    };
+    setCurrentUser(fallbackUser);
+    showToast('Sesión cambiada a Agente L2', { type: 'success' });
+    navigateToPath('/consola/bandeja', { replace: true });
+  };
+
   // Cierra el drawer de navegación al cambiar de ruta en móvil
   useEffect(() => {
     setIsSidebarOpen(false);
@@ -195,17 +230,17 @@ function AppContent() {
               navigateToPath('/consola/bandeja', { replace: true });
             }
           }}
-          onCancel={
-            !currentUser.mustChangePassword
-              ? () => {
-                  if (currentUser.role === 'cliente') {
-                    navigateToPath('/portal');
-                  } else {
-                    navigateToPath('/consola/bandeja');
-                  }
-                }
-              : undefined
-          }
+          onCancel={() => {
+            if (currentUser.mustChangePassword) {
+              handleSwitchToAgent();
+            } else if (currentUser.role === 'cliente') {
+              navigateToPath('/portal');
+            } else {
+              navigateToPath('/consola/bandeja');
+            }
+          }}
+          onLogout={logout}
+          onSwitchToAgent={handleSwitchToAgent}
         />
       </>
     );
