@@ -15,15 +15,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Selector solo visible con NEXT_PUBLIC_DEV_ROLE_SWITCH=true o VITE_DEV_ROLE_SWITCH=true o ?dev=true (Requirement 6 & 10)
-  const showDevAccounts = Boolean(
-    (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_DEV_ROLE_SWITCH === 'true') ||
-    import.meta.env.VITE_DEV_ROLE_SWITCH === 'true' ||
-    (typeof window !== 'undefined' && (
-      (window as unknown as { __DEV_ROLE_SWITCH?: boolean }).__DEV_ROLE_SWITCH ||
-      window.location.search.includes('dev=true')
-    ))
-  );
+  // Selector DEV (Requirement 2 - K9): elimina ?dev=true.
+  // Las cuentas de prueba solo existen con import.meta.env.DEV en true; en producción se eliminan del bundle.
+  const showDevAccounts = Boolean(import.meta.env.DEV);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -259,8 +259,9 @@ function AppContent() {
     );
   }
 
-  // ================= VALIDACIÓN DE ACCESO 403 PARA CONSOLA (Requirement 4) =================
-  // 1. Agente bloqueado en Métricas, Anuncios, Empresas, Usuarios, Configuración
+  // ================= VALIDACIÓN DE ACCESO 403 PARA CONSOLA (Requirement 7) =================
+  // Agente bloqueado en Métricas, Anuncios, Empresas, Usuarios, Configuración
+  // Supervisor y Admin tienen acceso a todas estas secciones operativas
   const isAgenteBlocked =
     currentUser.role === 'agente' &&
     (pathname === '/consola/metricas' ||
@@ -269,15 +270,9 @@ function AppContent() {
       pathname === '/consola/usuarios' ||
       pathname === '/consola/configuracion');
 
-  // 2. Supervisor bloqueado en Usuarios y Configuración (solo admin)
-  const isSupervisorBlocked =
-    currentUser.role === 'supervisor' &&
-    (pathname === '/consola/usuarios' || pathname === '/consola/configuracion');
-
-  const isForbidden = isAgenteBlocked || isSupervisorBlocked;
-  const forbiddenReason = isAgenteBlocked
-    ? 'Acceso no autorizado para tu rol de Agente. Las secciones de métricas, comunicados, empresas y administración requieren permisos de Supervisor o Administrador.'
-    : 'Acceso restringido. Solo los usuarios con rol de Administrador pueden gestionar el directorio de usuarios y los parámetros del sistema.';
+  const isForbidden = isAgenteBlocked;
+  const forbiddenReason =
+    'Acceso no autorizado para tu rol de Agente. Las secciones de métricas, comunicados, empresas, usuarios y configuración requieren permisos de Supervisor o Administrador.';
 
   return (
     <div className="h-screen w-screen flex flex-row overflow-hidden bg-[#F5F7FB] font-sans antialiased text-slate-800">

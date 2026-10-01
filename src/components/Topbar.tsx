@@ -53,12 +53,8 @@ export const Topbar: React.FC<TopbarProps> = ({
     return () => window.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // Check if dev role switch is enabled via environment variable (Requirement 6)
-  const showDevRoleSwitch = Boolean(
-    (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_DEV_ROLE_SWITCH === 'true') ||
-    import.meta.env.VITE_DEV_ROLE_SWITCH === 'true' ||
-    (typeof window !== 'undefined' && (window as unknown as { __DEV_ROLE_SWITCH?: boolean }).__DEV_ROLE_SWITCH)
-  );
+  // Selector DEV (Requirement 2 - K9): Solo disponible con import.meta.env.DEV en true
+  const showDevRoleSwitch = Boolean(import.meta.env.DEV);
 
   return (
     <header className="h-14 bg-white border-b border-slate-200/90 px-4 sm:px-6 flex items-center justify-between flex-shrink-0 z-30 shadow-2xs select-none">

@@ -6,12 +6,53 @@ import {
   actualizarContrasena,
   verificarHashContrasena,
   generarHashContrasena,
+  crearUsuario,
+  actualizarRolUsuario,
+  listarUsuarios,
   AuthUser
 } from './repositorio';
+import {
+  checkLoginRateLimit,
+  recordFailedLogin,
+  recordSuccessfulLogin,
+  resetLoginRateLimits
+} from './rate-limit';
 
 export const AUTH_COOKIE_NAME = 'sfs_session';
-export const AUTH_SECRET = process.env.AUTH_SECRET || 'sfs-desk-super-secret-key-2026-auth-token';
-const SECRET_KEY = new TextEncoder().encode(AUTH_SECRET);
+
+// Valor local nuevo para desarrollo (mínimo 32 caracteres, NUNCA el valor anterior)
+const DEV_AUTH_SECRET_FALLBACK = 'sfs_desk_dev_key_2026_super_secure_auth_32_chars!';
+
+/**
+ * Función centralizada getSecret() (Requirement 1 - K5):
+ * Compartida por Express y /api.
+ * - Lee process.env.AUTH_SECRET.
+ * - Si falta o tiene menos de 32 caracteres y NODE_ENV === 'production', lanza un error crítico al arrancar.
+ * - En desarrollo utiliza un nuevo valor local exclusivo de desarrollo.
+ */
+export function getSecret(): string {
+  const secret = process.env.AUTH_SECRET;
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (isProduction) {
+    if (!secret || secret.trim().length < 32) {
+      throw new Error(
+        'CRITICAL_CONFIG_ERROR: process.env.AUTH_SECRET must be defined with at least 32 characters in production environments.'
+      );
+    }
+    return secret;
+  }
+
+  if (secret && secret.trim().length >= 32) {
+    return secret;
+  }
+
+  return DEV_AUTH_SECRET_FALLBACK;
+}
+
+export function getSecretKey(): Uint8Array {
+  return new TextEncoder().encode(getSecret());
+}
 
 export interface SessionPayload {
   id: string;
@@ -27,56 +68,77 @@ export interface SessionPayload {
 export interface IniciarSesionResult {
   success: boolean;
   error?: string;
+  code?: string;
   token?: string;
   user?: User;
+  retryAfterSeconds?: number;
 }
 
-// Firmar JWT con jose con expiración de 8 horas
+// Firmar JWT con jose con expiración de 8 horas usando la clave dinámica
 export async function firmarTokenSesion(payload: SessionPayload): Promise<string> {
   return await new jose.SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('8h')
-    .sign(SECRET_KEY);
+    .sign(getSecretKey());
 }
 
 // Verificar JWT con jose
 export async function verificarTokenSesion(token: string): Promise<SessionPayload | null> {
   if (!token) return null;
   try {
-    const { payload } = await jose.jwtVerify(token, SECRET_KEY);
+    const { payload } = await jose.jwtVerify(token, getSecretKey());
     return payload as unknown as SessionPayload;
   } catch {
     return null;
   }
 }
 
-// Iniciar sesión con validación bcryptjs y el mismo mensaje de error para usuario inexistente o contraseña incorrecta
+// Iniciar sesión con validación bcryptjs, rate limiting y el mismo mensaje genérico
 export async function iniciarSesion(
   email: string,
-  password: string
+  password: string,
+  clientIp: string = '127.0.0.1'
 ): Promise<IniciarSesionResult> {
-  const ERROR_MSG = 'Correo o contraseña incorrectos';
+  const GENERIC_ERROR_MSG = 'Correo o contraseña incorrectos';
+
+  // 1. Validar límite de intentos (Requirement 5 - K6)
+  const rateLimit = checkLoginRateLimit(email, clientIp);
+  if (!rateLimit.allowed) {
+    return {
+      success: false,
+      error: GENERIC_ERROR_MSG,
+      code: 'TOO_MANY_ATTEMPTS',
+      retryAfterSeconds: rateLimit.retryAfterSeconds
+    };
+  }
 
   if (!email || !password) {
-    return { success: false, error: ERROR_MSG };
+    recordFailedLogin(email, clientIp);
+    return { success: false, error: GENERIC_ERROR_MSG };
   }
 
   // Validación básica de formato de correo
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.trim())) {
+    recordFailedLogin(email, clientIp);
     return { success: false, error: 'Ingresa un correo válido' };
   }
 
   const user = await buscarUsuarioPorEmail(email);
   if (!user) {
-    return { success: false, error: ERROR_MSG };
+    recordFailedLogin(email, clientIp);
+    return { success: false, error: GENERIC_ERROR_MSG };
   }
 
   const passwordValida = verificarHashContrasena(password, user.passwordHash);
   if (!passwordValida) {
-    return { success: false, error: ERROR_MSG };
+    recordFailedLogin(email, clientIp);
+    return { success: false, error: GENERIC_ERROR_MSG };
   }
+
+  // Login exitoso: limpiar historial de intentos fallidos
+  recordSuccessfulLogin(email, clientIp);
 
   const sessionPayload: SessionPayload = {
     id: user.id,
@@ -91,7 +153,6 @@ export async function iniciarSesion(
 
   const token = await firmarTokenSesion(sessionPayload);
 
-  // Devolver usuario sin passwordHash
   const userSafe: User = {
     id: user.id,
     name: user.name,
@@ -117,7 +178,7 @@ export async function obtenerSesion(token?: string | null): Promise<User | null>
   const payload = await verificarTokenSesion(token);
   if (!payload) return null;
 
-  // Consultar el estado más reciente del usuario
+  // Consultar el estado más reciente del usuario en el repositorio
   const user = await buscarUsuarioPorId(payload.id);
   if (!user) return null;
 
@@ -135,6 +196,8 @@ export async function obtenerSesion(token?: string | null): Promise<User | null>
 }
 
 // Cerrar sesión
+// TODO: En el futuro, implementar lista de revocación de tokens (blacklist) mediante claim 'jti' (JWT ID)
+// cuando exista base de datos o Redis para revocación inmediata antes de su expiración.
 export async function cerrarSesion(): Promise<{ success: boolean }> {
   return { success: true };
 }
@@ -180,3 +243,13 @@ export async function cambiarContrasenaUsuario(
     }
   };
 }
+
+export {
+  crearUsuario,
+  actualizarRolUsuario,
+  listarUsuarios,
+  checkLoginRateLimit,
+  recordFailedLogin,
+  recordSuccessfulLogin,
+  resetLoginRateLimits
+};

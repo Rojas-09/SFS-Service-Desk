@@ -112,7 +112,7 @@ export const UsersView: React.FC<UsersViewProps> = ({ onBackToConsole, onSwitchU
                     </span>
                   )}
 
-                  {!isCurrent && (
+                  {!isCurrent && import.meta.env.DEV && (
                     <button
                       onClick={() => onSwitchUser(member.role)}
                       className="px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold border border-blue-200 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"

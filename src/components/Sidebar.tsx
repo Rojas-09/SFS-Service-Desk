@@ -26,12 +26,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const role: UserRole = currentUser.role;
 
-  // Permisos de secciones operativas según rol (Requirement 4 & 6)
+  // Permisos de secciones operativas según rol (Requirement 7)
+  // Agente: Bandeja, Mis tickets, Sin asignar y Todos
+  // Supervisor y admin: además Métricas, Anuncios, Empresas, Usuarios y Configuración
   const canSeeMetrics = role === 'supervisor' || role === 'admin';
   const canSeeAnnouncements = role === 'supervisor' || role === 'admin';
   const canSeeCompanies = role === 'supervisor' || role === 'admin';
-  const canSeeUsers = role === 'admin'; // Solo el admin gestiona Usuarios
-  const canSeeSettings = role === 'admin'; // Solo el admin gestiona Configuración
+  const canSeeUsers = role === 'supervisor' || role === 'admin';
+  const canSeeSettings = role === 'supervisor' || role === 'admin';
 
   const hasAnyOperations = canSeeMetrics || canSeeAnnouncements || canSeeCompanies || canSeeUsers || canSeeSettings;
 

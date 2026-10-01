@@ -143,6 +143,33 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const clearToast = () => setToast(null);
 
+  // Sincronizar tickets desde la API y manejar 403 MUST_CHANGE_PASSWORD (Requirement 4 - K8)
+  useEffect(() => {
+    async function loadTicketsFromApi() {
+      if (!currentUser) return;
+      try {
+        const res = await fetch('/api/tickets');
+        if (res.status === 403) {
+          const errData = await res.json();
+          if (errData && errData.code === 'MUST_CHANGE_PASSWORD') {
+            window.history.pushState({}, '', '/cambiar-contrasena');
+            window.dispatchEvent(new PopStateEvent('popstate'));
+            return;
+          }
+        }
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.tickets)) {
+            setAllTickets(data.tickets);
+          }
+        }
+      } catch {
+        // Modo offline / mock fallback
+      }
+    }
+    loadTicketsFromApi();
+  }, [currentUser]);
+
   // Cerrar sesión
   const logout = async () => {
     try {
