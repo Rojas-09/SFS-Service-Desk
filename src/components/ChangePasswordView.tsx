@@ -101,7 +101,7 @@ export const ChangePasswordView: React.FC<ChangePasswordViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen w-screen flex flex-col justify-center items-center p-4 sm:p-6 bg-[#F5F7FB] font-sans antialiased text-slate-800 select-none">
+    <div className="min-h-dvh w-full flex flex-col justify-center items-center p-4 sm:p-6 py-8 bg-[#F5F7FB] font-sans antialiased text-slate-800 select-none overflow-y-auto custom-scrollbar pb-safe">
       <div className="w-full max-w-[440px] space-y-4">
         {/* Placa superior con Logo */}
         <div className="text-center">
@@ -111,12 +111,12 @@ export const ChangePasswordView: React.FC<ChangePasswordViewProps> = ({
         </div>
 
         {/* Tarjeta del Formulario */}
-        <div className="bg-white rounded-3xl p-7 sm:p-8 shadow-xl border border-slate-200/80 space-y-6">
+        <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-200/80 space-y-5 sm:space-y-6">
           <div className="space-y-1 text-center">
             <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center mx-auto mb-2">
               <span className="material-symbols-outlined text-xl">lock_reset</span>
             </div>
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
               Actualizar contraseña
             </h1>
             <p className="text-xs text-slate-500">
@@ -158,14 +158,14 @@ export const ChangePasswordView: React.FC<ChangePasswordViewProps> = ({
                     setCurrentPassword(e.target.value);
                     if (errorMessage) setErrorMessage(null);
                   }}
-                  className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
+                  className="w-full pl-3.5 pr-10 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[16px] sm:text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                   placeholder="••••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowCurrent(!showCurrent)}
                   aria-label={showCurrent ? 'Ocultar contraseña actual' : 'Mostrar contraseña actual'}
-                  className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-700 p-0.5 rounded cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="absolute right-1.5 top-1 sm:top-2 text-slate-400 hover:text-slate-700 p-2 rounded-lg active:bg-slate-100 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 >
                   <span className="material-symbols-outlined text-lg leading-none">
                     {showCurrent ? 'visibility_off' : 'visibility'}
@@ -192,14 +192,14 @@ export const ChangePasswordView: React.FC<ChangePasswordViewProps> = ({
                     setNewPassword(e.target.value);
                     if (errorMessage) setErrorMessage(null);
                   }}
-                  className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
+                  className="w-full pl-3.5 pr-10 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[16px] sm:text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                   placeholder="Mínimo 10 caracteres alfanuméricos..."
                 />
                 <button
                   type="button"
                   onClick={() => setShowNew(!showNew)}
                   aria-label={showNew ? 'Ocultar nueva contraseña' : 'Mostrar nueva contraseña'}
-                  className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-700 p-0.5 rounded cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="absolute right-1.5 top-1 sm:top-2 text-slate-400 hover:text-slate-700 p-2 rounded-lg active:bg-slate-100 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 >
                   <span className="material-symbols-outlined text-lg leading-none">
                     {showNew ? 'visibility_off' : 'visibility'}
@@ -258,14 +258,14 @@ export const ChangePasswordView: React.FC<ChangePasswordViewProps> = ({
                     setConfirmPassword(e.target.value);
                     if (errorMessage) setErrorMessage(null);
                   }}
-                  className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
+                  className="w-full pl-3.5 pr-10 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[16px] sm:text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                   placeholder="Repite la nueva contraseña..."
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirm(!showConfirm)}
                   aria-label={showConfirm ? 'Ocultar confirmación' : 'Mostrar confirmación'}
-                  className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-700 p-0.5 rounded cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="absolute right-1.5 top-1 sm:top-2 text-slate-400 hover:text-slate-700 p-2 rounded-lg active:bg-slate-100 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 >
                   <span className="material-symbols-outlined text-lg leading-none">
                     {showConfirm ? 'visibility_off' : 'visibility'}

@@ -10,6 +10,7 @@ interface TopbarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onNavigateToChangePassword: () => void;
+  onToggleSidebar: () => void;
 }
 
 export const Topbar: React.FC<TopbarProps> = ({
@@ -20,7 +21,8 @@ export const Topbar: React.FC<TopbarProps> = ({
   onToggleAppMode,
   searchQuery,
   onSearchChange,
-  onNavigateToChangePassword
+  onNavigateToChangePassword,
+  onToggleSidebar
 }) => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -57,9 +59,18 @@ export const Topbar: React.FC<TopbarProps> = ({
   const showDevRoleSwitch = Boolean(import.meta.env.DEV);
 
   return (
-    <header className="h-14 bg-white border-b border-slate-200/90 px-4 sm:px-6 flex items-center justify-between flex-shrink-0 z-30 shadow-2xs select-none">
+    <header className="h-14 bg-white border-b border-slate-200/90 px-3 sm:px-6 flex items-center justify-between gap-2 flex-shrink-0 z-30 shadow-2xs select-none pt-safe">
+      {/* Botón hamburguesa: solo móvil, abre el drawer de navegación */}
+      <button
+        onClick={onToggleSidebar}
+        aria-label="Abrir menú de navegación"
+        className="lg:hidden p-2 -ml-1 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer flex-shrink-0 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+      >
+        <span className="material-symbols-outlined text-2xl leading-none block">menu</span>
+      </button>
+
       {/* Zona Izquierda: Buscador Global (Ctrl+K) y opcional Role Switch solo con dev flag */}
-      <div className="flex items-center gap-3 flex-1 min-w-0 pr-3">
+      <div className="flex items-center gap-3 flex-1 min-w-0">
         {/* Toggle Mode: solo visible con flag NEXT_PUBLIC_DEV_ROLE_SWITCH=true (Requirement 6) */}
         {showDevRoleSwitch && onToggleAppMode && (
           <div className="inline-flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200/80 flex-shrink-0">
@@ -108,7 +119,7 @@ export const Topbar: React.FC<TopbarProps> = ({
       </div>
 
       {/* Zona Derecha: Horario Hábil Compacto + Notificaciones + Perfil */}
-      <div className="flex items-center gap-3 flex-shrink-0 min-w-0">
+      <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 flex-shrink-0 min-w-0">
         {/* Horario hábil: Indicador compacto flex sin posiciones absolutas (>= 1280px) */}
         <div className="hidden xl:flex items-center gap-1.5 text-xs text-slate-600 font-medium px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-200/80">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
@@ -119,17 +130,18 @@ export const Topbar: React.FC<TopbarProps> = ({
         <div className="xl:hidden relative">
           <button
             onClick={() => setSchedulePopoverOpen(!schedulePopoverOpen)}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer transition-colors relative flex items-center justify-center focus:ring-2 focus:ring-blue-600 focus:outline-none"
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 active:bg-slate-200 cursor-pointer transition-colors relative flex items-center justify-center flex-shrink-0 focus:ring-2 focus:ring-blue-600 focus:outline-none"
             title="Ver horario hábil"
+            aria-label="Ver horario hábil"
           >
             <span className="material-symbols-outlined text-xl">schedule</span>
             <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />
           </button>
 
           {schedulePopoverOpen && (
-            <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 p-3 z-50 text-xs animate-in fade-in slide-in-from-top-2">
+            <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-xl border border-slate-200 p-3 z-50 text-xs animate-in fade-in slide-in-from-top-2">
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 flex-shrink-0" />
                 <span className="font-bold text-slate-800">Horario de operación</span>
               </div>
               <p className="text-slate-600 leading-snug">
@@ -140,18 +152,19 @@ export const Topbar: React.FC<TopbarProps> = ({
         </div>
 
         {/* Notificaciones */}
-        <div className="relative">
+        <div className="relative flex-shrink-0">
           <button
             onClick={() => setNotificationsOpen(!notificationsOpen)}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 cursor-pointer transition-colors relative flex items-center justify-center focus:ring-2 focus:ring-blue-600 focus:outline-none"
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 active:bg-slate-200 cursor-pointer transition-colors relative flex items-center justify-center focus:ring-2 focus:ring-blue-600 focus:outline-none"
             title="Notificaciones"
+            aria-label="Notificaciones"
           >
             <span className="material-symbols-outlined text-xl">notifications</span>
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#F37021] rounded-full ring-2 ring-white" />
           </button>
 
           {notificationsOpen && (
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-3 z-50 text-xs animate-in fade-in slide-in-from-top-2 space-y-2">
+            <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-xl border border-slate-200 p-3 z-50 text-xs animate-in fade-in slide-in-from-top-2 space-y-2">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                 <span className="font-bold text-slate-900">Notificaciones</span>
                 <span className="text-[11px] text-blue-600 font-semibold cursor-pointer hover:underline">
@@ -170,7 +183,7 @@ export const Topbar: React.FC<TopbarProps> = ({
         </div>
 
         {/* Perfil del Usuario y Menú Desplegable (Requirement 12) */}
-        <div className="relative" ref={profileDropdownRef}>
+        <div className="relative flex-shrink-0" ref={profileDropdownRef}>
           <button
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
             className="flex items-center gap-2.5 p-1 rounded-2xl hover:bg-slate-100 transition-colors cursor-pointer group focus:ring-2 focus:ring-blue-600 focus:outline-none"
@@ -286,8 +299,8 @@ export const Topbar: React.FC<TopbarProps> = ({
 
       {/* Modal "Mi Perfil" (Requirement 12) */}
       {isProfileModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-sm w-full p-6 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/40 backdrop-blur-xs p-0 sm:p-4 animate-in fade-in">
+          <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 max-w-sm w-full p-5 sm:p-6 space-y-4 max-h-[90dvh] overflow-y-auto custom-scrollbar pb-safe sm:pb-6">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <h3 className="text-sm font-bold text-slate-900">Mi perfil</h3>
               <button

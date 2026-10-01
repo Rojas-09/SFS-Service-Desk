@@ -18,9 +18,9 @@ export const MetricsModal: React.FC<MetricsModalProps> = ({ isOpen, onClose, tic
   const compliance = total > 0 ? (((total - breached) / total) * 100).toFixed(1) : '100';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">analytics</span>
@@ -42,7 +42,7 @@ export const MetricsModal: React.FC<MetricsModalProps> = ({ isOpen, onClose, tic
           </button>
         </div>
 
-        <div className="p-6 space-y-5 max-h-[75vh] overflow-y-auto custom-scrollbar">
+        <div className="p-4 sm:p-6 space-y-5 flex-1 overflow-y-auto custom-scrollbar">
           {/* 4 Indicadores Principales */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
@@ -143,7 +143,7 @@ export const MetricsModal: React.FC<MetricsModalProps> = ({ isOpen, onClose, tic
           </div>
         </div>
 
-        <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
@@ -196,9 +196,9 @@ export const AnnouncementsModal: React.FC<AnnouncementsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">campaign</span>
@@ -220,7 +220,7 @@ export const AnnouncementsModal: React.FC<AnnouncementsModalProps> = ({
           </button>
         </div>
 
-        <div className="p-6 space-y-4 max-h-[75vh] overflow-y-auto custom-scrollbar">
+        <div className="p-4 sm:p-6 space-y-4 flex-1 overflow-y-auto custom-scrollbar pb-safe">
           {/* Barra de cabecera con botón crear */}
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -343,7 +343,7 @@ export const AnnouncementsModal: React.FC<AnnouncementsModalProps> = ({
           </div>
         </div>
 
-        <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-semibold cursor-pointer"
@@ -418,9 +418,9 @@ export const CompaniesModal: React.FC<CompaniesModalProps> = ({ isOpen, onClose,
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">corporate_fare</span>
@@ -442,7 +442,7 @@ export const CompaniesModal: React.FC<CompaniesModalProps> = ({ isOpen, onClose,
           </button>
         </div>
 
-        <div className="p-6 space-y-3 max-h-[75vh] overflow-y-auto custom-scrollbar">
+        <div className="p-4 sm:p-6 space-y-3 flex-1 overflow-y-auto custom-scrollbar pb-safe">
           {companies.map((c) => (
             <div
               key={c.name}
@@ -483,7 +483,7 @@ export const CompaniesModal: React.FC<CompaniesModalProps> = ({ isOpen, onClose,
           ))}
         </div>
 
-        <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-semibold cursor-pointer"
@@ -555,9 +555,9 @@ export const UsersModal: React.FC<UsersModalProps> = ({ isOpen, onClose, onSwitc
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">group</span>
@@ -579,7 +579,7 @@ export const UsersModal: React.FC<UsersModalProps> = ({ isOpen, onClose, onSwitc
           </button>
         </div>
 
-        <div className="p-6 space-y-3 max-h-[75vh] overflow-y-auto custom-scrollbar">
+        <div className="p-4 sm:p-6 space-y-3 flex-1 overflow-y-auto custom-scrollbar pb-safe">
           {usersList.map((u) => (
             <div
               key={u.email}
@@ -627,7 +627,7 @@ export const UsersModal: React.FC<UsersModalProps> = ({ isOpen, onClose, onSwitc
           ))}
         </div>
 
-        <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold cursor-pointer"
@@ -661,9 +661,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-6 py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">settings</span>
@@ -685,7 +685,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
           </button>
         </div>
 
-        <div className="p-6 space-y-4 text-xs">
+        <div className="p-4 sm:p-6 space-y-4 text-xs flex-1 overflow-y-auto custom-scrollbar pb-safe">
           <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200">
             <div>
               <span className="font-bold text-slate-800 block text-xs">
@@ -758,7 +758,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
           </div>
         </div>
 
-        <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between gap-2 flex-wrap flex-shrink-0 pb-safe sm:pb-4">
           <span className="text-xs text-slate-500 font-medium">Software Factory and Services</span>
           <div className="flex items-center gap-2">
             <button

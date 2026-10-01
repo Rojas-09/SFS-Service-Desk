@@ -73,23 +73,23 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#F5F7FB] font-sans antialiased text-slate-800 select-none">
       {/* Topbar del Portal del Cliente */}
-      <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between flex-shrink-0 z-30 shadow-2xs">
-        <div className="flex items-center gap-4">
-          <div className="bg-white py-1 px-2 rounded-xl">
-            <SfsLogo className="w-full max-w-[170px] h-auto object-contain" />
+      <header className="h-auto min-h-16 bg-white border-b border-slate-200 px-3 sm:px-6 py-2 sm:py-0 flex flex-wrap items-center justify-between gap-2 flex-shrink-0 z-30 shadow-2xs pt-safe">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+          <div className="bg-white py-1 px-2 rounded-xl flex-shrink-0">
+            <SfsLogo className="w-full max-w-[130px] sm:max-w-[170px] h-auto object-contain" />
           </div>
-          <span className="hidden sm:inline-block h-5 w-px bg-slate-200" />
-          <div className="hidden sm:block">
+          <span className="hidden sm:inline-block h-5 w-px bg-slate-200 flex-shrink-0" />
+          <div className="hidden sm:block min-w-0">
             <span className="text-xs font-bold text-slate-900 block">Portal corporativo</span>
-            <span className="text-[11px] text-slate-500 font-medium block">{clientCompany}</span>
+            <span className="text-[11px] text-slate-500 font-medium block truncate">{clientCompany}</span>
           </div>
         </div>
 
-        {/* Navegación del Portal */}
-        <div className="flex items-center gap-2">
+        {/* Navegación del Portal: en móvil pasa a una fila propia con scroll */}
+        <div className="order-3 sm:order-none w-full sm:w-auto flex items-center gap-1.5 sm:gap-2 overflow-x-auto custom-scrollbar -mx-1 px-1 sm:mx-0 sm:px-0">
           <button
             onClick={() => onNavigate('/portal')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
               subPath === 'inicio' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -97,7 +97,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           </button>
           <button
             onClick={() => onNavigate('/portal/tickets')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
               subPath === 'tickets' || subPath === 'detalle'
                 ? 'bg-blue-50 text-blue-700'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -107,14 +107,15 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           </button>
           <button
             onClick={onOpenNewTicket}
-            className="px-3.5 py-1.5 rounded-xl bg-[#F37021] hover:bg-[#d95d13] text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer ml-2"
+            className="px-3 py-1.5 sm:px-3.5 rounded-xl bg-[#F37021] hover:bg-[#d95d13] active:bg-[#c95310] text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap flex-shrink-0"
           >
             <span className="material-symbols-outlined text-base leading-none">add_circle</span>
             <span>Nueva solicitud</span>
           </button>
+        </div>
 
-          {/* Menú de Usuario (Requirement 12) */}
-          <div className="relative ml-2">
+        {/* Menú de Usuario (Requirement 12) */}
+        <div className="relative ml-auto sm:ml-2 flex-shrink-0">
             <button
               onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
               className="flex items-center gap-2 p-1 rounded-2xl hover:bg-slate-100 transition-colors cursor-pointer"
@@ -128,7 +129,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             </button>
 
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs animate-in fade-in slide-in-from-top-2">
+              <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-1.5rem)] bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs animate-in fade-in slide-in-from-top-2">
                 <div className="px-4 py-2.5 border-b border-slate-100">
                   <span className="font-bold text-slate-900 block">{currentUser.name}</span>
                   <span className="text-xs text-slate-500 block truncate">{currentUser.email}</span>
@@ -162,16 +163,15 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                 </div>
               </div>
             )}
-          </div>
         </div>
       </header>
 
       {/* Contenido Principal según subruta */}
-      <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-6 custom-scrollbar pb-safe">
         {/* SUBRUTA 1: DETALLE DE TICKET (/portal/tickets/[id]) */}
         {subPath === 'detalle' && activeDetailTicket ? (
           <div className="max-w-4xl mx-auto space-y-5">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
               <button
                 onClick={() => onNavigate('/portal/tickets')}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer shadow-2xs"
@@ -194,9 +194,9 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             </div>
 
             {/* Cabecera del ticket */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+            <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
               <div>
-                <h1 className="text-xl font-bold text-slate-900 leading-tight">
+                <h1 className="text-base sm:text-xl font-bold text-slate-900 leading-tight">
                   {activeDetailTicket.title}
                 </h1>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed whitespace-pre-wrap">
@@ -225,7 +225,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             </div>
 
             {/* Conversación pública (Sin notas internas) */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+            <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
               <h2 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">
                 Respuestas y seguimiento
               </h2>
@@ -270,7 +270,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                 <textarea
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
-                  className="w-full h-20 p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none font-sans"
+                  className="w-full h-24 sm:h-20 p-3 bg-slate-50 border border-slate-200 rounded-2xl text-[16px] sm:text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none font-sans"
                   placeholder="Escribe tu mensaje para el equipo de soporte SFS..."
                 />
                 <div className="flex justify-end">
@@ -287,9 +287,9 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
         ) : subPath === 'tickets' ? (
           /* SUBRUTA 2: LISTA DE TICKETS (/portal/tickets) */
           <div className="max-w-5xl mx-auto space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+                <h1 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
                   Solicitudes de {clientCompany}
                 </h1>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -304,7 +304,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                     value={ticketSearch}
                     onChange={(e) => setTicketSearch(e.target.value)}
                     placeholder="Buscar solicitud..."
-                    className="pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none w-56 font-sans"
+                    className="pl-8 pr-3 py-1.5 text-[16px] sm:text-xs bg-white border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none w-full sm:w-56 font-sans"
                   />
                   <span className="material-symbols-outlined text-slate-400 text-base absolute left-2 top-1.5">
                     search
@@ -342,7 +342,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                       className="p-4 bg-white rounded-2xl border border-slate-200 hover:border-blue-400 hover:shadow-xs transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
                     >
                       <div className="space-y-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-mono font-bold text-blue-700">{t.code}</span>
                           <span
                             className={`px-2 py-0.5 rounded-full text-[11px] font-semibold border ${getStatusBadgeStyle(
@@ -381,7 +381,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           /* SUBRUTA INICIO (/portal) */
           <div className="max-w-6xl mx-auto w-full space-y-6">
             {/* Banner de Bienvenida del Cliente */}
-            <div className="bg-gradient-to-r from-[#0B2A5B] to-[#1565C0] rounded-3xl p-7 text-white shadow-xl shadow-blue-950/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+            <div className="bg-gradient-to-r from-[#0B2A5B] to-[#1565C0] rounded-3xl p-5 sm:p-7 text-white shadow-xl shadow-blue-950/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-5">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F37021] text-white shadow-2xs">
@@ -389,7 +389,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                   </span>
                   <span className="text-xs text-blue-200">Atención bajo SLA</span>
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                <h1 className="text-xl sm:text-3xl font-bold tracking-tight">
                   Bienvenido, {currentUser.name}
                 </h1>
                 <p className="text-xs text-blue-100 max-w-xl leading-relaxed">

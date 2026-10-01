@@ -70,25 +70,35 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
   const selectedSlaBadge = selectedTicket ? formatSlaBadge(selectedTicket) : null;
 
+  // En móvil el inspector ocupa toda la pantalla, pero solo cuando el usuario
+  // ha abierto un ticket explícitamente. `selectedTicket` cae por defecto al
+  // primer elemento de la lista, así que hay que mirar el ticketId de la URL:
+  // si no, la lista nunca se vería en el móvil.
+  const hasExplicitSelection = Boolean(filters.ticketId && selectedTicket?.id === filters.ticketId);
+
   return (
     <div className="flex-1 flex flex-row min-h-0 h-full overflow-hidden select-none bg-[#F5F7FB]">
       {/* ================= PANEL CENTRAL (60%): BANDEJA / LISTA DE TICKETS ================= */}
-      <section className="w-full lg:w-[58%] xl:w-[60%] flex flex-col h-full bg-[#F5F7FB] border-r border-slate-200 overflow-hidden">
+      <section
+        className={`w-full lg:w-[58%] xl:w-[60%] flex flex-col h-full bg-[#F5F7FB] overflow-hidden lg:border-r lg:border-slate-200 ${
+          hasExplicitSelection ? 'hidden lg:flex' : 'flex'
+        }`}
+      >
         {/* Header de la Bandeja: Título según ?bandeja + Contador de activos + Selector de Vistas */}
-        <div className="p-3.5 bg-white border-b border-slate-200 flex-shrink-0 space-y-2.5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <h2 className="text-base font-bold text-slate-900 tracking-tight">
+        <div className="p-3 sm:p-3.5 bg-white border-b border-slate-200 flex-shrink-0 space-y-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate">
                 {getBandejaTitle(filters.bandeja)}
               </h2>
-              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold">
+              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold flex-shrink-0">
                 {activeCountInView} activos
               </span>
             </div>
 
             <div className="flex items-center gap-1.5">
               {/* Selector de vistas con links que conservan bandeja y filtros (Requirement 2 & 3) */}
-              <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200 text-xs">
+              <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200 text-xs flex-shrink-0">
                 <a
                   href={getVistaHref('tabla')}
                   onClick={(e) => {
@@ -207,7 +217,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
         </div>
 
         {/* Lista Desplazable de Tarjetas de Tickets */}
-        <div className="flex-1 overflow-y-auto p-3.5 space-y-2.5 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-3.5 space-y-2.5 custom-scrollbar">
           {filteredList.length === 0 ? (
             <div className="text-center py-16 text-slate-400">
               <span className="material-symbols-outlined text-4xl text-slate-300">inbox</span>
@@ -223,7 +233,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                 <div
                   key={ticket.id}
                   onClick={() => onSetFilterParam('ticketId', ticket.id)}
-                  className={`p-3.5 rounded-xl border transition-all cursor-pointer relative shadow-2xs ${
+                  className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer relative shadow-2xs active:bg-slate-50 ${
                     isSelected
                       ? 'bg-white border-blue-600 ring-2 ring-blue-600/20 shadow-sm'
                       : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-xs'
@@ -234,7 +244,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                     <div className="absolute left-0 top-3 bottom-3 w-1 bg-blue-600 rounded-r-md" />
                   )}
 
-                  <div className="flex items-center justify-between mb-1.5 pl-1.5">
+                  <div className="flex items-center justify-between gap-2 mb-1.5 pl-1.5 flex-wrap">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs font-bold text-blue-700">
                         {ticket.code}
@@ -289,16 +299,16 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
       {/* ================= PANEL DERECHO (40%): INSPECTOR DETALLADO ================= */}
       {selectedTicket && (
-        <aside className="w-full lg:w-[42%] xl:w-[40%] flex flex-col h-full bg-white overflow-hidden flex-shrink-0 shadow-lg border-l border-slate-200">
+        <aside className="w-full lg:w-[42%] xl:w-[40%] flex flex-col h-full bg-white overflow-hidden flex-shrink-0 shadow-lg lg:border-l lg:border-slate-200">
           {/* Cabecera del Inspector */}
-          <div className="p-4 border-b border-slate-200 flex-shrink-0 space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-sm font-bold text-blue-700">
+          <div className="p-3 sm:p-4 border-b border-slate-200 flex-shrink-0 space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="font-mono text-sm font-bold text-blue-700 flex-shrink-0">
                   {selectedTicket.code}
                 </span>
                 <span
-                  className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${getStatusBadgeStyle(
+                  className={`px-2 py-0.5 rounded-full text-xs font-semibold border flex-shrink-0 ${getStatusBadgeStyle(
                     selectedTicket.status
                   )}`}
                 >
@@ -306,14 +316,24 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                 </span>
               </div>
 
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 flex-shrink-0">
+                {/* Volver a la lista: solo en móvil, donde el inspector es pantalla completa */}
+                <button
+                  onClick={() => onSetFilterParam('ticketId', '')}
+                  className="lg:hidden p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 active:bg-slate-200 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  title="Volver a la lista"
+                  aria-label="Volver a la lista de tickets"
+                >
+                  <span className="material-symbols-outlined text-xl leading-none block">arrow_back</span>
+                </button>
+
                 <a
                   href={getVistaHref('tabla')}
                   onClick={(e) => {
                     e.preventDefault();
                     onSetVista('tabla');
                   }}
-                  className="p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline"
+                  className="hidden lg:flex p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline"
                   title="Volver a tabla general"
                 >
                   <span className="material-symbols-outlined text-base">close</span>
@@ -369,7 +389,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
           </div>
 
           {/* Ficha de Información: Categoría, Etiquetas y Estado (Requirement 10) */}
-          <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 text-xs space-y-2 flex-shrink-0">
+          <div className="px-3 sm:px-4 py-3 bg-slate-50 border-b border-slate-200 text-xs space-y-2 flex-shrink-0">
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <span className="text-slate-400 block text-[11px]">Empresa</span>
@@ -433,7 +453,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                 </button>
 
                 {showReassignModal && (
-                  <div className="absolute right-0 bottom-full mb-1 w-52 bg-white border border-slate-200 rounded-xl shadow-xl py-1 z-30 text-xs animate-in fade-in slide-in-from-bottom-2">
+                  <div className="absolute right-0 bottom-full mb-1 w-52 max-w-[calc(100vw-2rem)] bg-white border border-slate-200 rounded-xl shadow-xl py-1 z-30 text-xs animate-in fade-in slide-in-from-bottom-2">
                     <span className="px-3 py-1 text-xs uppercase font-bold text-slate-400 block border-b border-slate-100">
                       Seleccionar agente
                     </span>
@@ -456,7 +476,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
           </div>
 
           {/* Pestañas del Inspector: Conversación | Historial | Relacionados (Requirement 10) */}
-          <div className="flex border-b border-slate-200 bg-white px-4 text-xs font-semibold flex-shrink-0">
+          <div className="flex border-b border-slate-200 bg-white px-2 sm:px-4 text-xs font-semibold flex-shrink-0 overflow-x-auto custom-scrollbar">
             <button
               onClick={() => setInspectorTab('conversacion')}
               className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 focus:ring-2 focus:ring-blue-600 focus:outline-none ${
@@ -504,7 +524,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
           </div>
 
           {/* Contenido según pestaña activa */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 custom-scrollbar">
             {inspectorTab === 'conversacion' && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs text-slate-500 pb-1">
@@ -687,7 +707,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                       handleSendReply(false);
                     }
                   }}
-                  className={`w-full h-20 p-2.5 border rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none shadow-xs font-sans ${
+                  className={`w-full h-24 sm:h-20 p-2.5 border rounded-xl text-[16px] sm:text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none shadow-xs font-sans ${
                     compositorTab === 'interna'
                       ? 'border-amber-300 bg-amber-50/80 text-amber-950 focus:border-amber-500'
                       : 'border-slate-200 bg-white focus:border-blue-600'
@@ -701,7 +721,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
               </div>
 
               {/* Barra de Acciones del Compositor */}
-              <div className="flex items-center justify-between pt-1">
+              <div className="flex items-center justify-between gap-2 pt-1 flex-wrap">
                 <div className="flex items-center gap-1.5 text-slate-500 relative">
                   {/* Botón Respuestas Predefinidas con Menú de Macros (Requirement 9) */}
                   <button
@@ -716,7 +736,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
                   {/* Menú de Macros */}
                   {showMacrosMenu && (
-                    <div className="absolute left-0 bottom-full mb-1 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-1.5 z-40 text-xs animate-in fade-in slide-in-from-bottom-2">
+                    <div className="absolute left-0 bottom-full mb-1 w-72 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-xl border border-slate-200 p-1.5 z-40 text-xs animate-in fade-in slide-in-from-bottom-2">
                       <span className="px-2.5 py-1 text-[11px] uppercase font-bold text-slate-400 block border-b border-slate-100">
                         Macros de respuesta rápida
                       </span>
@@ -745,7 +765,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setReplyText(t => t + ' [Registro diagnóstico adjuntado]')}
-                    className="p-1 hover:text-slate-700 rounded-md hover:bg-white cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                    className="p-2 -ml-1 hover:text-slate-700 rounded-md hover:bg-white active:bg-slate-100 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                     title="Adjuntar archivo"
                   >
                     <span className="material-symbols-outlined text-base">attach_file</span>

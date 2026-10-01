@@ -17,11 +17,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-6 custom-scrollbar select-none">
-      <div className="max-w-4xl mx-auto w-full space-y-6">
+    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-3 sm:p-6 custom-scrollbar select-none">
+      <div className="max-w-4xl mx-auto w-full space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={onBackToConsole}
               className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
@@ -30,7 +30,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
               <span className="material-symbols-outlined text-lg leading-none">arrow_back</span>
             </button>
             <div>
-              <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
                 Configuración del sistema
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -48,8 +48,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
         </div>
 
         {/* Opciones */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-5 text-xs">
-          <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-200">
+        <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4 sm:space-y-5 text-xs">
+          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200">
             <div>
               <span className="font-bold text-slate-900 block text-xs">
                 Alertas sonoras para incidentes críticos
@@ -62,11 +62,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
               type="checkbox"
               checked={criticalSound}
               onChange={(e) => setCriticalSound(e.target.checked)}
-              className="w-4 h-4 rounded text-blue-600 cursor-pointer"
+              className="w-5 h-5 rounded text-blue-600 flex-shrink-0 cursor-pointer"
             />
           </div>
 
-          <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200">
             <div>
               <span className="font-bold text-slate-900 block text-xs">
                 Umbral de advertencia pre-vencimiento SLA
@@ -86,7 +86,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
             </select>
           </div>
 
-          <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200">
             <div>
               <span className="font-bold text-slate-900 block text-xs">
                 Asignación automática inteligente
@@ -99,11 +99,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
               type="checkbox"
               checked={autoAssign}
               onChange={(e) => setAutoAssign(e.target.checked)}
-              className="w-4 h-4 rounded text-blue-600 cursor-pointer"
+              className="w-5 h-5 rounded text-blue-600 flex-shrink-0 cursor-pointer"
             />
           </div>
 
-          <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200">
             <div>
               <span className="font-bold text-slate-900 block text-xs">
                 Notificaciones por correo a clientes
@@ -116,7 +116,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
               type="checkbox"
               checked={emailNotify}
               onChange={(e) => setEmailNotify(e.target.checked)}
-              className="w-4 h-4 rounded text-blue-600 cursor-pointer"
+              className="w-5 h-5 rounded text-blue-600 flex-shrink-0 cursor-pointer"
             />
           </div>
         </div>

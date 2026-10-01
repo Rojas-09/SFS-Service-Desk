@@ -20,11 +20,11 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
   const getPercent = (count: number) => (total > 0 ? ((count / total) * 100).toFixed(0) : '0');
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-6 custom-scrollbar select-none">
-      <div className="max-w-6xl mx-auto w-full space-y-6">
+    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-3 sm:p-6 custom-scrollbar select-none">
+      <div className="max-w-6xl mx-auto w-full space-y-4 sm:space-y-6">
         {/* Header con botón para volver a la consola */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={onBackToConsole}
               className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
@@ -33,7 +33,7 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
               <span className="material-symbols-outlined text-lg leading-none">arrow_back</span>
             </button>
             <div>
-              <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
                 Métricas y acuerdos SLA
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -51,7 +51,7 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
 
         {/* 4 KPIs Clave calculados dinámicamente desde los tickets (Requirement 8) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
               Tickets activos
             </span>
@@ -61,7 +61,7 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
             <span className="text-xs text-blue-600 font-semibold">En gestión activa</span>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
               Cumplimiento SLA
             </span>
@@ -71,7 +71,7 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
             <span className="text-xs text-emerald-600 font-semibold">Calculado en tiempo real</span>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
               Tiempo 1ª respuesta
             </span>
@@ -81,7 +81,7 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
             <span className="text-xs text-blue-600 font-semibold">{kpis.firstResponseTarget}</span>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
               Tickets resueltos
             </span>
@@ -93,9 +93,9 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
         </div>
 
         {/* Desglose de Severidad y Acuerdos con nuevos SLAs (Requirement 7) */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+        <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h2 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider leading-snug">
               Distribución por prioridad y acuerdos SLA (L–V 8:00 a. m.–6:00 p. m. Colombia)
             </h2>
             <span className="text-xs text-slate-500 font-medium">1 día hábil = 10 horas</span>
@@ -103,7 +103,7 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
 
           <div className="space-y-4">
             <div>
-              <div className="flex justify-between text-xs font-semibold mb-1">
+              <div className="flex justify-between gap-3 text-xs font-semibold mb-1">
                 <span className="text-rose-700 font-bold">Crítica (1 h primera resp. / 4 h solución)</span>
                 <span className="text-slate-700 font-mono">
                   {criticosCount} tickets ({getPercent(criticosCount)}%)
@@ -115,7 +115,7 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
             </div>
 
             <div>
-              <div className="flex justify-between text-xs font-semibold mb-1">
+              <div className="flex justify-between gap-3 text-xs font-semibold mb-1">
                 <span className="text-orange-700 font-bold">Alta (4 h primera resp. / 1 día solución)</span>
                 <span className="text-slate-700 font-mono">
                   {altosCount} tickets ({getPercent(altosCount)}%)
@@ -127,7 +127,7 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
             </div>
 
             <div>
-              <div className="flex justify-between text-xs font-semibold mb-1">
+              <div className="flex justify-between gap-3 text-xs font-semibold mb-1">
                 <span className="text-blue-700 font-bold">Media (8 h primera resp. / 3 días solución)</span>
                 <span className="text-slate-700 font-mono">
                   {mediosCount} tickets ({getPercent(mediosCount)}%)
@@ -139,7 +139,7 @@ export const MetricsView: React.FC<MetricsViewProps> = ({ onBackToConsole }) => 
             </div>
 
             <div>
-              <div className="flex justify-between text-xs font-semibold mb-1">
+              <div className="flex justify-between gap-3 text-xs font-semibold mb-1">
                 <span className="text-slate-700 font-bold">Baja (1 día primera resp. / 5 días solución)</span>
                 <span className="text-slate-700 font-mono">
                   {bajosCount} tickets ({getPercent(bajosCount)}%)

@@ -265,16 +265,16 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
     <div
       ref={setNodeRef}
       style={{ borderTopColor: topColor }}
-      className={`w-[288px] min-w-[288px] max-w-[288px] flex flex-col rounded-[12px] bg-[#EEF2F8] border-t-[3px] shadow-2xs h-full overflow-hidden transition-all ${
+      className={`w-[82vw] max-w-[288px] min-w-0 sm:w-[288px] sm:min-w-[288px] sm:max-w-[288px] flex flex-col rounded-[12px] bg-[#EEF2F8] border-t-[3px] shadow-2xs h-full overflow-hidden transition-all snap-start sm:snap-align-none ${
         isOver ? 'border-2 border-dashed border-[#1565C0]/40 bg-[#1565C0]/[0.05]' : ''
       }`}
     >
       {/* Cabecera fija con punto de color, nombre y contador en texto plano (Requirement 12) */}
       <div className="p-3 bg-[#EEF2F8] border-b border-slate-200/60 flex items-center justify-between flex-shrink-0">
-        <div className="flex items-center gap-2">
-          <span className={`w-2.5 h-2.5 rounded-full ${dotColor}`} />
-          <span className="text-xs font-bold text-slate-900 tracking-tight">{label}</span>
-          <span className="text-xs font-normal text-slate-500">{tickets.length}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${dotColor}`} />
+          <span className="text-xs font-bold text-slate-900 tracking-tight truncate">{label}</span>
+          <span className="text-xs font-normal text-slate-500 flex-shrink-0">{tickets.length}</span>
         </div>
 
         {status === 'Cerrado' && onToggleCerradoCollapse && (
@@ -489,10 +489,10 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
   return (
     <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative select-none bg-[#F5F7FB]">
       {/* Subheader Fijo: Título según ?bandeja + Contador de activos + Filtros Rápidos + Switcher de Vistas */}
-      <section className="px-6 pt-3.5 pb-2 flex-shrink-0">
+      <section className="px-3 sm:px-6 pt-3 pb-2 sm:pt-3.5 flex-shrink-0">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2 min-w-0">
               {getBandejaTitle(filters.bandeja)}
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/80">
@@ -502,7 +502,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
 
           <div className="flex items-center gap-2 flex-wrap">
             {/* Requirement 4: Filtros rápidos EXCLUSIVAMENTE Urgentes, SLA en riesgo, Esperando cliente */}
-            <div className="flex items-center bg-slate-200/80 p-0.5 rounded-xl border border-slate-300/60 text-xs font-semibold">
+            <div className="flex items-center bg-slate-200/80 p-0.5 rounded-xl border border-slate-300/60 text-xs font-semibold overflow-x-auto custom-scrollbar">
               <button
                 onClick={() => {
                   onSetFiltroRapido(filters.filtroRapido === 'urgentes' ? '' : 'urgentes');
@@ -608,10 +608,10 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
       </section>
 
       {/* Barra de Filtros (Requirement 15: mismos filtros de la tabla) */}
-      <section className="px-6 py-1.5 flex-shrink-0 space-y-1.5">
+      <section className="px-3 sm:px-6 py-1.5 flex-shrink-0 space-y-1.5">
         <div className="bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex flex-wrap items-center justify-between gap-3">
           {/* Buscador local */}
-          <div className="relative flex-1 min-w-[220px]">
+          <div className="relative flex-1 min-w-0 sm:min-w-[220px] basis-full sm:basis-auto">
             <span className="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-sm">
               filter_alt
             </span>
@@ -645,7 +645,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
 
             {/* Popover con filtros */}
             {filterPopoverOpen && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 z-40 text-xs animate-in fade-in slide-in-from-top-2">
+              <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-1.5rem)] bg-white rounded-2xl shadow-xl border border-slate-200 p-4 z-40 text-xs animate-in fade-in slide-in-from-top-2">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
                   <span className="font-bold text-slate-900 text-xs">Filtros avanzados</span>
                   {activeFiltersCount > 0 && (
@@ -867,19 +867,20 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
 
         {/* Línea discreta instructiva (Requirement 7) */}
         <p className="text-xs text-slate-500 font-normal px-1">
-          Arrastra una tarjeta para cambiar su estado
+          <span className="hidden sm:inline">Arrastra una tarjeta para cambiar su estado</span>
+          <span className="sm:hidden">Mantén pulsada una tarjeta para moverla de columna</span>
         </p>
       </section>
 
       {/* Tablero Kanban con Arrastre y Soltado (Requirements 8, 9, 10, 12, 13, 14) */}
-      <section className="flex-1 px-6 pt-2 pb-6 min-h-0 overflow-x-auto overflow-y-hidden custom-scrollbar">
+      <section className="flex-1 px-3 sm:px-6 pt-2 pb-4 sm:pb-6 min-h-0 overflow-x-auto overflow-y-hidden custom-scrollbar">
         <DndContext
           sensors={sensors}
           collisionDetection={pointerWithin}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex flex-row items-stretch gap-4 h-full min-w-max pb-1">
+          <div className="flex flex-row items-stretch gap-3 sm:gap-4 h-full min-w-max pb-1 snap-x snap-mandatory sm:snap-none">
             {KANBAN_COLUMNS.map((col) => (
               <DroppableColumn
                 key={col.status}
@@ -903,7 +904,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
           {/* DragOverlay (Requirement 14) */}
           <DragOverlay>
             {activeTicket ? (
-              <div className="rotate-[1.5deg] scale-[1.02] shadow-2xl rounded-[8px] bg-white border border-slate-200/90 pointer-events-none w-[272px]">
+              <div className="rotate-[1.5deg] scale-[1.02] shadow-2xl rounded-[8px] bg-white border border-slate-200/90 pointer-events-none w-[80vw] max-w-[272px]">
                 <KanbanCard ticket={activeTicket} isOverlay />
               </div>
             ) : null}
@@ -913,8 +914,8 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
 
       {/* Diálogo Pequeño con Selector de Agente para Supervisor (Requirement 11) */}
       {pendingSupervisorMove && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-sm w-full p-5 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/40 backdrop-blur-xs p-0 sm:p-4 animate-in fade-in">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 max-w-sm w-full p-5 space-y-4 max-h-[90dvh] overflow-y-auto custom-scrollbar pb-safe sm:pb-5">
             <div className="flex items-center gap-2.5">
               <span className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center flex-shrink-0">
                 <span className="material-symbols-outlined text-lg">person_add</span>

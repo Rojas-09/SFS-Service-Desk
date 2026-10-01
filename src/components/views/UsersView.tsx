@@ -35,11 +35,11 @@ export const UsersView: React.FC<UsersViewProps> = ({ onBackToConsole, onSwitchU
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-6 custom-scrollbar select-none">
-      <div className="max-w-5xl mx-auto w-full space-y-6">
+    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-3 sm:p-6 custom-scrollbar select-none">
+      <div className="max-w-5xl mx-auto w-full space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={onBackToConsole}
               className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
@@ -48,7 +48,7 @@ export const UsersView: React.FC<UsersViewProps> = ({ onBackToConsole, onSwitchU
               <span className="material-symbols-outlined text-lg leading-none">arrow_back</span>
             </button>
             <div>
-              <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
                 Directorio de usuarios y equipo SFS
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -81,16 +81,16 @@ export const UsersView: React.FC<UsersViewProps> = ({ onBackToConsole, onSwitchU
               return (
                 <div
                   key={member.id}
-                  className={`p-5 rounded-3xl border bg-white shadow-2xs transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+                  className={`p-4 sm:p-5 rounded-3xl border bg-white shadow-2xs transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 ${
                     isCurrent ? 'border-blue-600 ring-2 ring-blue-600/10' : 'border-slate-200 hover:border-slate-300'
                   }`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="relative">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                    <div className="relative flex-shrink-0">
                       <img
                         src={member.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'}
                         alt={member.name}
-                        className="w-13 h-13 rounded-full object-cover ring-2 ring-blue-100"
+                        className="w-12 h-12 rounded-full object-cover ring-2 ring-blue-100"
                       />
                       <span
                         className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full ring-2 ring-white ${
@@ -99,8 +99,8 @@ export const UsersView: React.FC<UsersViewProps> = ({ onBackToConsole, onSwitchU
                       ></span>
                     </div>
 
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
+                    <div className="space-y-0.5 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <h2 className="text-sm font-bold text-slate-900">{member.name}</h2>
                         {isCurrent && (
                           <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
@@ -116,7 +116,7 @@ export const UsersView: React.FC<UsersViewProps> = ({ onBackToConsole, onSwitchU
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 self-end sm:self-center">
+                  <div className="flex items-center gap-2 sm:gap-3 self-stretch sm:self-center justify-end flex-wrap">
                     {member.role !== 'cliente' && (
                       <span className="px-3 py-1 bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl border border-slate-200">
                         {assignedTickets.length} activos

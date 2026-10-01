@@ -46,6 +46,12 @@ function AppContent() {
   } = useTickets();
 
   const [isNewTicketModalOpen, setIsNewTicketModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Cierra el drawer de navegación al cambiar de ruta en móvil
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
 
   // ================= MIDDLEWARE Y PROTECCIÓN DE RUTAS (Requirements 1, 4 & 5) =================
   useEffect(() => {
@@ -106,7 +112,7 @@ function AppContent() {
 
   if (!isAuthLoaded) {
     return (
-      <div className="min-h-screen w-screen flex items-center justify-center bg-[#F5F7FB]">
+      <div className="min-h-dvh w-full flex items-center justify-center bg-[#F5F7FB]">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-3 border-[#1565C0] border-t-transparent rounded-full animate-spin" />
           <p className="text-xs font-semibold text-slate-500">Cargando...</p>
@@ -220,7 +226,7 @@ function AppContent() {
     }
 
     return (
-      <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#F5F7FB]">
+      <div className="h-dvh w-full flex flex-col overflow-hidden bg-[#F5F7FB]">
         {toast && (
           <div className="fixed top-4 right-6 z-50 px-4 py-2.5 rounded-2xl shadow-2xl border bg-[#0B2A5B] text-white border-white/20 flex items-center gap-3 animate-in fade-in text-xs font-semibold">
             <span>{toast.message}</span>
@@ -277,11 +283,11 @@ function AppContent() {
     'Acceso no autorizado para tu rol de Agente. Las secciones de métricas, comunicados, empresas, usuarios y configuración requieren permisos de Supervisor o Administrador.';
 
   return (
-    <div className="h-screen w-screen flex flex-row overflow-hidden bg-[#F5F7FB] font-sans antialiased text-slate-800">
+    <div className="h-dvh w-full flex flex-row overflow-hidden bg-[#F5F7FB] font-sans antialiased text-slate-800">
       {/* Toast Notification Container con Deshacer */}
       {toast && (
         <div
-          className={`fixed top-4 right-6 z-50 px-4 py-2.5 rounded-2xl shadow-2xl border flex items-center gap-3 animate-in fade-in slide-in-from-top-4 text-xs font-semibold select-none ${
+          className={`fixed top-3 right-3 sm:top-4 sm:right-6 z-50 px-4 py-2.5 rounded-2xl shadow-2xl border flex items-center gap-3 animate-in fade-in slide-in-from-top-4 text-xs font-semibold select-none max-w-[calc(100vw-1.5rem)] ${
             toast.type === 'error'
               ? 'bg-rose-950 text-white border-rose-700/50'
               : 'bg-[#0B2A5B] text-white border-white/20'
@@ -324,6 +330,8 @@ function AppContent() {
         currentPath={pathname}
         onNavigate={(p) => navigateToPath(p)}
         onOpenNewTicket={() => setIsNewTicketModalOpen(true)}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
         counts={counts}
       />
 
@@ -331,6 +339,7 @@ function AppContent() {
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative">
         <Topbar
           currentUser={currentUser}
+          onToggleSidebar={() => setIsSidebarOpen((v) => !v)}
           onLogout={async () => {
             await logout();
             navigateToPath('/login', { replace: true });

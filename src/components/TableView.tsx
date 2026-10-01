@@ -260,10 +260,10 @@ export const TableView: React.FC<TableViewProps> = ({
   return (
     <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative select-none">
       {/* Subheader Fijo: Título según ?bandeja + Contador de activos + Filtros Rápidos + Switcher de Vistas */}
-      <section className="px-6 pt-3.5 pb-2 flex-shrink-0">
+      <section className="px-3 sm:px-6 pt-3 pb-2 sm:pt-3.5 flex-shrink-0">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2 min-w-0">
               {getBandejaTitle(filters.bandeja)}
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/80">
@@ -271,9 +271,9 @@ export const TableView: React.FC<TableViewProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap -mx-0.5">
             {/* Requirement 4: Filtros rápidos EXCLUSIVAMENTE Urgentes, SLA en riesgo, Esperando cliente */}
-            <div className="flex items-center bg-slate-200/80 p-0.5 rounded-xl border border-slate-300/60 text-xs font-semibold">
+            <div className="flex items-center bg-slate-200/80 p-0.5 rounded-xl border border-slate-300/60 text-xs font-semibold overflow-x-auto custom-scrollbar">
               <button
                 onClick={() => {
                   onSetFiltroRapido(filters.filtroRapido === 'urgentes' ? '' : 'urgentes');
@@ -386,9 +386,9 @@ export const TableView: React.FC<TableViewProps> = ({
       </section>
 
       {/* 4 KPIs Compactos */}
-      <section className="px-6 py-1.5 flex-shrink-0">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+      <section className="px-3 sm:px-6 py-1.5 flex-shrink-0">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+          <div className="bg-white px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-1.5">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block leading-tight">
                 Abiertos hoy
@@ -398,12 +398,12 @@ export const TableView: React.FC<TableViewProps> = ({
                 <span className="text-xs font-semibold text-emerald-600">{kpis.openTodayDelta}</span>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center flex-shrink-0">
+            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-blue-50 text-blue-700 items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-lg leading-none">inbox</span>
             </div>
           </div>
 
-          <div className="bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+          <div className="bg-white px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-1.5">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block leading-tight">
                 Tiempo 1ª respuesta
@@ -413,12 +413,12 @@ export const TableView: React.FC<TableViewProps> = ({
                 <span className="text-xs font-medium text-slate-500">{kpis.firstResponseTarget}</span>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-lg leading-none">speed</span>
             </div>
           </div>
 
-          <div className="bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+          <div className="bg-white px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-1.5">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block leading-tight">
                 Cumplimiento SLA
@@ -428,12 +428,12 @@ export const TableView: React.FC<TableViewProps> = ({
                 <span className="text-xs font-semibold text-emerald-600">En rango</span>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center flex-shrink-0">
+            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-blue-50 text-blue-700 items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-lg leading-none">verified</span>
             </div>
           </div>
 
-          <div className="bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+          <div className="bg-white px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-1.5">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-rose-600 block leading-tight">
                 Críticos en riesgo
@@ -443,7 +443,7 @@ export const TableView: React.FC<TableViewProps> = ({
                 <span className="text-xs font-bold text-rose-500">{kpis.criticalAtRiskDetail}</span>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center flex-shrink-0">
+            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-rose-50 text-rose-600 items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-lg leading-none animate-pulse">alarm</span>
             </div>
           </div>
@@ -451,10 +451,10 @@ export const TableView: React.FC<TableViewProps> = ({
       </section>
 
       {/* Barra de Filtros con Persistencia en URL */}
-      <section className="px-6 py-2 flex-shrink-0">
+      <section className="px-3 sm:px-6 py-2 flex-shrink-0">
         <div className="bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex flex-wrap items-center justify-between gap-3">
           {/* Buscador local */}
-          <div className="relative flex-1 min-w-[220px]">
+          <div className="relative flex-1 min-w-0 sm:min-w-[220px] basis-full sm:basis-auto">
             <span className="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-sm">
               filter_alt
             </span>
@@ -491,7 +491,7 @@ export const TableView: React.FC<TableViewProps> = ({
 
             {/* Popover con filtros */}
             {filterPopoverOpen && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 z-40 text-xs animate-in fade-in slide-in-from-top-2">
+              <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-1.5rem)] bg-white rounded-2xl shadow-xl border border-slate-200 p-4 z-40 text-xs animate-in fade-in slide-in-from-top-2">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
                   <span className="font-bold text-slate-900 text-xs">Filtros avanzados</span>
                   {activeFiltersCount > 0 && (
@@ -723,9 +723,165 @@ export const TableView: React.FC<TableViewProps> = ({
       </section>
 
       {/* TABLA DE TICKETS */}
-      <section className="flex-1 min-h-0 px-6 pb-2.5 flex flex-col">
+      <section className="flex-1 min-h-0 px-3 sm:px-6 pb-2.5 flex flex-col">
         <div className="flex-1 min-h-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
-          <div className="flex-1 overflow-y-auto custom-scrollbar">
+          {/* ============ MÓVIL: lista de tarjetas (la tabla de 8 columnas no cabe) ============ */}
+          <div className="flex-1 overflow-y-auto custom-scrollbar md:hidden">
+            {paginatedTickets.length === 0 ? (
+              <div className="py-12 px-4 text-center text-slate-400">
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <span className="material-symbols-outlined text-4xl text-slate-300">inbox</span>
+                  <p className="font-semibold text-slate-600 text-xs leading-relaxed">
+                    No se encontraron tickets en esta bandeja o con los filtros aplicados
+                  </p>
+                  <button
+                    onClick={onClearAllFilters}
+                    className="mt-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  >
+                    Limpiar filtros
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <ul className="divide-y divide-slate-100">
+                {paginatedTickets.map((ticket) => {
+                  const isSelected = selectedIds.includes(ticket.id);
+                  const isBreached = ticket.isBreached;
+                  const slaBadge = formatSlaBadge(ticket);
+
+                  return (
+                    <li
+                      key={ticket.id}
+                      className={`px-3.5 py-3 transition-colors active:bg-blue-50/60 ${
+                        isSelected
+                          ? 'bg-blue-50/60'
+                          : isBreached
+                          ? 'bg-rose-50/25'
+                          : ticket.status === 'Nuevo'
+                          ? 'bg-amber-50/20'
+                          : ''
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        {/* Checkbox de selección */}
+                        <input
+                          type="checkbox"
+                          aria-label={`Seleccionar ticket ${ticket.code}`}
+                          checked={isSelected}
+                          onChange={() => handleToggleRow(ticket.id)}
+                          className="w-4 h-4 mt-0.5 rounded text-blue-600 accent-blue-600 flex-shrink-0 cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                        />
+
+                        <div className="flex-1 min-w-0 space-y-2">
+                          {/* Fila 1: código + badges + SLA */}
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span
+                              onClick={() => onSetVista('detalle', ticket.id)}
+                              className={`font-mono font-bold text-xs hover:underline cursor-pointer ${
+                                isBreached ? 'text-rose-600' : 'text-blue-700'
+                              }`}
+                            >
+                              {ticket.code}
+                            </span>
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold border ${
+                                ticket.priority === 'Crítica'
+                                  ? 'bg-rose-100 text-rose-800 border-rose-200'
+                                  : ticket.priority === 'Alta'
+                                  ? 'bg-orange-100 text-orange-800 border-orange-200'
+                                  : 'bg-slate-100 text-slate-700 border-slate-200'
+                              }`}
+                            >
+                              {ticket.priority}
+                            </span>
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border ${getStatusBadgeStyle(
+                                ticket.status
+                              )}`}
+                            >
+                              {ticket.status}
+                            </span>
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold border ml-auto flex-shrink-0 ${slaBadge.bgClass} ${slaBadge.colorClass} ${slaBadge.borderClass}`}
+                            >
+                              <span className={`w-1.5 h-1.5 rounded-full ${slaBadge.dotClass}`} />
+                              {slaBadge.text}
+                            </span>
+                          </div>
+
+                          {/* Fila 2: asunto (toca para abrir el detalle) */}
+                          <button
+                            onClick={() => onSetVista('detalle', ticket.id)}
+                            className="block w-full text-left text-sm font-semibold leading-snug text-slate-900 hover:text-blue-700 cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none rounded"
+                          >
+                            {ticket.title}
+                          </button>
+
+                          {/* Fila 3: empresa + categoría */}
+                          <div className="flex items-center gap-1.5 text-[11px] text-slate-500 min-w-0">
+                            <span className="material-symbols-outlined text-xs text-slate-400 flex-shrink-0">
+                              corporate_fare
+                            </span>
+                            <span className="font-medium text-slate-600 truncate">{ticket.company}</span>
+                            <span className="flex-shrink-0">·</span>
+                            <span className="truncate">{ticket.category}</span>
+                          </div>
+
+                          {/* Fila 4: agente + acciones */}
+                          <div className="flex items-center justify-between gap-2 pt-1">
+                            {ticket.assignedAgent ? (
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <img
+                                  alt={ticket.assignedAgent.name}
+                                  className="w-4 h-4 rounded-full object-cover ring-1 ring-slate-200 flex-shrink-0"
+                                  src={ticket.assignedAgent.avatar}
+                                />
+                                <span className="text-[11px] text-slate-600 truncate">
+                                  {ticket.assignedAgent.name}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-[11px] text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                                Sin asignar
+                              </span>
+                            )}
+
+                            <div className="flex items-center gap-1.5 flex-shrink-0">
+                              {!ticket.assignedAgent && (
+                                <button
+                                  onClick={() => takeTicket(ticket.id)}
+                                  className="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 active:bg-amber-200 text-amber-800 text-[11px] font-semibold border border-amber-200 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                                >
+                                  Tomar
+                                </button>
+                              )}
+                              <button
+                                onClick={(e) => {
+                                  const rect = e.currentTarget.getBoundingClientRect();
+                                  setRowMenuTicket({
+                                    ticket,
+                                    x: rect.right - 210,
+                                    y: rect.bottom + 4
+                                  });
+                                }}
+                                className="p-1.5 -mr-1 rounded text-slate-400 hover:text-slate-800 hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                                aria-label={`Más opciones para ${ticket.code}`}
+                              >
+                                <span className="material-symbols-outlined text-base">more_vert</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+
+          {/* ============ ESCRITORIO Y TABLET: tabla completa ============ */}
+          <div className="hidden md:block flex-1 overflow-y-auto custom-scrollbar">
             <table className="w-full text-left border-collapse">
               <thead className="sticky top-0 bg-slate-100/95 backdrop-blur-xs border-b border-slate-200 z-10 select-none">
                 <tr className="text-xs font-bold text-slate-600 uppercase tracking-wider">
@@ -930,12 +1086,12 @@ export const TableView: React.FC<TableViewProps> = ({
           </div>
 
           {/* Footer de Paginación */}
-          <footer className="p-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between text-xs text-slate-600 flex-shrink-0 select-none">
-            <div className="flex items-center gap-3">
-              <span>
+          <footer className="p-3 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-600 flex-shrink-0 select-none">
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="truncate">
                 Mostrando <strong className="text-slate-900 font-semibold">{totalTickets === 0 ? 0 : (currentPage - 1) * pageSize + 1}</strong> a{' '}
                 <strong className="text-slate-900 font-semibold">{Math.min(currentPage * pageSize, totalTickets)}</strong> de{' '}
-                <strong className="text-slate-900 font-semibold">{totalTickets}</strong> resultados
+                <strong className="text-slate-900 font-semibold">{totalTickets}</strong>
               </span>
               <div className="hidden sm:flex items-center gap-1.5 pl-3 border-l border-slate-200">
                 <span>Por página:</span>
@@ -954,11 +1110,11 @@ export const TableView: React.FC<TableViewProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 flex-shrink-0">
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(1)}
-                className="w-7 h-7 rounded flex items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                className="hidden sm:flex w-7 h-7 rounded items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 title="Primera página"
               >
                 <span className="material-symbols-outlined text-sm">first_page</span>
@@ -966,28 +1122,30 @@ export const TableView: React.FC<TableViewProps> = ({
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                className="w-7 h-7 rounded flex items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                className="w-8 h-8 sm:w-7 sm:h-7 rounded flex items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 title="Página anterior"
+                aria-label="Página anterior"
               >
                 <span className="material-symbols-outlined text-sm">chevron_left</span>
               </button>
 
-              <span className="px-2 font-medium text-slate-700">
-                Página {currentPage} de {totalPages}
+              <span className="px-2 font-medium text-slate-700 whitespace-nowrap">
+                {currentPage} / {totalPages}
               </span>
 
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                className="w-7 h-7 rounded flex items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                className="w-8 h-8 sm:w-7 sm:h-7 rounded flex items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 title="Página siguiente"
+                aria-label="Página siguiente"
               >
                 <span className="material-symbols-outlined text-sm">chevron_right</span>
               </button>
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(totalPages)}
-                className="w-7 h-7 rounded flex items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                className="hidden sm:flex w-7 h-7 rounded items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 title="Última página"
               >
                 <span className="material-symbols-outlined text-sm">last_page</span>
@@ -1060,16 +1218,16 @@ export const TableView: React.FC<TableViewProps> = ({
 
       {/* Barra Flotante Inferior de Acciones por Lote */}
       <div
-        className={`absolute bottom-5 left-1/2 -translate-x-1/2 z-40 transition-all duration-300 pointer-events-auto ${
+        className={`absolute bottom-4 sm:bottom-5 left-1/2 -translate-x-1/2 z-40 transition-all duration-300 pointer-events-auto max-w-[calc(100vw-1.5rem)] ${
           selectedIds.length > 0
             ? 'opacity-100 translate-y-0'
             : 'opacity-0 translate-y-10 pointer-events-none'
         }`}
       >
-        <div className="bg-[#0B2A5B]/95 backdrop-blur-md text-white px-4 py-2.5 rounded-xl shadow-xl border border-white/20 flex items-center gap-3">
-          <div className="flex items-center gap-2 pr-2 border-r border-white/20">
+        <div className="bg-[#0B2A5B]/95 backdrop-blur-md text-white px-3 sm:px-4 py-2.5 rounded-xl shadow-xl border border-white/20 flex items-center gap-2 sm:gap-3 overflow-x-auto custom-scrollbar">
+          <div className="flex items-center gap-2 pr-2 sm:pr-3 border-r border-white/20 flex-shrink-0">
             <span className="w-2 h-2 rounded-full bg-[#F37021] animate-pulse"></span>
-            <span className="text-xs font-bold text-white tracking-tight">
+            <span className="text-xs font-bold text-white tracking-tight whitespace-nowrap">
               {selectedIds.length} {selectedIds.length === 1 ? 'seleccionado' : 'seleccionados'}
             </span>
           </div>
@@ -1077,16 +1235,16 @@ export const TableView: React.FC<TableViewProps> = ({
           <div className="flex items-center gap-2 text-xs">
             <button
               onClick={triggerBulkAssign}
-              className="flex items-center gap-1 px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition-all cursor-pointer focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition-all cursor-pointer whitespace-nowrap flex-shrink-0 focus:ring-2 focus:ring-blue-400 focus:outline-none"
             >
               <span className="material-symbols-outlined text-sm">person_add</span>
               <span>Asignar</span>
             </button>
 
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               <button
                 onClick={() => setStatusMenuOpen(!statusMenuOpen)}
-                className="flex items-center gap-1 px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition-all cursor-pointer focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white transition-all cursor-pointer whitespace-nowrap focus:ring-2 focus:ring-blue-400 focus:outline-none"
               >
                 <span className="material-symbols-outlined text-sm">published_with_changes</span>
                 <span>Cambiar estado</span>
@@ -1149,8 +1307,8 @@ export const TableView: React.FC<TableViewProps> = ({
 
       {/* Diálogo de Confirmación para Acciones por Lote */}
       {confirmDialog && confirmDialog.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md p-5 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/50 backdrop-blur-xs">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md p-5 animate-in fade-in zoom-in-95 duration-150 pb-safe sm:pb-5">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center flex-shrink-0">
                 <span className="material-symbols-outlined text-xl">help</span>

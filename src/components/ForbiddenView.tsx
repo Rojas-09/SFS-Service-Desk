@@ -13,8 +13,8 @@ export const ForbiddenView: React.FC<ForbiddenViewProps> = ({
   onBackToConsole
 }) => {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 bg-[#F5F7FB] min-h-0 h-full text-center select-none">
-      <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200/90 shadow-lg space-y-5">
+    <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 bg-[#F5F7FB] min-h-0 h-full text-center select-none overflow-y-auto custom-scrollbar">
+      <div className="max-w-md w-full bg-white rounded-3xl p-5 sm:p-8 border border-slate-200/90 shadow-lg space-y-5">
         <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center mx-auto shadow-2xs">
           <span className="material-symbols-outlined text-3xl">lock</span>
         </div>
@@ -33,13 +33,13 @@ export const ForbiddenView: React.FC<ForbiddenViewProps> = ({
         </div>
 
         <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-left text-xs space-y-1.5">
-          <div className="flex items-center justify-between text-slate-500">
-            <span>Usuario autenticado:</span>
-            <span className="font-bold text-slate-900">{currentUser.name}</span>
+          <div className="flex items-start sm:items-center justify-between gap-2 sm:gap-4 text-slate-500">
+            <span className="shrink-0">Usuario autenticado:</span>
+            <span className="font-bold text-slate-900 text-right break-words min-w-0">{currentUser.name}</span>
           </div>
-          <div className="flex items-center justify-between text-slate-500">
-            <span>Rol en el sistema:</span>
-            <span className="font-semibold text-blue-700 capitalize">{currentUser.role}</span>
+          <div className="flex items-start sm:items-center justify-between gap-2 sm:gap-4 text-slate-500">
+            <span className="shrink-0">Rol en el sistema:</span>
+            <span className="font-semibold text-blue-700 capitalize text-right break-words min-w-0">{currentUser.role}</span>
           </div>
         </div>
 

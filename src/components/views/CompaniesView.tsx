@@ -12,11 +12,11 @@ export const CompaniesView: React.FC<CompaniesViewProps> = ({ onBackToConsole, o
   const companiesData = EMPRESAS_CATALOGO;
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-6 custom-scrollbar select-none">
-      <div className="max-w-6xl mx-auto w-full space-y-6">
+    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-3 sm:p-6 custom-scrollbar select-none">
+      <div className="max-w-6xl mx-auto w-full space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={onBackToConsole}
               className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
@@ -25,7 +25,7 @@ export const CompaniesView: React.FC<CompaniesViewProps> = ({ onBackToConsole, o
               <span className="material-symbols-outlined text-lg leading-none">arrow_back</span>
             </button>
             <div>
-              <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
                 Empresas cliente con convenio SLA
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -48,7 +48,7 @@ export const CompaniesView: React.FC<CompaniesViewProps> = ({ onBackToConsole, o
             return (
               <div
                 key={c.name}
-                className="bg-white rounded-3xl p-5 border border-slate-200 hover:border-slate-300 transition-all shadow-2xs flex flex-col justify-between gap-4"
+                className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200 hover:border-slate-300 transition-all shadow-2xs flex flex-col justify-between gap-4"
               >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-2">
@@ -79,7 +79,7 @@ export const CompaniesView: React.FC<CompaniesViewProps> = ({ onBackToConsole, o
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-slate-500">Tickets activos:</span>
                     <span className="text-xs font-bold text-slate-900 font-mono bg-slate-100 px-2 py-0.5 rounded-lg">

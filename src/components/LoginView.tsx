@@ -151,7 +151,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
   };
 
   return (
-    <div className="min-h-screen w-screen flex bg-[#F5F7FB] font-sans antialiased text-slate-800 select-none">
+    <div className="min-h-dvh w-full flex bg-[#F5F7FB] font-sans antialiased text-slate-800 select-none">
       {/* ================= PANEL IZQUIERDO (ESCRITORIO): AZUL MARINO #0B2A5B ================= */}
       {/* Requirement 7: Pantalla dividida con eslogan y 3 puntos de valor */}
       <div className="hidden lg:flex lg:w-1/2 bg-[#0B2A5B] flex-col justify-between p-12 text-white relative overflow-hidden">
@@ -234,10 +234,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
 
       {/* ================= PANEL DERECHO: TARJETA DE LOGIN (400 PX CENTRADA) ================= */}
       {/* Requirement 7: En móvil solo la tarjeta sobre #F5F7FB */}
-      <div className="flex-1 flex flex-col justify-center items-center p-4 sm:p-8 overflow-y-auto custom-scrollbar">
+      <div className="flex-1 flex flex-col justify-center items-center p-4 sm:p-8 py-8 sm:py-8 overflow-y-auto custom-scrollbar pb-safe">
         <div className="w-full max-w-[400px] flex flex-col items-center">
           {/* Tarjeta Blanca Centrada */}
-          <div className="w-full bg-white rounded-3xl p-7 sm:p-8 shadow-xl border border-slate-200/80 space-y-6">
+          <div className="w-full bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-200/80 space-y-5 sm:space-y-6">
             {/* Logo siempre sobre fondo blanco (Requirement 7) */}
             <div className="flex flex-col items-center text-center space-y-3">
               <div className="w-full max-w-[240px] flex items-center justify-center py-1">
@@ -286,7 +286,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
                     setEmail(e.target.value);
                     if (errorMessage) setErrorMessage(null);
                   }}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
+                  className="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[16px] sm:text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                   placeholder="ejemplo@empresa.com"
                 />
               </div>
@@ -310,14 +310,14 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
                       setPassword(e.target.value);
                       if (errorMessage) setErrorMessage(null);
                     }}
-                    className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
+                    className="w-full pl-3.5 pr-10 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[16px] sm:text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none transition-all"
                     placeholder="••••••••••"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-                    className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-700 p-0.5 rounded cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                    className="absolute right-1.5 top-1 sm:top-2 text-slate-400 hover:text-slate-700 p-2 rounded-lg active:bg-slate-100 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                   >
                     <span className="material-symbols-outlined text-lg leading-none">
                       {showPassword ? 'visibility_off' : 'visibility'}
@@ -327,7 +327,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
               </div>
 
               {/* Opciones: Recordarme y ¿Olvidaste tu contraseña? */}
-              <div className="flex items-center justify-between pt-0.5">
+              <div className="flex items-center justify-between gap-2 pt-0.5 flex-wrap">
                 <label className="flex items-center gap-2 cursor-pointer select-none">
                   <input
                     type="checkbox"

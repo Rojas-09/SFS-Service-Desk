@@ -8,6 +8,71 @@
     overflow: hidden;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background-color: #F5F7FB;
+    /* Evita el zoom automático de iOS Safari al enfocar inputs pequeños */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Elimina el flash azul/grís al tocar en Android */
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+  }
+}
+
+/* Estas reglas viven fuera de @layer para ganarle al `select-none` de Tailwind,
+   que se aplica en la capa utilities. En táctil se permite seleccionar texto
+   para poder copiar datos de tickets; en escritorio no cambia nada. */
+@media (hover: none) {
+  body,
+  body *:not(input):not(textarea) {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}
+
+/* Inputs de 16px mínimo en móvil: iOS Safari hace zoom automático si son menores */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+@layer utilities {
+  /* Altura dinámica de viewport: corrige el problema de 100vh con la barra
+     de direcciones de los navegadores móviles (iOS Safari, Chrome Android). */
+  .h-dvh {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .min-h-dvh {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .max-h-dvh {
+    max-height: 100vh;
+    max-height: 100dvh;
+  }
+
+  /* Safe areas para notch y barra de gestos en iPhone */
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pl-safe {
+    padding-left: env(safe-area-inset-left, 0px);
+  }
+  .pr-safe {
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+
+  /* Padding lateral combinado con safe areas (para headers y footers) */
+  .px-safe {
+    padding-left: max(env(safe-area-inset-left, 0px), 1rem);
+    padding-right: max(env(safe-area-inset-right, 0px), 1rem);
   }
 }
 
@@ -24,4 +89,31 @@
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* En móvil los scrollbars ocupan espacio: se ocultan pero se mantiene el scroll */
+@media (hover: none) {
+  .custom-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+  /* El scroll por toque se siente más fluido sin inercia pesada */
+  .custom-scrollbar {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Accesibilidad: respeta la preferencia de menos animaciones */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

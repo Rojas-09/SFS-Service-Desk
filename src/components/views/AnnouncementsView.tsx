@@ -36,11 +36,11 @@ export const AnnouncementsView: React.FC<AnnouncementsViewProps> = ({ onBackToCo
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-6 custom-scrollbar select-none">
-      <div className="max-w-5xl mx-auto w-full space-y-6">
+    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-3 sm:p-6 custom-scrollbar select-none">
+      <div className="max-w-5xl mx-auto w-full space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={onBackToConsole}
               className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
@@ -49,7 +49,7 @@ export const AnnouncementsView: React.FC<AnnouncementsViewProps> = ({ onBackToCo
               <span className="material-symbols-outlined text-lg leading-none">arrow_back</span>
             </button>
             <div>
-              <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
                 Anuncios y comunicados oficiales
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -73,9 +73,9 @@ export const AnnouncementsView: React.FC<AnnouncementsViewProps> = ({ onBackToCo
         {showCreateForm && (
           <form
             onSubmit={handleSubmit}
-            className="p-5 rounded-3xl border border-blue-200 bg-white shadow-md space-y-4 animate-in fade-in duration-150"
+            className="p-4 sm:p-5 rounded-3xl border border-blue-200 bg-white shadow-md space-y-4 animate-in fade-in duration-150"
           >
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-slate-100 pb-2">
               <h2 className="text-sm font-bold text-slate-900">Redactar nuevo comunicado oficial</h2>
               <span className="text-xs text-slate-400">Software Factory and Services</span>
             </div>
@@ -120,7 +120,7 @@ export const AnnouncementsView: React.FC<AnnouncementsViewProps> = ({ onBackToCo
               />
             </div>
 
-            <div className="flex items-center justify-between pt-1">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
               <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -146,10 +146,10 @@ export const AnnouncementsView: React.FC<AnnouncementsViewProps> = ({ onBackToCo
           {announcements.map((ann) => (
             <div
               key={ann.id}
-              className="p-5 rounded-3xl border border-slate-200 bg-white hover:border-slate-300 transition-all shadow-2xs space-y-2.5"
+              className="p-4 sm:p-5 rounded-3xl border border-slate-200 bg-white hover:border-slate-300 transition-all shadow-2xs space-y-2.5"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span
                     className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                       ann.priority === 'Alta'
@@ -172,7 +172,7 @@ export const AnnouncementsView: React.FC<AnnouncementsViewProps> = ({ onBackToCo
               <h2 className="text-base font-bold text-slate-900 leading-snug">{ann.title}</h2>
               <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-wrap">{ann.content}</p>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+              <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs text-slate-400">
                 <span>Publicado por: {ann.author}</span>
                 <span className="text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                   Activo
