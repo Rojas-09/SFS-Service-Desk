@@ -41,7 +41,9 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
     return filteredList.filter(t => t.status !== 'Resuelto' && t.status !== 'Cerrado').length;
   }, [filteredList]);
 
-  // Ticket seleccionado: si está en URL (filters.ticketId), se usa ese; sino el primero de la lista o tickets[0]
+  // Ticket seleccionado. Si la URL trae ticketId se busca ese; si no existe,
+  // se devuelve null (NO se cae a otro ticket). Sin ticketId en la URL se
+  // preselecciona el primero de la lista, que es el comportamiento de escritorio.
   const selectedTicket: Ticket | null = useMemo(() => {
     if (filters.ticketId) {
       const found = tickets.find(t => t.id === filters.ticketId);
@@ -71,10 +73,11 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
   const selectedSlaBadge = selectedTicket ? formatSlaBadge(selectedTicket) : null;
 
-  // En móvil el inspector ocupa toda la pantalla, pero solo cuando el usuario
-  // ha abierto un ticket explícitamente. `selectedTicket` cae por defecto al
-  // primer elemento de la lista, así que hay que mirar el ticketId de la URL:
-  // si no, la lista nunca se vería en el móvil.
+  // En móvil los dos paneles (lista e inspector) son `w-full`, así que solo
+  // puede verse uno a la vez. La lista se oculta cuando hay un ticket abierto
+  // explícitamente; el inspector, en cambio, se oculta cuando NO lo hay.
+  // Sin esto el inspector se colaba en móvil mostrando el primer ticket de la
+  // lista (#SFS-1001) sin que el usuario hubiera tocado nada.
   const hasExplicitSelection = Boolean(filters.ticketId && selectedTicket && selectedTicket.id === filters.ticketId);
 
   return (
@@ -226,23 +229,41 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
             </div>
           ) : (
             filteredList.map((ticket) => {
-              const isSelected = selectedTicket && ticket.id === selectedTicket.id;
+              const isSelected = Boolean(selectedTicket && ticket.id === selectedTicket.id);
               const isCritical = ticket.priority === 'Crítica';
               const slaBadge = formatSlaBadge(ticket);
+
+              // El resalte azul se aplica:
+              //  - siempre en escritorio (lg+), donde lista e inspector conviven
+              //    y el primero queda preseleccionado en el inspector;
+              //  - en móvil solo con selección explícita, para no aparentar que
+              //    hay un ticket abierto sin que el usuario haya tocado nada.
+              const selectedHighlight =
+                'border-blue-600 ring-2 ring-blue-600/20 shadow-sm';
+              const selectedHighlightDesktopOnly =
+                'lg:border-blue-600 lg:ring-2 lg:ring-blue-600/20 lg:shadow-sm';
+              const neutralCard =
+                'bg-white border-slate-200 hover:border-slate-300 hover:shadow-xs';
+
+              const cardStateClass = !isSelected
+                ? neutralCard
+                : hasExplicitSelection
+                ? `bg-white ${selectedHighlight}`
+                : `${neutralCard} ${selectedHighlightDesktopOnly}`;
 
               return (
                 <div
                   key={ticket.id}
                   onClick={() => onSetFilterParam('ticketId', ticket.id)}
-                  className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer relative shadow-2xs active:bg-slate-50 ${
-                    isSelected
-                      ? 'bg-white border-blue-600 ring-2 ring-blue-600/20 shadow-sm'
-                      : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-xs'
-                  }`}
+                  className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer relative shadow-2xs active:bg-slate-50 ${cardStateClass}`}
                 >
                   {/* Indicador lateral azul para seleccionado */}
                   {isSelected && (
-                    <div className="absolute left-0 top-3 bottom-3 w-1 bg-blue-600 rounded-r-md" />
+                    <div
+                      className={`absolute left-0 top-3 bottom-3 w-1 bg-blue-600 rounded-r-md ${
+                        hasExplicitSelection ? '' : 'hidden lg:block'
+                      }`}
+                    />
                   )}
 
                   <div className="flex items-center justify-between gap-2 mb-1.5 pl-1.5 flex-wrap">
@@ -300,7 +321,11 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
       {/* ================= PANEL DERECHO (40%): INSPECTOR DETALLADO ================= */}
       {selectedTicket && (
-        <aside className="w-full lg:w-[42%] xl:w-[40%] flex flex-col h-full bg-white overflow-hidden flex-shrink-0 shadow-lg lg:border-l lg:border-slate-200">
+        <aside
+          className={`w-full lg:w-[42%] xl:w-[40%] flex-col h-full bg-white overflow-hidden flex-shrink-0 shadow-lg lg:border-l lg:border-slate-200 ${
+            hasExplicitSelection ? 'flex' : 'hidden lg:flex'
+          }`}
+        >
           {/* Cabecera del Inspector */}
           <div className="p-3 sm:p-4 border-b border-slate-200 flex-shrink-0 space-y-2">
             <div className="flex items-center justify-between gap-2">
