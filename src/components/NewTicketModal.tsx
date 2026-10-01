@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Priority, Ticket } from '../types';
 import { COMPANIES_LIST, CATEGORIES_LIST, MODULES_LIST } from '../data/mockData';
 import { calcularVencimiento, MATRIZ_SLA } from '../utils/sla';
@@ -10,6 +10,8 @@ interface NewTicketModalProps {
   onSubmit: (newTicket: Ticket) => void;
   defaultCompany?: string;
   defaultRequester?: string;
+  defaultRequesterEmail?: string;
+  isClient?: boolean;
 }
 
 export const NewTicketModal: React.FC<NewTicketModalProps> = ({
@@ -17,17 +19,27 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
   onClose,
   onSubmit,
   defaultCompany,
-  defaultRequester
+  defaultRequester,
+  defaultRequesterEmail,
+  isClient = false
 }) => {
   const [company, setCompany] = useState(defaultCompany || COMPANIES_LIST[0]);
   const [requesterName, setRequesterName] = useState(defaultRequester || 'Claudia Mendoza');
-  const [requesterEmail, setRequesterEmail] = useState('cmendoza@cafequindio.com');
+  const [requesterEmail, setRequesterEmail] = useState(
+    defaultRequesterEmail || 'cmendoza@cafequindio.com'
+  );
   const [moduleName, setModuleName] = useState(MODULES_LIST[0]);
   const [category, setCategory] = useState(CATEGORIES_LIST[0]);
   const [priority, setPriority] = useState<Priority>('Media');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [attachedFileName, setAttachedFileName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (defaultCompany) setCompany(defaultCompany);
+    if (defaultRequester) setRequesterName(defaultRequester);
+    if (defaultRequesterEmail) setRequesterEmail(defaultRequesterEmail);
+  }, [defaultCompany, defaultRequester, defaultRequesterEmail]);
 
   if (!isOpen) return null;
 
@@ -140,17 +152,25 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
               <label className="block font-bold text-slate-700 mb-1">
                 Empresa cliente vinculada <span className="text-rose-500">*</span>
               </label>
-              <select
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900"
-              >
-                {COMPANIES_LIST.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+              {isClient ? (
+                <input
+                  value={company}
+                  readOnly
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-100 font-medium text-slate-700"
+                />
+              ) : (
+                <select
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900"
+                >
+                  {COMPANIES_LIST.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
 
             <div>
@@ -177,9 +197,12 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
               <input
                 type="email"
                 value={requesterEmail}
+                readOnly={isClient}
                 onChange={(e) => setRequesterEmail(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-mono text-slate-900"
+                className={`w-full px-3 py-2 rounded-xl border border-slate-200 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-mono text-slate-900 ${
+                  isClient ? 'bg-slate-100' : 'bg-slate-50'
+                }`}
                 placeholder="correo@empresa.com"
               />
             </div>

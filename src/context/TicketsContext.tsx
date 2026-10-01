@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useMemo, useEffect, useCallback } from 'react';
 import { Ticket, User, TicketStatus, Announcement, TicketHistoryEvent, KPIStats } from '../types';
 import { INITIAL_ANNOUNCEMENTS, COMPANIES_LIST } from '../data/mockData';
+import { DEMO_TICKETS } from '../data/demoTickets';
 import { calcularKPIs } from '../utils/kpi';
 import { formatFechaBogota } from '../utils/fechas';
 
@@ -193,6 +194,12 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setAllTickets([]);
       return;
     }
+    const isDemoUser = currentUser.id.startsWith('demo-');
+
+    const useDemoTickets = () => {
+      if (isDemoUser) setAllTickets(DEMO_TICKETS);
+    };
+
     try {
       const getHeaders = () => {
         const token = typeof window !== 'undefined' ? localStorage.getItem('sfs_token') : null;
@@ -242,9 +249,11 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (data && Array.isArray(data.tickets)) {
           setAllTickets(data.tickets);
         }
+      } else {
+        useDemoTickets();
       }
     } catch {
-      // Ignorar fallo de red
+      useDemoTickets();
     }
   }, [currentUser]);
 

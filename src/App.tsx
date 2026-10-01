@@ -254,6 +254,8 @@ function AppContent() {
           }}
           defaultCompany={currentUser.company}
           defaultRequester={currentUser.name}
+          defaultRequesterEmail={currentUser.email}
+          isClient={currentUser.role === 'cliente'}
         />
       </div>
     );
@@ -430,6 +432,8 @@ function AppContent() {
         onSubmit={createTicket}
         defaultCompany={currentUser.company}
         defaultRequester={currentUser.name}
+        defaultRequesterEmail={currentUser.email}
+        isClient={currentUser.role === 'cliente'}
       />
     </div>
   );
