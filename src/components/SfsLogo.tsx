@@ -14,7 +14,7 @@ export const SfsLogo: React.FC<SfsLogoProps> = ({
       {/* Isotipo SFS Vectorial: Fábrica tecnológica y circuito integrado */}
       <svg
         viewBox="0 0 160 85"
-        className="w-16 sm:w-18 h-auto flex-shrink-0 object-contain"
+        className="w-14 sm:w-16 h-auto flex-shrink-0 object-contain"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >

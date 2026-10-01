@@ -240,8 +240,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
           <div className="w-full bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-200/80 space-y-5 sm:space-y-6">
             {/* Logo siempre sobre fondo blanco (Requirement 7) */}
             <div className="flex flex-col items-center text-center space-y-3">
-              <div className="w-full max-w-[240px] flex items-center justify-center py-1">
-                <SfsLogo className="w-full max-w-[240px] h-auto object-contain" />
+              <div className="w-full max-w-[220px] sm:max-w-[240px] flex items-center justify-center py-1">
+                <SfsLogo variant="full" className="w-full max-w-[220px] sm:max-w-[240px] h-auto object-contain" />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-slate-900 tracking-tight">

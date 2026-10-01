@@ -42,12 +42,13 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
   }, [filteredList]);
 
   // Ticket seleccionado: si está en URL (filters.ticketId), se usa ese; sino el primero de la lista o tickets[0]
-  const selectedTicket: Ticket = useMemo(() => {
+  const selectedTicket: Ticket | null = useMemo(() => {
     if (filters.ticketId) {
       const found = tickets.find(t => t.id === filters.ticketId);
       if (found) return found;
+      return null;
     }
-    return filteredList[0] || tickets[0];
+    return filteredList[0] || null;
   }, [filters.ticketId, filteredList, tickets]);
 
   // Related tickets: misma empresa, excluyendo ticket actual
@@ -74,7 +75,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
   // ha abierto un ticket explícitamente. `selectedTicket` cae por defecto al
   // primer elemento de la lista, así que hay que mirar el ticketId de la URL:
   // si no, la lista nunca se vería en el móvil.
-  const hasExplicitSelection = Boolean(filters.ticketId && selectedTicket?.id === filters.ticketId);
+  const hasExplicitSelection = Boolean(filters.ticketId && selectedTicket && selectedTicket.id === filters.ticketId);
 
   return (
     <div className="flex-1 flex flex-row min-h-0 h-full overflow-hidden select-none bg-[#F5F7FB]">
@@ -247,7 +248,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                   <div className="flex items-center justify-between gap-2 mb-1.5 pl-1.5 flex-wrap">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs font-bold text-blue-700">
-                        {ticket.code}
+                        {ticket.code || ticket.id}
                       </span>
                       <span
                         className={`px-2 py-0.5 rounded text-xs font-semibold border ${
@@ -305,7 +306,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
                 <span className="font-mono text-sm font-bold text-blue-700 flex-shrink-0">
-                  {selectedTicket.code}
+                  {selectedTicket.code || selectedTicket.id}
                 </span>
                 <span
                   className={`px-2 py-0.5 rounded-full text-xs font-semibold border flex-shrink-0 ${getStatusBadgeStyle(
