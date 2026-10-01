@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTickets } from '../../context/TicketsContext';
 import { User, UserRole } from '../../types';
+import { DEMO_USERS } from '../../data/demoUsers';
 
 interface UsersViewProps {
   onBackToConsole: () => void;
@@ -21,9 +22,11 @@ export const UsersView: React.FC<UsersViewProps> = ({ onBackToConsole, onSwitchU
           if (data && Array.isArray(data.users)) {
             setUsersList(data.users);
           }
+        } else if (currentUser?.id.startsWith('demo-')) {
+          setUsersList(DEMO_USERS);
         }
       } catch {
-        // En caso de fallo de red
+        if (currentUser?.id.startsWith('demo-')) setUsersList(DEMO_USERS);
       } finally {
         setLoading(false);
       }

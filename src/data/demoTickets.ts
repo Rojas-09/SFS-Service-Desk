@@ -2,7 +2,7 @@ import { Ticket } from '../types';
 
 const demoDate = '2026-09-29T14:30:00-05:00';
 
-export const DEMO_TICKETS: Ticket[] = [
+const DEMO_TICKET_SEEDS: Ticket[] = [
   {
     id: 'demo-t-1001',
     code: '#SFS-1001',
@@ -192,4 +192,74 @@ export const DEMO_TICKETS: Ticket[] = [
     messages: [],
     history: []
   }
+];
+
+const DEMO_COMPANIES = [
+  { name: 'Café Quindío S.A.S.', nit: '890.102.455-8', requester: 'Claudia Mendoza', email: 'cliente@cafequindio.com' },
+  { name: 'Trilladora La Manuela', nit: '800.231.908-1', requester: 'Juan Camilo Duque', email: 'cliente@trilladoralamanuela.co' },
+  { name: 'Exportadora del Eje', nit: '900.551.402-3', requester: 'Sandra Milena Ortiz', email: 'cliente@exportadoradeleje.com' },
+  { name: 'Almacafé S.A.', nit: '860.007.820-9', requester: 'Diego Fernando Rojas', email: 'cliente@almacafe.com.co' }
+];
+
+const DEMO_STATUSES: Ticket['status'][] = [
+  ...Array(8).fill('Nuevo'),
+  ...Array(10).fill('Asignado'),
+  ...Array(12).fill('En progreso'),
+  ...Array(6).fill('En espera del cliente'),
+  ...Array(14).fill('Resuelto'),
+  ...Array(10).fill('Cerrado')
+];
+
+const DEMO_AGENTS = ['Laura Yepes', 'Felipe Castaño', 'Valentina Ríos', 'Mateo Gómez', 'Daniel Ospina'];
+const DEMO_TITLES = [
+  'Validar integración del módulo con el sistema corporativo',
+  'Consulta sobre el flujo de operación del portal',
+  'Ajuste requerido en reporte operativo',
+  'Error intermitente durante la operación',
+  'Solicitud de acceso para nuevo usuario',
+  'Revisión de tiempos de respuesta del servicio'
+];
+
+function buildGeneratedDemoTicket(index: number): Ticket {
+  const company = DEMO_COMPANIES[index % DEMO_COMPANIES.length];
+  const status = DEMO_STATUSES[index];
+  const createdDate = new Date(Date.UTC(2026, 8, 30 - (index % 88), 13 + (index % 5), 15, 0));
+  const createdAtIso = createdDate.toISOString();
+  const assignedName = status === 'Nuevo' || status === 'En espera del cliente' ? undefined : DEMO_AGENTS[index % DEMO_AGENTS.length];
+  const priority: Ticket['priority'] = index % 10 === 0 ? 'Crítica' : index % 4 === 0 ? 'Alta' : index % 3 === 0 ? 'Baja' : 'Media';
+  const statusIsFinal = status === 'Resuelto' || status === 'Cerrado';
+  const remaining = Math.max(30, 900 - index * 11);
+
+  return {
+    id: `demo-t-${1100 + index}`,
+    code: `#SFS-${1100 + index}`,
+    title: `${DEMO_TITLES[index % DEMO_TITLES.length]} #${index + 1}`,
+    description: 'Caso de demostración generado desde la semilla local de la demo.',
+    company: company.name,
+    companyNit: company.nit,
+    requesterName: company.requester,
+    requesterEmail: company.email,
+    module: index % 2 === 0 ? 'Portal Web Clientes' : 'Módulo ERP Facturación',
+    category: ['Error del sistema', 'Duda de uso', 'Solicitud de cambio', 'Acceso/usuarios', 'Otro'][index % 5],
+    tags: ['Demo', 'Soporte'],
+    priority,
+    status,
+    assignedAgent: assignedName ? { name: assignedName, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80', role: 'Especialista de soporte' } : undefined,
+    createdAt: createdDate.toLocaleDateString('es-CO') + ', ' + createdDate.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' }),
+    createdAtIso,
+    createdHoursAgo: `hace ${Math.max(1, index % 30)} d`,
+    slaLimit: statusIsFinal ? 'Cumplido' : '30/09/2026, 06:00 p. m.',
+    slaLimitIso: '2026-09-30T18:00:00-05:00',
+    slaMinutesRemaining: statusIsFinal ? 0 : remaining,
+    slaFormatted: statusIsFinal ? 'Cumplido' : `${Math.max(1, Math.floor(remaining / 60))} h`,
+    slaRemainingPercent: statusIsFinal ? 100 : Math.max(5, 90 - index),
+    isBreached: false,
+    messages: [],
+    history: []
+  };
+}
+
+export const DEMO_TICKETS: Ticket[] = [
+  ...DEMO_TICKET_SEEDS,
+  ...Array.from({ length: 54 }, (_, index) => buildGeneratedDemoTicket(index + 6))
 ];

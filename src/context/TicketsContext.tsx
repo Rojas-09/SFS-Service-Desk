@@ -425,6 +425,10 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       undoLabel: 'Deshacer'
     });
 
+    if (currentUser.id.startsWith('demo-')) {
+      return { success: true, ticket: updatedTicket, previousStatus, previousAgent };
+    }
+
     // 2. Fetch a la API
     try {
       const res = await fetch(`/api/tickets/${ticketId}`, {
@@ -496,6 +500,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     showToast('Movimiento deshecho para el ticket', { type: 'info' });
 
+    if (currentUser.id.startsWith('demo-')) return;
+
     try {
       const res = await fetch(`/api/tickets/${ticketId}`, {
         method: 'PATCH',
@@ -554,6 +560,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     );
 
     showToast(`Ticket asignado a ${currentUser.name}`, { type: 'success' });
+
+    if (currentUser.id.startsWith('demo-')) return;
 
     try {
       const res = await fetch(`/api/tickets/${ticketId}`, {
@@ -630,6 +638,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     showToast(isInternal ? 'Nota interna guardada' : 'Respuesta enviada al cliente', { type: 'success' });
 
+    if (currentUser.id.startsWith('demo-')) return;
+
     try {
       const res = await fetch(`/api/tickets/${ticketId}/messages`, {
         method: 'POST',
@@ -696,6 +706,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     showToast(`Ticket reasignado a: ${newAgentName}`, { type: 'success' });
 
+    if (currentUser.id.startsWith('demo-')) return;
+
     try {
       const res = await fetch(`/api/tickets/${ticketId}`, {
         method: 'PATCH',
@@ -748,6 +760,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       `${ticketIds.length} ${ticketIds.length === 1 ? 'ticket resuelto' : 'tickets resueltos'}`,
       { type: 'success' }
     );
+
+    if (currentUser.id.startsWith('demo-')) return;
 
     try {
       const res = await fetch('/api/tickets/bulk', {
@@ -810,6 +824,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       { type: 'success' }
     );
 
+    if (currentUser.id.startsWith('demo-')) return;
+
     try {
       const res = await fetch('/api/tickets/bulk', {
         method: 'POST',
@@ -862,6 +878,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     showToast(`Se cambió el estado a ${newStatus} en ${ticketIds.length} tickets`, { type: 'success' });
 
+    if (currentUser.id.startsWith('demo-')) return;
+
     try {
       const res = await fetch('/api/tickets/bulk', {
         method: 'POST',
@@ -891,6 +909,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     // Optimistic Update
     setAllTickets(prev => [newTicket, ...prev]);
     showToast(`Ticket ${newTicket.code} creado exitosamente`, { type: 'success' });
+
+    if (currentUser?.id.startsWith('demo-')) return newTicket;
 
     try {
       const res = await fetch('/api/tickets', {
