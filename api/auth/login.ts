@@ -1,13 +1,14 @@
 import type { Request, Response } from 'express';
-import { iniciarSesion } from '../../lib/auth/index';
-import { setSessionCookie, getClientIp } from '../_utils';
-
 export default async function handler(req: Request, res: Response) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
   try {
+    const [{ iniciarSesion }, { setSessionCookie, getClientIp }] = await Promise.all([
+      import('../../lib/auth/index'),
+      import('../_utils')
+    ]);
     const { email, password } = req.body || {};
     const clientIp = getClientIp(req);
     const result = await iniciarSesion(email, password, clientIp);
