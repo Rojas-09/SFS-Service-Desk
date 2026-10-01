@@ -16,7 +16,26 @@ export type VistaType = 'tabla' | 'detalle' | 'kanban';
 
 export type SeccionType = 'metricas' | 'anuncios' | 'empresas' | 'usuarios' | 'configuracion';
 
-export interface User {
+// Categorías del brief
+export type CategoriaTicket = 
+  | 'Error del sistema'
+  | 'Duda de uso'
+  | 'Solicitud de cambio'
+  | 'Acceso/usuarios'
+  | 'Otro';
+
+// Módulos / productos afectados
+export type ModuloAfectado =
+  | 'Portal Web Clientes'
+  | 'Módulo ERP Facturación'
+  | 'App Móvil Logística'
+  | 'Básculas y Pesaje IoT'
+  | 'API Integración Bancaria'
+  | 'Reportes DIAN'
+  | 'Infraestructura y Base de Datos'
+  | 'General';
+
+export interface Usuario {
   id: string;
   name: string;
   email: string;
@@ -29,42 +48,64 @@ export interface User {
   passwordHash?: string;
 }
 
-export interface TicketMessage {
+export type User = Usuario;
+
+export interface Empresa {
+  id: string;
+  name: string;
+  nit: string;
+  tier: string;
+  sede: string;
+  contact: string;
+  contactEmail: string;
+  contactPhone?: string;
+  slaNotes?: string;
+  activeTicketsCount?: number;
+}
+
+export interface Mensaje {
   id: string;
   senderName: string;
   senderRole: 'cliente' | 'soporte' | 'sistema';
-  time: string;
-  timestamp: number;
+  senderEmail?: string;
+  time: string; // Formato amigable Bogotá (dd/mm/aaaa hh:mm a.m./p.m.)
+  timestamp: number; // ms
   content: string;
   isInternal?: boolean;
+  createdAtIso?: string; // ISO 8601
   attachment?: {
     name: string;
     size: string;
   };
 }
 
-export interface TicketHistoryEvent {
+export type TicketMessage = Mensaje;
+
+export interface EventoTicket {
   id: string;
   action: string;
   detail: string;
   user: string;
-  time: string;
+  time: string; // Formato legible Bogotá
   timestamp: number;
+  createdAtIso?: string;
 }
+
+export type TicketHistoryEvent = EventoTicket;
 
 export interface Ticket {
   id: string;
   code: string; // e.g. '#SFS-1024'
   title: string;
   description: string;
-  company: string;
+  company: string; // Café Quindío S.A.S., Trilladora La Manuela, Exportadora del Eje, Almacafé S.A.
   companyNit?: string;
   requesterName: string;
   requesterTitle?: string;
   requesterEmail?: string;
   requesterPhone?: string;
-  module: string;
-  category: string;
+  module: string; // Módulo o producto afectado
+  category: string; // Error del sistema, Duda de uso, etc.
   tags: string[];
   priority: Priority;
   status: TicketStatus;
@@ -72,17 +113,51 @@ export interface Ticket {
     name: string;
     avatar: string;
     role: string;
+    email?: string;
   };
-  createdAt: string;
-  createdHoursAgo: string; // 'hace 2 h'
-  slaLimit: string;
+  createdAt: string; // dd/mm/aaaa, hh:mm a. m.
+  createdAtIso?: string; // ISO 8601
+  createdHoursAgo: string; // Calculado relativo desde ISO
+  slaLimit: string; // dd/mm/aaaa, hh:mm a. m.
+  slaLimitIso?: string;
+  slaFirstResponseLimitIso?: string;
   slaMinutesRemaining: number;
   slaFormatted: string; // e.g. "2 h 15 min"
-  slaRemainingPercent: number; // 0 to 100 (% of SLA remaining)
+  slaRemainingPercent: number; // 0 to 100 (% de SLA restante)
   isBreached?: boolean;
+  firstResponseAtIso?: string;
+  resolvedAtIso?: string;
+  closedAtIso?: string;
   resolutionTime?: string;
-  messages: TicketMessage[];
-  history: TicketHistoryEvent[];
+  messages: Mensaje[];
+  history: EventoTicket[];
+}
+
+export interface Anuncio {
+  id: string;
+  title: string;
+  category: string;
+  content: string;
+  date: string;
+  author: string;
+  priority: 'Alta' | 'Normal';
+  createdAtIso?: string;
+}
+
+export type Announcement = Anuncio;
+
+export interface ReglaSLA {
+  prioridad: Priority;
+  primeraRespuestaHoras: number;
+  solucionHoras: number;
+  descripcion: string;
+}
+
+export interface Macro {
+  id: string;
+  label: string;
+  text: string;
+  categoria?: string;
 }
 
 export interface KPIStats {
@@ -93,16 +168,6 @@ export interface KPIStats {
   slaCompliancePercent: number;
   criticalAtRisk: number;
   criticalAtRiskDetail: string;
-}
-
-export interface Announcement {
-  id: string;
-  title: string;
-  category: string;
-  content: string;
-  date: string;
-  author: string;
-  priority: 'Alta' | 'Normal';
 }
 
 export interface NavigationFilters {

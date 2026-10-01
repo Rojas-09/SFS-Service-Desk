@@ -53,6 +53,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
       const data = await response.json();
 
       if (response.ok && data.success && data.user) {
+        if (data.token) {
+          localStorage.setItem('sfs_token', data.token);
+        }
         onLoginSuccess(data.user);
       } else {
         setErrorMessage(data.error || 'Correo o contraseña incorrectos');

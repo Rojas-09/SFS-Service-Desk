@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { User, UserRole, Ticket } from './types';
-import { INITIAL_USERS, INITIAL_KPIS } from './data/mockData';
 import { TicketsProvider, useTickets } from './context/TicketsContext';
 import { useNavigationUrl } from './hooks/useNavigationUrl';
 import { Sidebar } from './components/Sidebar';
@@ -39,6 +38,7 @@ function AppContent() {
     isAuthLoaded,
     logout,
     counts,
+    kpis,
     toast,
     showToast,
     clearToast,
@@ -333,17 +333,24 @@ function AppContent() {
             await logout();
             navigateToPath('/login', { replace: true });
           }}
-          onSwitchUser={(newRole: UserRole) => {
-            const user = INITIAL_USERS[newRole];
-            if (user) {
-              setCurrentUser(user);
-              showToast(`Perfil cambiado a: ${user.name} (${user.role})`);
-              if (user.role === 'cliente') {
-                navigateToPath('/portal', { replace: true });
-              } else {
-                navigateToPath('/consola/bandeja', { replace: true });
+          onSwitchUser={async (newRole: UserRole) => {
+            if (!import.meta.env.DEV) return;
+            try {
+              const res = await fetch('/api/users');
+              if (res.ok) {
+                const data = await res.json();
+                const target = data.users?.find((u: User) => u.role === newRole);
+                if (target) {
+                  setCurrentUser(target);
+                  showToast(`Perfil cambiado a: ${target.name} (${target.role})`);
+                  if (target.role === 'cliente') {
+                    navigateToPath('/portal', { replace: true });
+                  } else {
+                    navigateToPath('/consola/bandeja', { replace: true });
+                  }
+                }
               }
-            }
+            } catch {}
           }}
           searchQuery={filters.busqueda || ''}
           onSearchChange={(q) => setFilterParam('busqueda', q)}
@@ -372,16 +379,22 @@ function AppContent() {
         ) : pathname === '/consola/usuarios' ? (
           <UsersView
             onBackToConsole={() => navigateToPath('/consola/bandeja')}
-            onSwitchUser={(newRole) => {
-              const u = INITIAL_USERS[newRole];
-              if (u) setCurrentUser(u);
+            onSwitchUser={(targetUser) => {
+              if (!import.meta.env.DEV) return;
+              setCurrentUser(targetUser);
+              showToast(`Perfil cambiado a: ${targetUser.name} (${targetUser.role})`);
+              if (targetUser.role === 'cliente') {
+                navigateToPath('/portal', { replace: true });
+              } else {
+                navigateToPath('/consola/bandeja', { replace: true });
+              }
             }}
           />
         ) : pathname === '/consola/configuracion' ? (
           <SettingsView onBackToConsole={() => navigateToPath('/consola/bandeja')} />
         ) : filters.vista === 'tabla' && !pathname.startsWith('/consola/tickets/') ? (
           <TableView
-            kpis={INITIAL_KPIS}
+            kpis={kpis}
             filters={filters}
             onSetVista={setVista}
             onSetFiltroRapido={setFiltroRapido}

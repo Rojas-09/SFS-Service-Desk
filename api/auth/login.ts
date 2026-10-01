@@ -21,5 +21,5 @@ export default async function handler(req: Request, res: Response) {
   }
 
   setSessionCookie(res, result.token);
-  return res.status(200).json({ success: true, user: result.user });
+  return res.status(200).json({ success: true, user: result.user, token: result.token });
 }

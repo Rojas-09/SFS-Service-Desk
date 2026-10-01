@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 import {
   iniciarSesion,
@@ -19,7 +20,14 @@ import {
   actualizarRolUsuario,
   buscarUsuarioPorId
 } from './lib/auth/repositorio';
-import { INITIAL_TICKETS } from './src/data/mockData';
+import {
+  listarTickets,
+  obtenerTicketPorId,
+  crearNuevoTicket,
+  actualizarTicket,
+  agregarMensajeTicket,
+  procesarOperacionLote
+} from './server/tickets-service';
 import { UserRole } from './src/types';
 
 // Requirement 1 (K5): Validar AUTH_SECRET al arrancar.
@@ -87,7 +95,8 @@ app.post('/api/auth/login', async (req, res) => {
   setSessionCookie(res, result.token);
   return res.json({
     success: true,
-    user: result.user
+    user: result.user,
+    token: result.token
   });
 });
 
@@ -151,26 +160,68 @@ app.post('/api/auth/change-password', async (req, res) => {
   return res.json({ success: true, user: result.user });
 });
 
-// ================= RUTAS PROTEGIDAS =================
+// ================= RUTAS PROTEGIDAS DE TICKETS (Requirement 2) =================
 
-// Consulta de tickets (Requirement 3, 4 & 7)
+// Operación masiva en lote (POST /api/tickets/bulk)
+app.post('/api/tickets/bulk', async (req, res) => {
+  const session = await requireSession(req, res);
+  if (!session) return;
+  const result = procesarOperacionLote(session, req.body);
+  if (result.errorStatus) {
+    return res.status(result.errorStatus).json({ error: result.errorMsg });
+  }
+  return res.json({ success: true, count: result.modifiedCount });
+});
+
+// Consulta de tickets (Requirement 2 & 3)
 // El rol proviene exclusivamente del JWT verificado.
 // Un cliente solo obtiene tickets de SU empresa y nunca ve mensajes con interno = true.
 app.get('/api/tickets', async (req, res) => {
   const session = await requireSession(req, res);
   if (!session) return;
+  const tickets = listarTickets(session);
+  return res.json({ tickets });
+});
 
-  if (session.role === 'cliente') {
-    const clientCompany = session.company;
-    const clientTickets = INITIAL_TICKETS.filter(t => t.company === clientCompany).map(t => ({
-      ...t,
-      // Sanitizar mensajes internos en el servidor
-      messages: t.messages.filter(m => !m.isInternal)
-    }));
-    return res.json({ tickets: clientTickets });
+// Crear nuevo ticket (POST /api/tickets)
+app.post('/api/tickets', async (req, res) => {
+  const session = await requireSession(req, res);
+  if (!session) return;
+  const nuevo = crearNuevoTicket(session, req.body);
+  return res.status(201).json({ ticket: nuevo });
+});
+
+// Consultar ticket por ID (GET /api/tickets/:id)
+app.get('/api/tickets/:id', async (req, res) => {
+  const session = await requireSession(req, res);
+  if (!session) return;
+  const result = obtenerTicketPorId(session, req.params.id);
+  if (result.errorStatus) {
+    return res.status(result.errorStatus).json({ error: result.errorMsg });
   }
+  return res.json({ ticket: result.ticket });
+});
 
-  return res.json({ tickets: INITIAL_TICKETS });
+// Modificar ticket (PATCH /api/tickets/:id)
+app.patch('/api/tickets/:id', async (req, res) => {
+  const session = await requireSession(req, res);
+  if (!session) return;
+  const result = actualizarTicket(session, req.params.id, req.body);
+  if (result.errorStatus) {
+    return res.status(result.errorStatus).json({ error: result.errorMsg });
+  }
+  return res.json({ ticket: result.ticket });
+});
+
+// Agregar mensaje o nota (POST /api/tickets/:id/messages)
+app.post('/api/tickets/:id/messages', async (req, res) => {
+  const session = await requireSession(req, res);
+  if (!session) return;
+  const result = agregarMensajeTicket(session, req.params.id, req.body);
+  if (result.errorStatus) {
+    return res.status(result.errorStatus).json({ error: result.errorMsg });
+  }
+  return res.status(201).json({ message: result.message, ticket: result.ticket });
 });
 
 // Directorio de usuarios: accesible por supervisor y admin (Requirement 7)
@@ -269,6 +320,20 @@ async function startServer() {
       appType: 'spa'
     });
     app.use(vite.middlewares);
+    app.use('*', async (req, res, next) => {
+      const url = req.originalUrl;
+      if (url.startsWith('/api')) {
+        return next();
+      }
+      try {
+        let template = fs.readFileSync(path.resolve('index.html'), 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      } catch (e) {
+        vite.ssrFixStacktrace(e as Error);
+        next(e);
+      }
+    });
   } else {
     app.use(express.static('dist'));
     app.get('*', (_req, res) => {

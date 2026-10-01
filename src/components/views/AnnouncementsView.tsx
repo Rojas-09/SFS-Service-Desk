@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTickets } from '../../context/TicketsContext';
 import { Announcement } from '../../types';
+import { formatFechaBogota } from '../../utils/fechas';
 
 interface AnnouncementsViewProps {
   onBackToConsole: () => void;
@@ -23,7 +24,7 @@ export const AnnouncementsView: React.FC<AnnouncementsViewProps> = ({ onBackToCo
       title: title.trim(),
       category,
       content: content.trim(),
-      date: 'Hoy ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      date: formatFechaBogota(new Date(), true),
       author: currentUser ? `${currentUser.name} (${currentUser.title})` : 'SFS Oficial',
       priority
     };

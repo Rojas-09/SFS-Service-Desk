@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
-import { Ticket, User, TicketStatus, Announcement, TicketHistoryEvent } from '../types';
-import { INITIAL_TICKETS, INITIAL_USERS, INITIAL_ANNOUNCEMENTS } from '../data/mockData';
+import React, { createContext, useContext, useState, useMemo, useEffect, useCallback } from 'react';
+import { Ticket, User, TicketStatus, Announcement, TicketHistoryEvent, KPIStats } from '../types';
+import { INITIAL_ANNOUNCEMENTS, COMPANIES_LIST } from '../data/mockData';
+import { calcularKPIs } from '../utils/kpi';
+import { formatFechaBogota } from '../utils/fechas';
 
 interface MoveTicketResult {
   success: boolean;
@@ -33,24 +35,25 @@ interface TicketsContextValue {
     announcements: number;
     companies: number;
   };
+  kpis: KPIStats;
   moveTicket: (
     ticketId: string,
     targetStatus: TicketStatus,
     options?: { assignedAgentName?: string }
-  ) => MoveTicketResult;
+  ) => Promise<MoveTicketResult>;
   undoMove: (
     ticketId: string,
     previousStatus: TicketStatus,
     previousAgent?: Ticket['assignedAgent']
-  ) => void;
-  takeTicket: (ticketId: string) => void;
-  sendMessage: (ticketId: string, content: string, isInternal: boolean) => void;
-  updateStatus: (ticketId: string, newStatus: TicketStatus) => void;
-  reassignAgent: (ticketId: string, newAgentName: string) => void;
-  bulkResolve: (ticketIds: string[]) => void;
-  bulkAssign: (ticketIds: string[]) => void;
-  bulkChangeStatus: (ticketIds: string[], newStatus: TicketStatus) => void;
-  createTicket: (newTicket: Ticket) => void;
+  ) => Promise<void>;
+  takeTicket: (ticketId: string) => Promise<void>;
+  sendMessage: (ticketId: string, content: string, isInternal: boolean) => Promise<void>;
+  updateStatus: (ticketId: string, newStatus: TicketStatus) => Promise<void>;
+  reassignAgent: (ticketId: string, newAgentName: string) => Promise<void>;
+  bulkResolve: (ticketIds: string[]) => Promise<void>;
+  bulkAssign: (ticketIds: string[]) => Promise<void>;
+  bulkChangeStatus: (ticketIds: string[], newStatus: TicketStatus) => Promise<void>;
+  createTicket: (newTicket: Ticket) => Promise<Ticket | null>;
   addAnnouncement: (announcement: Announcement) => void;
   toast: ToastInfo | null;
   showToast: (
@@ -58,12 +61,13 @@ interface TicketsContextValue {
     options?: { type?: 'success' | 'error' | 'info'; undoAction?: () => void; undoLabel?: string }
   ) => void;
   clearToast: () => void;
+  reloadTickets: () => Promise<void>;
 }
 
 const TicketsContext = createContext<TicketsContextValue | null>(null);
 
 export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [allTickets, setAllTickets] = useState<Ticket[]>(INITIAL_TICKETS);
+  const [allTickets, setAllTickets] = useState<Ticket[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>(INITIAL_ANNOUNCEMENTS);
   const [currentUser, setCurrentUserState] = useState<User | null>(() => {
     if (typeof window === 'undefined') return null;
@@ -74,56 +78,10 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return null;
     }
   });
-  const [isAuthLoaded, setIsAuthLoaded] = useState<boolean>(true);
+  const [isAuthLoaded, setIsAuthLoaded] = useState<boolean>(false);
   const [toast, setToast] = useState<ToastInfo | null>(null);
 
-  const setCurrentUser = (user: User | null) => {
-    setCurrentUserState(user);
-    if (typeof window !== 'undefined') {
-      try {
-        if (user) {
-          localStorage.setItem('sfs_user', JSON.stringify(user));
-        } else {
-          localStorage.removeItem('sfs_user');
-        }
-      } catch {}
-    }
-  };
-
-  // Intentar sincronizar sesión real con el backend en montaje
-  useEffect(() => {
-    async function checkBackendSession() {
-      try {
-        const res = await fetch('/api/auth/session');
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.user) {
-            setCurrentUserState(data.user);
-            try {
-              localStorage.setItem('sfs_user', JSON.stringify(data.user));
-            } catch {}
-          } else {
-            setCurrentUserState(null);
-            try {
-              localStorage.removeItem('sfs_user');
-            } catch {}
-          }
-        } else if (res.status === 401) {
-          setCurrentUserState(null);
-          try {
-            localStorage.removeItem('sfs_user');
-          } catch {}
-        }
-      } catch {
-        // En entorno dev puro o estático, mantener usuario actual en caché
-      } finally {
-        setIsAuthLoaded(true);
-      }
-    }
-    checkBackendSession();
-  }, []);
-
-  const showToast = (
+  const showToast = useCallback((
     message: string,
     options?: { type?: 'success' | 'error' | 'info'; undoAction?: () => void; undoLabel?: string }
   ) => {
@@ -139,50 +97,179 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setTimeout(() => {
       setToast(current => (current && current.id === id ? null : current));
     }, 5000);
-  };
+  }, []);
 
-  const clearToast = () => setToast(null);
+  const clearToast = useCallback(() => setToast(null), []);
 
-  // Sincronizar tickets desde la API y manejar 403 MUST_CHANGE_PASSWORD (Requirement 4 - K8)
-  useEffect(() => {
-    async function loadTicketsFromApi() {
-      if (!currentUser) return;
+  const getAuthHeaders = useCallback((): HeadersInit => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('sfs_token') : null;
+    const h: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    if (token) h['Authorization'] = `Bearer ${token}`;
+    return h;
+  }, []);
+
+  const setCurrentUser = useCallback((user: User | null) => {
+    setCurrentUserState(user);
+    if (typeof window !== 'undefined') {
       try {
-        const res = await fetch('/api/tickets');
-        if (res.status === 403) {
-          const errData = await res.json();
-          if (errData && errData.code === 'MUST_CHANGE_PASSWORD') {
-            window.history.pushState({}, '', '/cambiar-contrasena');
-            window.dispatchEvent(new PopStateEvent('popstate'));
-            return;
-          }
+        if (user) {
+          localStorage.setItem('sfs_user', JSON.stringify(user));
+        } else {
+          localStorage.removeItem('sfs_user');
         }
+      } catch {}
+    }
+  }, []);
+
+  // Intentar sincronizar sesión real con el backend en montaje
+  useEffect(() => {
+    async function checkBackendSession() {
+      try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('sfs_token') : null;
+        const headers: Record<string, string> = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const res = await fetch('/api/auth/session', { headers, credentials: 'include' });
         if (res.ok) {
           const data = await res.json();
-          if (data && Array.isArray(data.tickets)) {
-            setAllTickets(data.tickets);
+          if (data && data.user) {
+            setCurrentUserState(data.user);
+            try {
+              localStorage.setItem('sfs_user', JSON.stringify(data.user));
+            } catch {}
+          } else {
+            setCurrentUserState(null);
+            try {
+              localStorage.removeItem('sfs_user');
+              localStorage.removeItem('sfs_token');
+            } catch {}
+          }
+        } else if (res.status === 401) {
+          if (!import.meta.env.DEV) {
+            setCurrentUserState(null);
+            try {
+              localStorage.removeItem('sfs_user');
+              localStorage.removeItem('sfs_token');
+            } catch {}
+          } else {
+            // En modo desarrollo, auto-autenticar con usuario guardado o demo por defecto
+            try {
+              const cached = typeof window !== 'undefined' ? localStorage.getItem('sfs_user') : null;
+              const u = cached ? JSON.parse(cached) : null;
+              const emailToLogin = u?.email || 'agente@sfs.co';
+              const loginRes = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailToLogin, password: 'SFS2026!' }),
+                credentials: 'include'
+              });
+              if (loginRes.ok) {
+                const loginData = await loginRes.json();
+                if (loginData.token) {
+                  localStorage.setItem('sfs_token', loginData.token);
+                }
+                if (loginData.user) {
+                  setCurrentUserState(loginData.user);
+                  localStorage.setItem('sfs_user', JSON.stringify(loginData.user));
+                }
+              }
+            } catch {}
           }
         }
       } catch {
-        // Modo offline / mock fallback
+        // En entorno dev puro
+      } finally {
+        setIsAuthLoaded(true);
       }
     }
-    loadTicketsFromApi();
+    checkBackendSession();
+  }, []);
+
+  // Carga de tickets desde la API (GET /api/tickets) tras el login (Requirement 3)
+  const reloadTickets = useCallback(async () => {
+    if (!currentUser) {
+      setAllTickets([]);
+      return;
+    }
+    try {
+      const getHeaders = () => {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('sfs_token') : null;
+        const h: Record<string, string> = {};
+        if (token) h['Authorization'] = `Bearer ${token}`;
+        return h;
+      };
+
+      let res = await fetch('/api/tickets', {
+        headers: getHeaders(),
+        credentials: 'include'
+      });
+
+      // Auto-autenticación en modo desarrollo si 401 (evita pantalla vacía por cookie faltante)
+      if (res.status === 401 && Boolean(import.meta.env.DEV)) {
+        try {
+          const emailToLogin = currentUser.email || 'agente@sfs.co';
+          const loginRes = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailToLogin, password: 'SFS2026!' }),
+            credentials: 'include'
+          });
+          if (loginRes.ok) {
+            const loginData = await loginRes.json();
+            if (loginData.token) {
+              localStorage.setItem('sfs_token', loginData.token);
+            }
+            res = await fetch('/api/tickets', {
+              headers: getHeaders(),
+              credentials: 'include'
+            });
+          }
+        } catch {}
+      }
+
+      if (res.status === 403) {
+        const errData = await res.json().catch(() => ({}));
+        if (errData && errData.code === 'MUST_CHANGE_PASSWORD') {
+          window.history.pushState({}, '', '/cambiar-contrasena');
+          window.dispatchEvent(new PopStateEvent('popstate'));
+          return;
+        }
+      }
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.tickets)) {
+          setAllTickets(data.tickets);
+        }
+      }
+    } catch {
+      // Ignorar fallo de red
+    }
   }, [currentUser]);
+
+  useEffect(() => {
+    reloadTickets();
+  }, [reloadTickets]);
 
   // Cerrar sesión
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
     } catch {
       // Ignorar error de red en logout
     }
+    try {
+      localStorage.removeItem('sfs_token');
+      localStorage.removeItem('sfs_user');
+    } catch {}
     setCurrentUser(null);
+    setAllTickets([]);
     showToast('Sesión cerrada', { type: 'info' });
   };
 
-  // Requirement 5: Filtrado estricto en el servidor / store
-  // Un cliente solo obtiene tickets de SU empresa y NUNCA ve mensajes con interno = true
+  // Filtrado de seguridad en el frontend
+  // Un cliente solo obtiene tickets de su empresa y no ve mensajes internos
   const visibleTickets = useMemo(() => {
     if (!currentUser) return [];
 
@@ -196,14 +283,13 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }));
     }
 
-    // Agentes, supervisores y administradores ven tickets del sistema
     return allTickets;
   }, [allTickets, currentUser]);
 
-  // Contadores calculados sin contar Resuelto ni Cerrado como activos
+  // Contadores dinámicos calculados desde los tickets
   const counts = useMemo(() => {
     if (!currentUser) {
-      return { activos: 0, mios: 0, sinAsignar: 0, todos: 0, announcements: 0, companies: 6 };
+      return { activos: 0, mios: 0, sinAsignar: 0, todos: 0, announcements: 0, companies: COMPANIES_LIST.length };
     }
 
     const activeTickets = visibleTickets.filter(
@@ -222,16 +308,23 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       sinAsignar: unassignedActive.length,
       todos: visibleTickets.length,
       announcements: announcements.length,
-      companies: 6
+      companies: COMPANIES_LIST.length
     };
   }, [visibleTickets, announcements.length, currentUser]);
 
-  // Mover ticket con reglas de autorización y auditoría
-  const moveTicket = (
+  // KPIs dinámicos calculados exclusivamente desde los tickets reales (Requirement 8)
+  const kpis = useMemo(() => {
+    return calcularKPIs(visibleTickets);
+  }, [visibleTickets]);
+
+  // ================= MUTACIONES CON ACTUALIZACIÓN OPTIMISTA Y REVERSIÓN =================
+
+  // 1. Mover ticket / cambiar estado
+  const moveTicket = async (
     ticketId: string,
     targetStatus: TicketStatus,
     options?: { assignedAgentName?: string }
-  ): MoveTicketResult => {
+  ): Promise<MoveTicketResult> => {
     if (!currentUser) return { success: false, error: 'No autenticado' };
 
     const currentTicket = allTickets.find(t => t.id === ticketId);
@@ -243,7 +336,13 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return { success: true, ticket: currentTicket };
     }
 
-    // Regla 11: Un agente solo mueve tickets propios o sin asignar
+    // Validación cliente
+    if (currentUser.role === 'cliente') {
+      showToast('Los clientes no pueden cambiar el estado del ticket', { type: 'error' });
+      return { success: false, error: 'Permiso denegado' };
+    }
+
+    // Validación agente
     const isOwner =
       currentTicket.assignedAgent &&
       currentTicket.assignedAgent.name
@@ -257,17 +356,15 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       isUnassigned;
 
     if (!canMove) {
-      showToast('Solo puedes gestionar tus propios tickets o tickets sin asignar', {
-        type: 'error'
-      });
+      showToast('Solo puedes gestionar tus propios tickets o tickets sin asignar', { type: 'error' });
       return { success: false, error: 'Permiso denegado' };
     }
 
     const previousStatus = currentTicket.status;
     const previousAgent = currentTicket.assignedAgent;
-    let nextAgent = currentTicket.assignedAgent;
+    const snapshot = [...allTickets];
 
-    // Regla 11: En Nuevo se quita el agente
+    let nextAgent = currentTicket.assignedAgent;
     if (targetStatus === 'Nuevo') {
       nextAgent = undefined;
     } else if (
@@ -276,12 +373,10 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         targetStatus === 'En espera del cliente') &&
       !nextAgent
     ) {
-      // Regla 11: Autoasignación de agente o selección por supervisor/admin
       if (options?.assignedAgentName) {
         nextAgent = {
           name: options.assignedAgentName,
-          avatar:
-            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
           role: 'Especialista de soporte'
         };
       } else {
@@ -296,11 +391,9 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const newHistoryEvent: TicketHistoryEvent = {
       id: `h-${Date.now()}`,
       action: `Cambio de estado a ${targetStatus}`,
-      detail: `Movido de ${previousStatus} a ${targetStatus}${
-        nextAgent ? ` (Agente: ${nextAgent.name})` : ''
-      }`,
+      detail: `Movido de ${previousStatus} a ${targetStatus}${nextAgent ? ` (Agente: ${nextAgent.name})` : ''}`,
       user: currentUser.name,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      time: formatFechaBogota(new Date(), true),
       timestamp: Date.now()
     };
 
@@ -308,11 +401,11 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       ...currentTicket,
       status: targetStatus,
       assignedAgent: nextAgent,
-      resolutionTime:
-        targetStatus === 'Resuelto' ? 'Resuelto ahora' : currentTicket.resolutionTime,
+      resolutionTime: targetStatus === 'Resuelto' ? 'Resuelto en SLA' : currentTicket.resolutionTime,
       history: [...currentTicket.history, newHistoryEvent]
     };
 
+    // 1. Optimistic Update
     setAllTickets(prev => prev.map(t => (t.id === ticketId ? updatedTicket : t)));
 
     showToast(`Ticket ${currentTicket.code} movido a ${targetStatus}`, {
@@ -323,6 +416,37 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       undoLabel: 'Deshacer'
     });
 
+    // 2. Fetch a la API
+    try {
+      const res = await fetch(`/api/tickets/${ticketId}`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({
+          status: targetStatus,
+          assignedAgent: nextAgent
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        // Reversión
+        setAllTickets(snapshot);
+        showToast(err.error || 'Error al actualizar el ticket en el servidor', { type: 'error' });
+        return { success: false, error: err.error || 'Fallo en el servidor' };
+      }
+
+      const data = await res.json();
+      if (data && data.ticket) {
+        setAllTickets(prev => prev.map(t => (t.id === ticketId ? data.ticket : t)));
+      }
+    } catch {
+      // Reversión por error de red
+      setAllTickets(snapshot);
+      showToast('Error de conexión al actualizar el ticket. Cambio revertido.', { type: 'error' });
+      return { success: false, error: 'Error de red' };
+    }
+
     return {
       success: true,
       ticket: updatedTicket,
@@ -331,12 +455,14 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
   };
 
-  const undoMove = (
+  const undoMove = async (
     ticketId: string,
     previousStatus: TicketStatus,
     previousAgent?: Ticket['assignedAgent']
   ) => {
     if (!currentUser) return;
+    const snapshot = [...allTickets];
+
     setAllTickets(prev =>
       prev.map(t => {
         if (t.id === ticketId) {
@@ -345,7 +471,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
             action: 'Acción deshecha',
             detail: `Restablecido a estado ${previousStatus}`,
             user: currentUser.name,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            time: formatFechaBogota(new Date(), true),
             timestamp: Date.now()
           };
           return {
@@ -358,22 +484,49 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return t;
       })
     );
+
     showToast('Movimiento deshecho para el ticket', { type: 'info' });
+
+    try {
+      const res = await fetch(`/api/tickets/${ticketId}`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({
+          status: previousStatus,
+          assignedAgent: previousAgent
+        })
+      });
+      if (!res.ok) {
+        setAllTickets(snapshot);
+        showToast('No se pudo revertir el ticket en el servidor', { type: 'error' });
+      }
+    } catch {
+      setAllTickets(snapshot);
+      showToast('Error de conexión al deshacer', { type: 'error' });
+    }
   };
 
-  const takeTicket = (ticketId: string) => {
+  // 2. Tomar ticket (auto-asignar y poner En progreso)
+  const takeTicket = async (ticketId: string) => {
     if (!currentUser) return;
+    const currentTicket = allTickets.find(t => t.id === ticketId);
+    if (!currentTicket) return;
+
+    const snapshot = [...allTickets];
+    const newAgent = {
+      name: currentUser.name,
+      avatar: currentUser.avatar,
+      role: currentUser.title
+    };
+
     setAllTickets(prev =>
       prev.map(t => {
         if (t.id === ticketId) {
           return {
             ...t,
             status: 'En progreso' as TicketStatus,
-            assignedAgent: {
-              name: currentUser.name,
-              avatar: currentUser.avatar,
-              role: currentUser.title
-            },
+            assignedAgent: newAgent,
             history: [
               ...t.history,
               {
@@ -381,7 +534,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 action: 'Ticket asignado',
                 detail: `Tomado y autoasignado por ${currentUser.name}`,
                 user: currentUser.name,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                time: formatFechaBogota(new Date(), true),
                 timestamp: Date.now()
               }
             ]
@@ -390,38 +543,72 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return t;
       })
     );
-    showToast(`Ticket asignado a ${currentUser.name}`);
+
+    showToast(`Ticket asignado a ${currentUser.name}`, { type: 'success' });
+
+    try {
+      const res = await fetch(`/api/tickets/${ticketId}`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({
+          status: 'En progreso',
+          assignedAgent: newAgent
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setAllTickets(snapshot);
+        showToast(err.error || 'No fue posible autoasignar el ticket', { type: 'error' });
+      }
+    } catch {
+      setAllTickets(snapshot);
+      showToast('Error de conexión al asignar ticket. Cambio revertido.', { type: 'error' });
+    }
   };
 
-  const sendMessage = (ticketId: string, content: string, isInternal: boolean) => {
+  // 3. Enviar mensaje o nota interna
+  const sendMessage = async (ticketId: string, content: string, isInternal: boolean) => {
     if (!currentUser) return;
+    const currentTicket = allTickets.find(t => t.id === ticketId);
+    if (!currentTicket) return;
+
+    if (currentUser.role === 'cliente' && isInternal) {
+      showToast('Los clientes no pueden enviar notas internas', { type: 'error' });
+      return;
+    }
+
+    const snapshot = [...allTickets];
+    const now = new Date();
+    const timeFormatted = formatFechaBogota(now, true);
+
+    const newMsg = {
+      id: `msg-${Date.now()}`,
+      senderName: isInternal
+        ? `${currentUser.name} (SFS)`
+        : currentUser.role === 'cliente'
+        ? `${currentUser.name} (Cliente)`
+        : `${currentUser.name} (SFS Soporte)`,
+      senderRole: currentUser.role === 'cliente' ? ('cliente' as const) : ('soporte' as const),
+      time: timeFormatted,
+      timestamp: now.getTime(),
+      content,
+      isInternal
+    };
+
+    const newHistory: TicketHistoryEvent = {
+      id: `h-${Date.now()}`,
+      action: isInternal ? 'Nota interna guardada' : 'Respuesta al cliente',
+      detail: isInternal ? 'Nota privada visible solo para SFS' : 'Mensaje público emitido',
+      user: currentUser.name,
+      time: timeFormatted,
+      timestamp: now.getTime()
+    };
+
     setAllTickets(prev =>
       prev.map(t => {
         if (t.id === ticketId) {
-          const newMsg = {
-            id: `msg-${Date.now()}`,
-            senderName: isInternal
-              ? `${currentUser.name} (SFS)`
-              : currentUser.role === 'cliente'
-              ? `${currentUser.name} (Cliente)`
-              : `${currentUser.name} (SFS Soporte)`,
-            senderRole:
-              currentUser.role === 'cliente' ? ('cliente' as const) : ('soporte' as const),
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            timestamp: Date.now(),
-            content,
-            isInternal
-          };
-
-          const newHistory: TicketHistoryEvent = {
-            id: `h-${Date.now()}`,
-            action: isInternal ? 'Nota interna guardada' : 'Respuesta al cliente',
-            detail: isInternal ? 'Nota privada visible solo para SFS' : 'Mensaje público emitido',
-            user: currentUser.name,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            timestamp: Date.now()
-          };
-
           return {
             ...t,
             messages: [...t.messages, newMsg],
@@ -431,26 +618,56 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return t;
       })
     );
-    showToast(isInternal ? 'Nota interna guardada' : 'Respuesta enviada al cliente');
+
+    showToast(isInternal ? 'Nota interna guardada' : 'Respuesta enviada al cliente', { type: 'success' });
+
+    try {
+      const res = await fetch(`/api/tickets/${ticketId}/messages`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({ content, isInternal })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setAllTickets(snapshot);
+        showToast(err.error || 'Error al enviar el mensaje en el servidor', { type: 'error' });
+      } else {
+        const data = await res.json();
+        if (data && data.ticket) {
+          setAllTickets(prev => prev.map(t => (t.id === ticketId ? data.ticket : t)));
+        }
+      }
+    } catch {
+      setAllTickets(snapshot);
+      showToast('Error de conexión al enviar el mensaje. Revertido.', { type: 'error' });
+    }
   };
 
-  const updateStatus = (ticketId: string, newStatus: TicketStatus) => {
-    moveTicket(ticketId, newStatus);
+  const updateStatus = async (ticketId: string, newStatus: TicketStatus) => {
+    await moveTicket(ticketId, newStatus);
   };
 
-  const reassignAgent = (ticketId: string, newAgentName: string) => {
+  // 4. Reasignar agente
+  const reassignAgent = async (ticketId: string, newAgentName: string) => {
     if (!currentUser) return;
+    const currentTicket = allTickets.find(t => t.id === ticketId);
+    if (!currentTicket) return;
+
+    const snapshot = [...allTickets];
+    const newAgent = {
+      name: newAgentName,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
+      role: 'Especialista de soporte'
+    };
+
     setAllTickets(prev =>
       prev.map(t => {
         if (t.id === ticketId) {
           return {
             ...t,
-            assignedAgent: {
-              name: newAgentName,
-              avatar:
-                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
-              role: 'Especialista de soporte'
-            },
+            assignedAgent: newAgent,
             history: [
               ...t.history,
               {
@@ -458,7 +675,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 action: 'Reasignación',
                 detail: `Asignado a ${newAgentName}`,
                 user: currentUser.name,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                time: formatFechaBogota(new Date(), true),
                 timestamp: Date.now()
               }
             ]
@@ -467,18 +684,40 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return t;
       })
     );
-    showToast(`Ticket reasignado a: ${newAgentName}`);
+
+    showToast(`Ticket reasignado a: ${newAgentName}`, { type: 'success' });
+
+    try {
+      const res = await fetch(`/api/tickets/${ticketId}`, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({ assignedAgent: newAgent })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setAllTickets(snapshot);
+        showToast(err.error || 'No fue posible reasignar el agente en el servidor', { type: 'error' });
+      }
+    } catch {
+      setAllTickets(snapshot);
+      showToast('Error de conexión al reasignar agente. Revertido.', { type: 'error' });
+    }
   };
 
-  const bulkResolve = (ticketIds: string[]) => {
-    if (!currentUser) return;
+  // 5. Operaciones en lote
+  const bulkResolve = async (ticketIds: string[]) => {
+    if (!currentUser || ticketIds.length === 0) return;
+    const snapshot = [...allTickets];
+
     setAllTickets(prev =>
       prev.map(t => {
         if (ticketIds.includes(t.id)) {
           return {
             ...t,
             status: 'Resuelto' as TicketStatus,
-            resolutionTime: 'Resuelto hoy',
+            resolutionTime: 'Resuelto en SLA',
             history: [
               ...t.history,
               {
@@ -486,7 +725,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 action: 'Resuelto por lote',
                 detail: 'Marcado como resuelto en operación masiva',
                 user: currentUser.name,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                time: formatFechaBogota(new Date(), true),
                 timestamp: Date.now()
               }
             ]
@@ -495,24 +734,51 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return t;
       })
     );
+
     showToast(
-      `${ticketIds.length} ${ticketIds.length === 1 ? 'ticket resuelto' : 'tickets resueltos'}`
+      `${ticketIds.length} ${ticketIds.length === 1 ? 'ticket resuelto' : 'tickets resueltos'}`,
+      { type: 'success' }
     );
+
+    try {
+      const res = await fetch('/api/tickets/bulk', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({
+          ticketIds,
+          action: 'resolve'
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setAllTickets(snapshot);
+        showToast(err.error || 'Error al resolver tickets en lote', { type: 'error' });
+      }
+    } catch {
+      setAllTickets(snapshot);
+      showToast('Error de conexión en operación por lote. Revertido.', { type: 'error' });
+    }
   };
 
-  const bulkAssign = (ticketIds: string[]) => {
-    if (!currentUser) return;
+  const bulkAssign = async (ticketIds: string[]) => {
+    if (!currentUser || ticketIds.length === 0) return;
+    const snapshot = [...allTickets];
+
+    const agentObj = {
+      name: currentUser.name,
+      avatar: currentUser.avatar,
+      role: currentUser.title
+    };
+
     setAllTickets(prev =>
       prev.map(t => {
         if (ticketIds.includes(t.id)) {
           return {
             ...t,
-            status: 'Asignado' as TicketStatus,
-            assignedAgent: {
-              name: currentUser.name,
-              avatar: currentUser.avatar,
-              role: currentUser.title
-            },
+            status: (t.status === 'Nuevo' ? 'Asignado' : t.status) as TicketStatus,
+            assignedAgent: agentObj,
             history: [
               ...t.history,
               {
@@ -520,7 +786,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 action: 'Asignado por lote',
                 detail: `Asignado a ${currentUser.name}`,
                 user: currentUser.name,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                time: formatFechaBogota(new Date(), true),
                 timestamp: Date.now()
               }
             ]
@@ -529,13 +795,39 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return t;
       })
     );
+
     showToast(
-      `${ticketIds.length} ${ticketIds.length === 1 ? 'ticket asignado' : 'tickets asignados'}`
+      `${ticketIds.length} ${ticketIds.length === 1 ? 'ticket asignado' : 'tickets asignados'}`,
+      { type: 'success' }
     );
+
+    try {
+      const res = await fetch('/api/tickets/bulk', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({
+          ticketIds,
+          action: 'assign',
+          agentName: currentUser.name
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setAllTickets(snapshot);
+        showToast(err.error || 'Error al asignar tickets en lote', { type: 'error' });
+      }
+    } catch {
+      setAllTickets(snapshot);
+      showToast('Error de red en asignación por lote. Revertido.', { type: 'error' });
+    }
   };
 
-  const bulkChangeStatus = (ticketIds: string[], newStatus: TicketStatus) => {
-    if (!currentUser) return;
+  const bulkChangeStatus = async (ticketIds: string[], newStatus: TicketStatus) => {
+    if (!currentUser || ticketIds.length === 0) return;
+    const snapshot = [...allTickets];
+
     setAllTickets(prev =>
       prev.map(t => {
         if (ticketIds.includes(t.id)) {
@@ -549,7 +841,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 action: 'Cambio de estado por lote',
                 detail: `Actualizado a "${newStatus}"`,
                 user: currentUser.name,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                time: formatFechaBogota(new Date(), true),
                 timestamp: Date.now()
               }
             ]
@@ -558,17 +850,83 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return t;
       })
     );
-    showToast(`Se cambió el estado a ${newStatus} en ${ticketIds.length} tickets`);
+
+    showToast(`Se cambió el estado a ${newStatus} en ${ticketIds.length} tickets`, { type: 'success' });
+
+    try {
+      const res = await fetch('/api/tickets/bulk', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({
+          ticketIds,
+          action: 'status',
+          statusTarget: newStatus
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setAllTickets(snapshot);
+        showToast(err.error || 'Error al cambiar estado por lote', { type: 'error' });
+      }
+    } catch {
+      setAllTickets(snapshot);
+      showToast('Error de red en cambio de estado por lote. Revertido.', { type: 'error' });
+    }
   };
 
-  const createTicket = (newTicket: Ticket) => {
+  // 6. Crear ticket (POST /api/tickets)
+  const createTicket = async (newTicket: Ticket): Promise<Ticket | null> => {
+    const snapshot = [...allTickets];
+    // Optimistic Update
     setAllTickets(prev => [newTicket, ...prev]);
-    showToast(`Ticket ${newTicket.code} creado exitosamente`);
+    showToast(`Ticket ${newTicket.code} creado exitosamente`, { type: 'success' });
+
+    try {
+      const res = await fetch('/api/tickets', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({
+          title: newTicket.title,
+          description: newTicket.description,
+          company: newTicket.company,
+          category: newTicket.category,
+          module: newTicket.module,
+          priority: newTicket.priority,
+          tags: newTicket.tags,
+          requesterName: newTicket.requesterName,
+          requesterEmail: newTicket.requesterEmail,
+          requesterPhone: newTicket.requesterPhone,
+          requesterTitle: newTicket.requesterTitle
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setAllTickets(snapshot);
+        showToast(err.error || 'Error al registrar el ticket en el servidor', { type: 'error' });
+        return null;
+      }
+
+      const data = await res.json();
+      if (data && data.ticket) {
+        // Reemplazar el optimista con el confirmado por el servidor
+        setAllTickets(prev => [data.ticket, ...prev.filter(t => t.id !== newTicket.id)]);
+        return data.ticket;
+      }
+      return newTicket;
+    } catch {
+      setAllTickets(snapshot);
+      showToast('Error de red al crear el ticket. Revertido.', { type: 'error' });
+      return null;
+    }
   };
 
   const addAnnouncement = (newAnnouncement: Announcement) => {
     setAnnouncements(prev => [newAnnouncement, ...prev]);
-    showToast('Comunicado publicado exitosamente');
+    showToast('Comunicado publicado exitosamente', { type: 'success' });
   };
 
   return (
@@ -581,6 +939,7 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         isAuthLoaded,
         logout,
         counts,
+        kpis,
         moveTicket,
         undoMove,
         takeTicket,
@@ -594,7 +953,8 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         addAnnouncement,
         toast,
         showToast,
-        clearToast
+        clearToast,
+        reloadTickets
       }}
     >
       {children}

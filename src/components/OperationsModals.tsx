@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Ticket, Announcement } from '../types';
+import { formatFechaBogota } from '../utils/fechas';
 
 interface MetricsModalProps {
   isOpen: boolean;
@@ -185,7 +186,7 @@ export const AnnouncementsModal: React.FC<AnnouncementsModalProps> = ({
       title: title.trim(),
       category,
       content: content.trim(),
-      date: 'Hoy 10:00 a. m.',
+      date: formatFechaBogota(new Date(), true),
       author: 'Carlos M. Restrepo (Supervisor SFS)',
       priority
     });
