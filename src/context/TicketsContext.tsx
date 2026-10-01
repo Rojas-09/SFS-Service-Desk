@@ -65,9 +65,30 @@ const TicketsContext = createContext<TicketsContextValue | null>(null);
 export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [allTickets, setAllTickets] = useState<Ticket[]>(INITIAL_TICKETS);
   const [announcements, setAnnouncements] = useState<Announcement[]>(INITIAL_ANNOUNCEMENTS);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isAuthLoaded, setIsAuthLoaded] = useState<boolean>(false);
+  const [currentUser, setCurrentUserState] = useState<User | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const cached = localStorage.getItem('sfs_user');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [isAuthLoaded, setIsAuthLoaded] = useState<boolean>(true);
   const [toast, setToast] = useState<ToastInfo | null>(null);
+
+  const setCurrentUser = (user: User | null) => {
+    setCurrentUserState(user);
+    if (typeof window !== 'undefined') {
+      try {
+        if (user) {
+          localStorage.setItem('sfs_user', JSON.stringify(user));
+        } else {
+          localStorage.removeItem('sfs_user');
+        }
+      } catch {}
+    }
+  };
 
   // Intentar sincronizar sesión real con el backend en montaje
   useEffect(() => {
@@ -77,11 +98,24 @@ export const TicketsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (res.ok) {
           const data = await res.json();
           if (data && data.user) {
-            setCurrentUser(data.user);
+            setCurrentUserState(data.user);
+            try {
+              localStorage.setItem('sfs_user', JSON.stringify(data.user));
+            } catch {}
+          } else {
+            setCurrentUserState(null);
+            try {
+              localStorage.removeItem('sfs_user');
+            } catch {}
           }
+        } else if (res.status === 401) {
+          setCurrentUserState(null);
+          try {
+            localStorage.removeItem('sfs_user');
+          } catch {}
         }
       } catch {
-        // En entorno dev puro, mantener usuario actual
+        // En entorno dev puro o estático, mantener usuario actual en caché
       } finally {
         setIsAuthLoaded(true);
       }

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { obtenerSesion } from '../../lib/auth';
+import { obtenerSesion } from '../../lib/auth/index';
 import { cookieValue } from '../_utils';
 
 export default async function handler(req: Request, res: Response) {

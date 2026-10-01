@@ -47,12 +47,10 @@ function AppContent() {
 
   const [isNewTicketModalOpen, setIsNewTicketModalOpen] = useState(false);
 
-  if (!isAuthLoaded) {
-    return null;
-  }
-
   // ================= MIDDLEWARE Y PROTECCIÓN DE RUTAS (Requirements 1, 4 & 5) =================
   useEffect(() => {
+    if (!isAuthLoaded) return;
+
     // 1. SIN SESIÓN ACTIVA
     if (!currentUser) {
       if (
@@ -104,7 +102,18 @@ function AppContent() {
         return;
       }
     }
-  }, [pathname, currentUser, navigateToPath]);
+  }, [pathname, currentUser, navigateToPath, isAuthLoaded]);
+
+  if (!isAuthLoaded) {
+    return (
+      <div className="min-h-screen w-screen flex items-center justify-center bg-[#F5F7FB]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-[#1565C0] border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs font-semibold text-slate-500">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Si no hay usuario y estamos en /login
   if (!currentUser) {

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { iniciarSesion } from '../../lib/auth';
+import { iniciarSesion } from '../../lib/auth/index';
 import { setSessionCookie } from '../_utils';
 
 export default async function handler(req: Request, res: Response) {

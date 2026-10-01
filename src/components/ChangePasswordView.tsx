@@ -87,7 +87,7 @@ export const ChangePasswordView: React.FC<ChangePasswordViewProps> = ({
       }
     } catch {
       // Fallback a lógica local
-      const { cambiarContrasenaUsuario } = await import('../../lib/auth');
+      const { cambiarContrasenaUsuario } = await import('../../lib/auth/index');
       const localRes = await cambiarContrasenaUsuario(currentUser.id, currentPassword, newPassword);
 
       if (localRes.success && localRes.user) {

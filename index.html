@@ -13,6 +13,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+      (function() {
+        try {
+          var p = window.location.pathname;
+          var u = localStorage.getItem('sfs_user');
+          if (p === '/') {
+            if (!u) {
+              window.location.replace('/login');
+            } else {
+              var user = JSON.parse(u);
+              if (user && user.role === 'cliente') {
+                window.location.replace('/portal');
+              } else {
+                window.location.replace('/consola/bandeja');
+              }
+            }
+          } else if (!u && (p.indexOf('/consola') === 0 || p.indexOf('/portal') === 0 || p === '/cambiar-contrasena')) {
+            window.location.replace('/login?next=' + encodeURIComponent(p + window.location.search));
+          }
+        } catch(e) {}
+      })();
+    </script>
   </head>
   <body class="bg-[#F5F7FB] font-sans text-slate-800 antialiased overflow-hidden m-0 p-0 select-none">
     <div id="root"></div>

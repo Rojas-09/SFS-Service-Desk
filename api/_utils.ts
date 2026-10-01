@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { AUTH_COOKIE_NAME, verificarTokenSesion } from '../lib/auth';
+import { AUTH_COOKIE_NAME, verificarTokenSesion } from '../lib/auth/index';
 
 export function cookieValue(req: Request): string | undefined {
   const cookies = req.headers.cookie?.split(';') || [];

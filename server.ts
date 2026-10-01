@@ -8,7 +8,7 @@ import {
   cambiarContrasenaUsuario,
   AUTH_COOKIE_NAME,
   verificarTokenSesion
-} from './lib/auth';
+} from './lib/auth/index';
 import { INITIAL_TICKETS } from './src/data/mockData';
 
 const app = express();

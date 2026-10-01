@@ -5,7 +5,7 @@ export const useNavigationUrl = () => {
   const getFiltersFromLocation = (): NavigationFilters & { pathname: string } => {
     if (typeof window === 'undefined') {
       return {
-        pathname: '/consola/bandeja',
+        pathname: '/login',
         bandeja: 'activos',
         vista: 'tabla',
         seccion: undefined,
@@ -20,8 +20,31 @@ export const useNavigationUrl = () => {
       };
     }
 
-    const pathname = window.location.pathname;
+    let pathname = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
+
+    // Normalizar raíz '/' según el estado de la sesión
+    if (pathname === '/') {
+      try {
+        const cachedUserStr = localStorage.getItem('sfs_user');
+        if (!cachedUserStr) {
+          pathname = '/login';
+          window.history.replaceState({}, '', '/login');
+        } else {
+          const cachedUser = JSON.parse(cachedUserStr);
+          if (cachedUser && cachedUser.role === 'cliente') {
+            pathname = '/portal';
+            window.history.replaceState({}, '', '/portal');
+          } else {
+            pathname = '/consola/bandeja';
+            window.history.replaceState({}, '', '/consola/bandeja');
+          }
+        }
+      } catch {
+        pathname = '/login';
+        window.history.replaceState({}, '', '/login');
+      }
+    }
 
     // Mapear pathname real a bandeja o sección
     let bandeja: BandejaType = 'activos';
