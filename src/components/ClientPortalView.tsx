@@ -25,7 +25,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
   onLogout,
   onNavigateToChangePassword
 }) => {
-  const { sendMessage } = useTickets();
+  const { sendMessage, kpis } = useTickets();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [ticketSearch, setTicketSearch] = useState('');
   const [replyContent, setReplyContent] = useState('');
@@ -387,7 +387,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F37021] text-white shadow-2xs">
                     Portal corporativo
                   </span>
-                  <span className="text-xs text-blue-200">SLA Platinum 99.9%</span>
+                  <span className="text-xs text-blue-200">Atención bajo SLA</span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
                   Bienvenido, {currentUser.name}
@@ -433,8 +433,8 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                     Tiempo promedio de respuesta
                   </span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-2xl font-bold text-slate-900">18 min</span>
-                    <span className="text-xs text-emerald-600 font-semibold">Garantizado</span>
+                    <span className="text-2xl font-bold text-slate-900">{kpis.firstResponseTime}</span>
+                    <span className="text-xs text-emerald-600 font-semibold">Calculado</span>
                   </div>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
@@ -448,8 +448,10 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                     Cumplimiento SLA mensual
                   </span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-2xl font-bold text-emerald-600">99.4%</span>
-                    <span className="text-xs text-emerald-600 font-semibold">Óptimo</span>
+                    <span className="text-2xl font-bold text-emerald-600">
+                      {kpis.slaCompliancePercent.toFixed(1)}%
+                    </span>
+                    <span className="text-xs text-emerald-600 font-semibold">Calculado</span>
                   </div>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">

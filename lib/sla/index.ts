@@ -84,20 +84,43 @@ export interface BogotaDateParts {
   isoDateString: string; // YYYY-MM-DD
 }
 
+const bogotaDateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/Bogota',
+  weekday: 'short',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hourCycle: 'h23'
+});
+
+const weekdayIndexes: Record<string, number> = {
+  Sun: 0,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6
+};
+
 /**
  * Extrae partes de fecha en zona horaria America/Bogota (UTC-5 fijo, sin cambio de hora).
  */
 export function getBogotaDateParts(d: Date): BogotaDateParts {
-  const bogotaOffsetMs = -5 * 60 * 60 * 1000;
-  const bogotaTime = new Date(d.getTime() + bogotaOffsetMs);
-  const year = bogotaTime.getUTCFullYear();
-  const month = bogotaTime.getUTCMonth();
-  const day = bogotaTime.getUTCDate();
-  const dayOfWeek = bogotaTime.getUTCDay();
-  const hours = bogotaTime.getUTCHours();
-  const minutes = bogotaTime.getUTCMinutes();
-  const seconds = bogotaTime.getUTCSeconds();
-  const ms = bogotaTime.getUTCMilliseconds();
+  const parts = Object.fromEntries(
+    bogotaDateTimeFormatter.formatToParts(d).map(part => [part.type, part.value])
+  );
+  const year = Number(parts.year);
+  const month = Number(parts.month) - 1;
+  const day = Number(parts.day);
+  const dayOfWeek = weekdayIndexes[parts.weekday];
+  const hours = Number(parts.hour);
+  const minutes = Number(parts.minute);
+  const seconds = Number(parts.second);
+  const ms = d.getUTCMilliseconds();
   const isoDateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
   return { year, month, day, dayOfWeek, hours, minutes, seconds, ms, isoDateString };

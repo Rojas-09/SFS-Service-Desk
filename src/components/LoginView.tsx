@@ -50,7 +50,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
         body: JSON.stringify({ email: emailTrimmed, password })
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (response.ok && data.success && data.user) {
         if (data.token) {
@@ -64,14 +64,22 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowToas
         setErrorMessage(data.error || 'Correo o contraseña incorrectos');
       }
     } catch {
-      // Si la API remota no responde directamente, invocar validación local del módulo auth
-      const { iniciarSesion } = await import('../../lib/auth/index');
-      const localResult = await iniciarSesion(emailTrimmed, password);
+      // El fallback local solo es válido durante desarrollo; producción debe usar la API.
+      if (import.meta.env.DEV) {
+        try {
+          const { iniciarSesion } = await import('../../lib/auth/index');
+          const localResult = await iniciarSesion(emailTrimmed, password);
 
-      if (localResult.success && localResult.user) {
-        onLoginSuccess(localResult.user);
+          if (localResult.success && localResult.user) {
+            onLoginSuccess(localResult.user);
+          } else {
+            setErrorMessage(localResult.error || 'Correo o contraseña incorrectos');
+          }
+        } catch {
+          setErrorMessage('No fue posible conectar con el servicio de autenticación');
+        }
       } else {
-        setErrorMessage(localResult.error || 'Correo o contraseña incorrectos');
+        setErrorMessage('No fue posible conectar con el servicio de autenticación');
       }
     } finally {
       setIsLoading(false);

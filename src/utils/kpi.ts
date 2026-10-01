@@ -52,10 +52,12 @@ export function calcularKPIs(tickets: Ticket[], refDate = new Date()): KPIStats 
     }
   }
 
-  const avgMinutes = responseCount > 0 ? Math.round(totalResponseTimeMinutes / responseCount) : 18;
-  const firstResponseTime = avgMinutes >= 60
-    ? `${Math.floor(avgMinutes / 60)} h ${avgMinutes % 60} min`
-    : `${avgMinutes} min`;
+  const avgMinutes = responseCount > 0 ? Math.round(totalResponseTimeMinutes / responseCount) : null;
+  const firstResponseTime = avgMinutes === null
+    ? 'Sin datos'
+    : avgMinutes >= 60
+      ? `${Math.floor(avgMinutes / 60)} h ${avgMinutes % 60} min`
+      : `${avgMinutes} min`;
 
   // 4. Críticos en riesgo: prioridad Crítica activa con SLA < 60 min o ya vencidos
   const criticalAtRisk = tickets.filter(t =>
