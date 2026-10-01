@@ -26,7 +26,7 @@
  *    - Agrega EventoTicket por cada ticket modificado.
  */
 
-import { Ticket, TicketStatus, Priority, Mensaje, EventoTicket } from '../src/types';
+import type { Ticket, TicketStatus, Priority, Mensaje, EventoTicket } from '../src/types';
 import { SessionPayload } from '../lib/auth/index';
 import { SERVER_TICKETS_DATABASE, SEED_COMPANIES } from './data/seed';
 import { calcularVencimiento, MATRIZ_SLA } from '../lib/sla/index';

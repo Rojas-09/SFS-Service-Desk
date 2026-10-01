@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { User, UserRole } from '../../src/types';
+import type { User, UserRole } from '../../src/types';
 import { SEED_USERS } from '../../server/data/seed';
 
 export interface AuthUser extends User {

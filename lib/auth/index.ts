@@ -1,5 +1,5 @@
 import * as jose from 'jose';
-import { User, UserRole } from '../../src/types';
+import type { User, UserRole } from '../../src/types';
 import {
   buscarUsuarioPorEmail,
   buscarUsuarioPorId,
@@ -9,7 +9,6 @@ import {
   crearUsuario,
   actualizarRolUsuario,
   listarUsuarios,
-  AuthUser
 } from './repositorio';
 import {
   checkLoginRateLimit,

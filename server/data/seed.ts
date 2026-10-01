@@ -11,7 +11,7 @@
  * - Módulo/producto afectado como campo independiente.
  */
 
-import {
+import type {
   Ticket,
   TicketStatus,
   Priority,
@@ -23,7 +23,7 @@ import {
   CategoriaTicket,
   ModuloAfectado
 } from '../../src/types';
-import { AuthUser } from '../../lib/auth/repositorio';
+import type { AuthUser } from '../../lib/auth/repositorio';
 import { calcularVencimiento, MATRIZ_SLA } from '../../lib/sla/index';
 import { formatFechaBogota, formatTiempoRelativo, calcularEstadoSLA } from '../../src/utils/fechas';
 

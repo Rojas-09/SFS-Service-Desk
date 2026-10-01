@@ -4,7 +4,7 @@
  * 1 día hábil = 10 horas de servicio (08:00 a 18:00).
  */
 
-import { Priority } from '../../src/types';
+import type { Priority } from '../../src/types';
 
 // Festivos oficiales de Colombia para 2025 y 2026 (configurables)
 export const FESTIVOS_COLOMBIA: string[] = [
