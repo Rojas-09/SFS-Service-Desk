@@ -226,7 +226,17 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
             </div>
           ) : (
             filteredList.map((ticket) => {
-              const isSelected = selectedTicket && ticket.id === selectedTicket.id;
+              const isSelected = Boolean(selectedTicket && ticket.id === selectedTicket.id);
+              const selectedHighlight = 'border-blue-600 dark:border-blue-500 ring-2 ring-blue-600/20 shadow-sm';
+              const selectedHighlightDesktopOnly = 'lg:border-blue-600 lg:border-blue-500 lg:ring-2 lg:ring-blue-600/20 lg:shadow-sm';
+              const neutralCard = 'bg-white dark:bg-[#0E2A52] border-slate-200 dark:border-[#1E3F73] hover:border-slate-300 dark:hover:border-[#2a5596] hover:shadow-xs';
+
+              const cardStateClass = !isSelected
+                ? neutralCard
+                : hasExplicitSelection
+                  ? `bg-white dark:bg-[#0E2A52] ${selectedHighlight}`
+                  : `${neutralCard} ${selectedHighlightDesktopOnly}`;
+
               const isCritical = ticket.priority === 'Crítica';
               const slaBadge = formatSlaBadge(ticket);
 
@@ -234,15 +244,11 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                 <div
                   key={ticket.id}
                   onClick={() => onSetFilterParam('ticketId', ticket.id)}
-                  className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer relative shadow-2xs active:bg-slate-50 dark:active:bg-[#081B3A] ${
-                    isSelected
-                      ? 'bg-white dark:bg-[#0E2A52] border-blue-600 dark:border-blue-500 ring-2 ring-blue-600/20 shadow-sm'
-                      : 'bg-white dark:bg-[#0E2A52] border-slate-200 dark:border-[#1E3F73] hover:border-slate-300 dark:hover:border-[#2a5596] hover:shadow-xs'
-                  }`}
+                  className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer relative shadow-2xs active:bg-slate-50 dark:active:bg-[#081B3A] ${cardStateClass}`}
                 >
                   {/* Indicador lateral azul para seleccionado */}
                   {isSelected && (
-                    <div className="absolute left-0 top-3 bottom-3 w-1 bg-blue-600 dark:bg-blue-500 rounded-r-md" />
+                    <div className={`absolute left-0 top-3 bottom-3 w-1 bg-blue-600 dark:bg-blue-500 rounded-r-md ${hasExplicitSelection ? '' : 'hidden lg:block'}`} />
                   )}
 
                   <div className="flex items-center justify-between gap-2 mb-1.5 pl-1.5 flex-wrap">
@@ -300,7 +306,11 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
       {/* ================= PANEL DERECHO (40%): INSPECTOR DETALLADO ================= */}
       {selectedTicket && (
-        <aside className="w-full lg:w-[42%] xl:w-[40%] flex flex-col h-full bg-white dark:bg-[#0E2A52] overflow-hidden flex-shrink-0 shadow-lg lg:border-l lg:border-slate-200 dark:lg:border-[#1E3F73] transition-colors">
+        <aside
+          className={`w-full lg:w-[42%] xl:w-[40%] flex-col h-full bg-white dark:bg-[#0E2A52] overflow-hidden flex-shrink-0 shadow-lg lg:border-l lg:border-slate-200 dark:lg:border-[#1E3F73] transition-colors ${
+            hasExplicitSelection ? 'flex' : 'hidden lg:flex'
+          }`}
+        >
           {/* Cabecera del Inspector */}
           <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-[#1E3F73] flex-shrink-0 space-y-2 transition-colors">
             <div className="flex items-center justify-between gap-2">
