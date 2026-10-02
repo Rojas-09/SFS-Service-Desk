@@ -17,23 +17,23 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] p-3 sm:p-6 custom-scrollbar select-none">
+    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-[#F5F7FB] dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] p-3 sm:p-6 custom-scrollbar select-none transition-colors duration-200">
       <div className="max-w-4xl mx-auto w-full space-y-4 sm:space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={onBackToConsole}
-              className="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-700 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+              className="p-2 rounded-xl bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] text-slate-600 dark:text-[#E8EEF9] hover:text-blue-700 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-[#081B3A] transition-colors shadow-2xs cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
               title="Volver a la consola"
             >
               <span className="material-symbols-outlined text-lg leading-none">arrow_back</span>
             </button>
             <div>
-              <h1 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
+              <h1 className="text-base sm:text-xl font-bold text-slate-900 dark:text-[#E8EEF9] tracking-tight">
                 Configuración del sistema
               </h1>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-[#94A9CC] mt-0.5">
                 Parámetros de la mesa de ayuda, alertas automáticas y preferencias
               </p>
             </div>
@@ -48,13 +48,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
         </div>
 
         {/* Opciones */}
-        <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4 sm:space-y-5 text-xs">
-          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200">
+        <div className="bg-white dark:bg-[#0E2A52] rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-[#1E3F73] shadow-sm space-y-4 sm:space-y-5 text-xs">
+          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73]">
             <div>
-              <span className="font-bold text-slate-900 block text-xs">
+              <span className="font-bold text-slate-900 dark:text-[#E8EEF9] block text-xs">
                 Alertas sonoras para incidentes críticos
               </span>
-              <span className="text-slate-500 text-xs mt-0.5 block">
+              <span className="text-slate-500 dark:text-[#94A9CC] text-xs mt-0.5 block">
                 Emitir aviso acústico ante nuevos tickets clasificados con prioridad crítica
               </span>
             </div>
@@ -66,32 +66,32 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
             />
           </div>
 
-          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73]">
             <div>
-              <span className="font-bold text-slate-900 block text-xs">
+              <span className="font-bold text-slate-900 dark:text-[#E8EEF9] block text-xs">
                 Umbral de advertencia pre-vencimiento SLA
               </span>
-              <span className="text-slate-500 text-xs mt-0.5 block">
+              <span className="text-slate-500 dark:text-[#94A9CC] text-xs mt-0.5 block">
                 Tiempo de anticipación antes de expirar el tiempo límite para activar semáforo de alerta
               </span>
             </div>
             <select
               value={slaThreshold}
               onChange={(e) => setSlaThreshold(e.target.value)}
-              className="bg-white border border-slate-200 rounded-xl px-3 py-1.5 font-semibold text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+              className="bg-white dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] text-slate-800 dark:text-[#E8EEF9] rounded-xl px-3 py-1.5 font-semibold focus:ring-2 focus:ring-blue-600 focus:outline-none"
             >
-              <option value="0.5">30 minutos</option>
-              <option value="1">1 hora</option>
-              <option value="2">2 horas</option>
+              <option value="0.5" className="bg-white dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9]">30 minutos</option>
+              <option value="1" className="bg-white dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9]">1 hora</option>
+              <option value="2" className="bg-white dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9]">2 horas</option>
             </select>
           </div>
 
-          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73]">
             <div>
-              <span className="font-bold text-slate-900 block text-xs">
+              <span className="font-bold text-slate-900 dark:text-[#E8EEF9] block text-xs">
                 Asignación automática inteligente
               </span>
-              <span className="text-slate-500 text-xs mt-0.5 block">
+              <span className="text-slate-500 dark:text-[#94A9CC] text-xs mt-0.5 block">
                 Distribuir automáticamente casos nuevos entre agentes disponibles según carga de trabajo
               </span>
             </div>
@@ -103,12 +103,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ onBackToConsole }) =
             />
           </div>
 
-          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73]">
             <div>
-              <span className="font-bold text-slate-900 block text-xs">
+              <span className="font-bold text-slate-900 dark:text-[#E8EEF9] block text-xs">
                 Notificaciones por correo a clientes
               </span>
-              <span className="text-slate-500 text-xs mt-0.5 block">
+              <span className="text-slate-500 dark:text-[#94A9CC] text-xs mt-0.5 block">
                 Enviar correo automático inmediato ante cambios de estado o respuestas técnicas
               </span>
             </div>

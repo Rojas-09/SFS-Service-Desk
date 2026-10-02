@@ -124,7 +124,7 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 max-w-2xl w-full max-h-[95dvh] sm:max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95">
+      <div className="bg-white dark:bg-[#0E2A52] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-[#1E3F73] max-w-2xl w-full max-h-[95dvh] sm:max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 transition-colors duration-200">
         {/* Header */}
         <div className="px-4 sm:px-6 py-3.5 sm:py-4 bg-linear-to-r from-[#0B2A5B] to-[#1565C0] text-white flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
@@ -149,23 +149,23 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
           {/* Empresa y Solicitante */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-bold text-slate-700 mb-1">
+              <label className="block font-bold text-slate-700 dark:text-[#E8EEF9] mb-1">
                 Empresa cliente vinculada <span className="text-rose-500">*</span>
               </label>
               {isClient ? (
                 <input
                   value={company}
                   readOnly
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-100 font-medium text-slate-700"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] bg-slate-100 dark:bg-[#081B3A]/60 font-medium text-slate-700 dark:text-[#94A9CC]"
                 />
               ) : (
                 <select
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] focus:bg-white dark:focus:bg-[#081B3A] focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900 dark:text-[#E8EEF9]"
                 >
                   {COMPANIES_LIST.map((c) => (
-                    <option key={c} value={c}>
+                    <option key={c} value={c} className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">
                       {c}
                     </option>
                   ))}
@@ -174,7 +174,7 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 mb-1">
+              <label className="block font-bold text-slate-700 dark:text-[#E8EEF9] mb-1">
                 Nombre del solicitante <span className="text-rose-500">*</span>
               </label>
               <input
@@ -182,7 +182,7 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
                 value={requesterName}
                 onChange={(e) => setRequesterName(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900"
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] focus:bg-white dark:focus:bg-[#081B3A] focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900 dark:text-[#E8EEF9] placeholder-slate-400 dark:placeholder-[#94A9CC]/60"
                 placeholder="Ej. Claudia Mendoza"
               />
             </div>
@@ -191,7 +191,7 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
           {/* Correo y Prioridad */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-bold text-slate-700 mb-1">
+              <label className="block font-bold text-slate-700 dark:text-[#E8EEF9] mb-1">
                 Correo corporativo <span className="text-rose-500">*</span>
               </label>
               <input
@@ -200,26 +200,26 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
                 readOnly={isClient}
                 onChange={(e) => setRequesterEmail(e.target.value)}
                 required
-                className={`w-full px-3 py-2 rounded-xl border border-slate-200 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-mono text-slate-900 ${
-                  isClient ? 'bg-slate-100' : 'bg-slate-50'
+                className={`w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] focus:bg-white dark:focus:bg-[#081B3A] focus:ring-2 focus:ring-blue-600 focus:outline-none font-mono text-slate-900 dark:text-[#E8EEF9] placeholder-slate-400 dark:placeholder-[#94A9CC]/60 ${
+                  isClient ? 'bg-slate-100 dark:bg-[#081B3A]/60 text-slate-700 dark:text-[#94A9CC]' : 'bg-slate-50 dark:bg-[#081B3A]'
                 }`}
                 placeholder="correo@empresa.com"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 mb-1">
+              <label className="block font-bold text-slate-700 dark:text-[#E8EEF9] mb-1">
                 Nivel de prioridad SLA <span className="text-rose-500">*</span>
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as Priority)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold text-slate-900"
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] focus:bg-white dark:focus:bg-[#081B3A] focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold text-slate-900 dark:text-[#E8EEF9]"
               >
-                <option value="Crítica">Crítica (1 h resp. / 4 h solución)</option>
-                <option value="Alta">Alta (4 h resp. / 1 día solución)</option>
-                <option value="Media">Media (8 h resp. / 3 días solución)</option>
-                <option value="Baja">Baja (1 día resp. / 5 días solución)</option>
+                <option value="Crítica" className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">Crítica (1 h resp. / 4 h solución)</option>
+                <option value="Alta" className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">Alta (4 h resp. / 1 día solución)</option>
+                <option value="Media" className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">Media (8 h resp. / 3 días solución)</option>
+                <option value="Baja" className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">Baja (1 día resp. / 5 días solución)</option>
               </select>
             </div>
           </div>
@@ -227,16 +227,16 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
           {/* Categoría y Módulo Afectado (Requirement 6: campo independiente) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-bold text-slate-700 mb-1">
+              <label className="block font-bold text-slate-700 dark:text-[#E8EEF9] mb-1">
                 Categoría del caso <span className="text-rose-500">*</span>
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900"
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] focus:bg-white dark:focus:bg-[#081B3A] focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900 dark:text-[#E8EEF9]"
               >
                 {CATEGORIES_LIST.map((cat) => (
-                  <option key={cat} value={cat}>
+                  <option key={cat} value={cat} className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">
                     {cat}
                   </option>
                 ))}
@@ -244,16 +244,16 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 mb-1">
+              <label className="block font-bold text-slate-700 dark:text-[#E8EEF9] mb-1">
                 Módulo o producto afectado <span className="text-rose-500">*</span>
               </label>
               <select
                 value={moduleName}
                 onChange={(e) => setModuleName(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900"
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] focus:bg-white dark:focus:bg-[#081B3A] focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900 dark:text-[#E8EEF9]"
               >
                 {MODULES_LIST.map((mod) => (
-                  <option key={mod} value={mod}>
+                  <option key={mod} value={mod} className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">
                     {mod}
                   </option>
                 ))}
@@ -263,7 +263,7 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
 
           {/* Título o Asunto */}
           <div>
-            <label className="block font-bold text-slate-700 mb-1">
+            <label className="block font-bold text-slate-700 dark:text-[#E8EEF9] mb-1">
               Asunto descriptivo del incidente <span className="text-rose-500">*</span>
             </label>
             <input
@@ -271,14 +271,14 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900"
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] focus:bg-white dark:focus:bg-[#081B3A] focus:ring-2 focus:ring-blue-600 focus:outline-none font-medium text-slate-900 dark:text-[#E8EEF9] placeholder-slate-400 dark:placeholder-[#94A9CC]/60"
               placeholder="Ej. Error 500 al timbrar factura con validación DIAN"
             />
           </div>
 
           {/* Descripción Detallada */}
           <div>
-            <label className="block font-bold text-slate-700 mb-1">
+            <label className="block font-bold text-slate-700 dark:text-[#E8EEF9] mb-1">
               Descripción y pasos para reproducir <span className="text-rose-500">*</span>
             </label>
             <textarea
@@ -286,18 +286,18 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none font-normal text-slate-900 resize-none"
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] focus:bg-white dark:focus:bg-[#081B3A] focus:ring-2 focus:ring-blue-600 focus:outline-none font-normal text-slate-900 dark:text-[#E8EEF9] placeholder-slate-400 dark:placeholder-[#94A9CC]/60 resize-none"
               placeholder="Explica qué ocurrió, qué acción realizabas y el mensaje de error arrojado..."
             />
           </div>
 
           {/* Adjunto Simulado */}
           <div className="pt-1">
-            <label className="block font-bold text-slate-700 mb-1">
+            <label className="block font-bold text-slate-700 dark:text-[#E8EEF9] mb-1">
               Adjuntar evidencia técnica o captura (opcional)
             </label>
             <div className="flex items-center gap-3">
-              <label className="px-3 py-2 rounded-xl border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold cursor-pointer transition-colors flex items-center gap-1.5">
+              <label className="px-3 py-2 rounded-xl border border-slate-300 dark:border-[#1E3F73] bg-slate-100 dark:bg-[#081B3A] hover:bg-slate-200 dark:hover:bg-[#1E3F73]/50 text-slate-700 dark:text-[#E8EEF9] font-semibold cursor-pointer transition-colors flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-base">attach_file</span>
                 <span>{attachedFileName ? 'Cambiar archivo' : 'Seleccionar archivo (.log, .png, .pdf)'}</span>
                 <input
@@ -310,7 +310,7 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
                 />
               </label>
               {attachedFileName && (
-                <span className="text-xs text-emerald-700 font-medium flex items-center gap-1">
+                <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium flex items-center gap-1">
                   <span className="material-symbols-outlined text-sm">check_circle</span>
                   {attachedFileName}
                 </span>
@@ -319,11 +319,11 @@ export const NewTicketModal: React.FC<NewTicketModalProps> = ({
           </div>
 
           {/* Footer Actions */}
-          <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+          <div className="pt-4 border-t border-slate-200 dark:border-[#1E3F73] flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold cursor-pointer transition-colors"
+              className="px-4 py-2 rounded-xl border border-slate-200 dark:border-[#1E3F73] hover:bg-slate-100 dark:hover:bg-[#081B3A] text-slate-700 dark:text-[#94A9CC] font-semibold cursor-pointer transition-colors"
             >
               Cancelar
             </button>

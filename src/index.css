@@ -1,13 +1,43 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+
+:root {
+  --color-bg-app: #F5F7FB;
+  --color-surface-card: #FFFFFF;
+  --color-border-subtle: #E2E8F0;
+  --color-text-main: #0F172A;
+  --color-text-muted: #64748B;
+}
+
+html.dark {
+  --color-bg-app: #081B3A;
+  --color-surface-card: #0E2A52;
+  --color-border-subtle: #1E3F73;
+  --color-text-main: #E8EEF9;
+  --color-text-muted: #94A9CC;
+}
+
 @layer base {
+  @media (prefers-color-scheme: dark) {
+    html:not(.light) {
+      --color-bg-app: #081B3A;
+      --color-surface-card: #0E2A52;
+      --color-border-subtle: #1E3F73;
+      --color-text-main: #E8EEF9;
+      --color-text-muted: #94A9CC;
+    }
+  }
+
   html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     overflow: hidden;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #F5F7FB;
+    background-color: var(--color-bg-app);
+    color: var(--color-text-main);
+    transition: background-color 200ms ease, color 200ms ease;
     /* Evita el zoom automático de iOS Safari al enfocar inputs pequeños */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -89,6 +119,13 @@
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1E3F73;
+}
+html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #2b569b;
 }
 
 /* En móvil los scrollbars ocupan espacio: se ocultan pero se mantiene el scroll */

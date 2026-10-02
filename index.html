@@ -16,6 +16,19 @@
     <script>
       (function() {
         try {
+          var t = localStorage.getItem('sfs_tema');
+          var isDark = t === 'oscuro' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) || (t === 'sistema' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch(e) {}
+      })();
+    </script>
+    <script>
+      (function() {
+        try {
           var p = window.location.pathname;
           var u = localStorage.getItem('sfs_user');
           if (p === '/') {
@@ -36,7 +49,7 @@
       })();
     </script>
   </head>
-  <body class="bg-[#F5F7FB] font-sans text-slate-800 antialiased overflow-hidden m-0 p-0 select-none">
+  <body class="bg-[#F5F7FB] dark:bg-[#081B3A] font-sans text-slate-800 dark:text-[#E8EEF9] antialiased overflow-hidden m-0 p-0 select-none transition-colors duration-200">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

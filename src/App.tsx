@@ -318,7 +318,7 @@ function AppContent() {
     'Acceso no autorizado para tu rol de Agente. Las secciones de métricas, comunicados, empresas, usuarios y configuración requieren permisos de Supervisor o Administrador.';
 
   return (
-    <div className="h-dvh w-full flex flex-row overflow-hidden bg-[#F5F7FB] font-sans antialiased text-slate-800">
+    <div className="h-dvh w-full flex flex-row overflow-hidden bg-[#F5F7FB] dark:bg-[#081B3A] font-sans antialiased text-slate-800 dark:text-[#E8EEF9] transition-colors duration-200">
       {/* Toast Notification Container con Deshacer */}
       {toast && (
         <div

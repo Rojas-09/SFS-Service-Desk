@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <aside
         aria-label="Navegación principal"
         aria-hidden={false}
-        className={`w-[17rem] max-w-[85vw] h-full bg-[#0B2A5B] flex flex-col justify-between py-4 pl-3.5 pr-3.5 text-white z-50 flex-shrink-0 shadow-xl border-r border-[#153a75] overflow-x-hidden
+        className={`w-[17rem] max-w-[85vw] h-full bg-[#0B2A5B] dark:bg-[#081B3A] flex flex-col justify-between py-4 pl-3.5 pr-3.5 text-white z-50 flex-shrink-0 shadow-xl border-r border-[#153a75] dark:border-[#1E3F73] overflow-x-hidden transition-colors duration-200
           /* Móvil: drawer deslizante fuera de pantalla */
           fixed inset-y-0 left-0 transition-transform duration-300 ease-out pb-safe
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}

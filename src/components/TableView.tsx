@@ -18,19 +18,19 @@ export const formatSlaBadge = (ticket: Ticket) => {
   if (ticket.status === 'Resuelto' || ticket.status === 'Cerrado') {
     return {
       text: 'SLA cumplido',
-      colorClass: 'text-emerald-700',
-      bgClass: 'bg-emerald-50',
-      borderClass: 'border-emerald-200',
-      dotClass: 'bg-emerald-500'
+      colorClass: 'text-emerald-700 dark:text-emerald-300',
+      bgClass: 'bg-emerald-50 dark:bg-emerald-950/40',
+      borderClass: 'border-emerald-200 dark:border-emerald-800/50',
+      dotClass: 'bg-emerald-500 dark:bg-emerald-400'
     };
   }
   if (ticket.isBreached || ticket.slaMinutesRemaining <= 0) {
     return {
       text: 'SLA vencido',
-      colorClass: 'text-rose-700',
-      bgClass: 'bg-rose-50',
-      borderClass: 'border-rose-200',
-      dotClass: 'bg-rose-500'
+      colorClass: 'text-rose-700 dark:text-rose-300',
+      bgClass: 'bg-rose-50 dark:bg-rose-950/40',
+      borderClass: 'border-rose-200 dark:border-rose-800/50',
+      dotClass: 'bg-rose-500 dark:bg-rose-400'
     };
   }
 
@@ -42,26 +42,26 @@ export const formatSlaBadge = (ticket: Ticket) => {
   if (pct > 50) {
     return {
       text: timeText,
-      colorClass: 'text-emerald-700',
-      bgClass: 'bg-emerald-50',
-      borderClass: 'border-emerald-200',
-      dotClass: 'bg-emerald-500'
+      colorClass: 'text-emerald-700 dark:text-emerald-300',
+      bgClass: 'bg-emerald-50 dark:bg-emerald-950/40',
+      borderClass: 'border-emerald-200 dark:border-emerald-800/50',
+      dotClass: 'bg-emerald-500 dark:bg-emerald-400'
     };
   } else if (pct >= 20) {
     return {
       text: timeText,
-      colorClass: 'text-amber-700',
-      bgClass: 'bg-amber-50',
-      borderClass: 'border-amber-200',
-      dotClass: 'bg-amber-500'
+      colorClass: 'text-amber-700 dark:text-amber-300',
+      bgClass: 'bg-amber-50 dark:bg-amber-950/40',
+      borderClass: 'border-amber-200 dark:border-amber-800/50',
+      dotClass: 'bg-amber-500 dark:bg-amber-400'
     };
   } else {
     return {
       text: timeText,
-      colorClass: 'text-rose-700',
-      bgClass: 'bg-rose-50',
-      borderClass: 'border-rose-200',
-      dotClass: 'bg-rose-500'
+      colorClass: 'text-rose-700 dark:text-rose-300',
+      bgClass: 'bg-rose-50 dark:bg-rose-950/40',
+      borderClass: 'border-rose-200 dark:border-rose-800/50',
+      dotClass: 'bg-rose-500 dark:bg-rose-400'
     };
   }
 };
@@ -69,19 +69,19 @@ export const formatSlaBadge = (ticket: Ticket) => {
 export const getStatusBadgeStyle = (status: TicketStatus) => {
   switch (status) {
     case 'Nuevo':
-      return 'bg-amber-50 text-amber-800 border-amber-200';
+      return 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800/50';
     case 'Asignado':
-      return 'bg-slate-100 text-slate-800 border-slate-200';
+      return 'bg-slate-100 dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] border-slate-200 dark:border-[#1E3F73]';
     case 'En progreso':
-      return 'bg-blue-50 text-blue-800 border-blue-200';
+      return 'bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800/50';
     case 'En espera del cliente':
-      return 'bg-sky-50 text-sky-700 border-sky-200';
+      return 'bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800/50';
     case 'Resuelto':
-      return 'bg-emerald-50 text-emerald-800 border-emerald-200';
+      return 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/50';
     case 'Cerrado':
-      return 'bg-slate-100 text-slate-600 border-slate-200';
+      return 'bg-slate-100 dark:bg-[#081B3A] text-slate-600 dark:text-[#94A9CC] border-slate-200 dark:border-[#1E3F73]';
     default:
-      return 'bg-slate-100 text-slate-700 border-slate-200';
+      return 'bg-slate-100 dark:bg-[#081B3A] text-slate-700 dark:text-[#E8EEF9] border-slate-200 dark:border-[#1E3F73]';
   }
 };
 
@@ -258,22 +258,22 @@ export const TableView: React.FC<TableViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative select-none">
+    <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative select-none bg-[#F5F7FB] dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] transition-colors duration-200">
       {/* Subheader Fijo: Título según ?bandeja + Contador de activos + Filtros Rápidos + Switcher de Vistas */}
       <section className="px-3 sm:px-6 pt-3 pb-2 sm:pt-3.5 flex-shrink-0">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2 min-w-0">
+            <h1 className="text-base sm:text-lg font-bold text-slate-900 dark:text-[#E8EEF9] tracking-tight flex items-center gap-2 min-w-0">
               {getBandejaTitle(filters.bandeja)}
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/80">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-700/50">
               {activeCountInView} activos
             </span>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap -mx-0.5">
             {/* Requirement 4: Filtros rápidos EXCLUSIVAMENTE Urgentes, SLA en riesgo, Esperando cliente */}
-            <div className="flex items-center bg-slate-200/80 p-0.5 rounded-xl border border-slate-300/60 text-xs font-semibold overflow-x-auto custom-scrollbar">
+            <div className="flex items-center bg-slate-200/80 dark:bg-[#081B3A] p-0.5 rounded-xl border border-slate-300/60 dark:border-[#1E3F73] text-xs font-semibold overflow-x-auto custom-scrollbar transition-colors">
               <button
                 onClick={() => {
                   onSetFiltroRapido(filters.filtroRapido === 'urgentes' ? '' : 'urgentes');
@@ -281,8 +281,8 @@ export const TableView: React.FC<TableViewProps> = ({
                 }}
                 className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1 cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                   filters.filtroRapido === 'urgentes'
-                    ? 'bg-white text-rose-700 shadow-xs'
-                    : 'text-slate-600 hover:text-rose-600'
+                    ? 'bg-white dark:bg-[#0E2A52] text-rose-700 dark:text-rose-400 shadow-xs'
+                    : 'text-slate-600 dark:text-[#94A9CC] hover:text-rose-600 dark:hover:text-rose-400'
                 }`}
               >
                 <span className="material-symbols-outlined text-xs leading-none text-rose-500">warning</span>
@@ -296,8 +296,8 @@ export const TableView: React.FC<TableViewProps> = ({
                 }}
                 className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1 cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                   filters.filtroRapido === 'sla_riesgo'
-                    ? 'bg-white text-rose-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white dark:bg-[#0E2A52] text-rose-700 dark:text-rose-400 shadow-xs'
+                    : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                 }`}
               >
                 <span className="material-symbols-outlined text-xs leading-none text-amber-500">alarm</span>
@@ -311,8 +311,8 @@ export const TableView: React.FC<TableViewProps> = ({
                 }}
                 className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1 cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                   filters.filtroRapido === 'esperando'
-                    ? 'bg-white text-sky-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white dark:bg-[#0E2A52] text-sky-700 dark:text-sky-400 shadow-xs'
+                    : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                 }`}
               >
                 <span className="material-symbols-outlined text-xs leading-none text-sky-500">hourglass_empty</span>
@@ -321,7 +321,7 @@ export const TableView: React.FC<TableViewProps> = ({
             </div>
 
             {/* Selector de Vistas con Links semánticos que conservan bandeja y filtros (Requirement 2 & 3) */}
-            <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200/80 text-xs">
+            <div className="flex items-center bg-slate-100 dark:bg-[#081B3A] p-0.5 rounded-xl border border-slate-200/80 dark:border-[#1E3F73] text-xs transition-colors">
               <a
                 href={getVistaHref('tabla')}
                 onClick={(e) => {
@@ -330,8 +330,8 @@ export const TableView: React.FC<TableViewProps> = ({
                 }}
                 className={`px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1 focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline ${
                   filters.vista === 'tabla'
-                    ? 'bg-white text-blue-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white dark:bg-[#0E2A52] text-blue-700 dark:text-blue-400 shadow-xs'
+                    : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                 }`}
                 title="Vista tabla"
               >
@@ -346,8 +346,8 @@ export const TableView: React.FC<TableViewProps> = ({
                 }}
                 className={`px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline ${
                   filters.vista === 'detalle'
-                    ? 'bg-white text-blue-700 shadow-xs font-semibold'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white dark:bg-[#0E2A52] text-blue-700 dark:text-blue-400 shadow-xs font-semibold'
+                    : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                 }`}
                 title="Vista master-detalle"
               >
@@ -362,8 +362,8 @@ export const TableView: React.FC<TableViewProps> = ({
                 }}
                 className={`px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline ${
                   filters.vista === 'kanban'
-                    ? 'bg-white text-blue-700 shadow-xs font-semibold'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-white dark:bg-[#0E2A52] text-blue-700 dark:text-blue-400 shadow-xs font-semibold'
+                    : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                 }`}
                 title="Tablero kanban"
               >
@@ -375,7 +375,7 @@ export const TableView: React.FC<TableViewProps> = ({
             {/* Botón Exportar */}
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-all cursor-pointer active:scale-95 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] hover:bg-slate-50 dark:hover:bg-[#081B3A] text-slate-700 dark:text-[#E8EEF9] text-xs font-semibold shadow-2xs transition-all cursor-pointer active:scale-95 focus:ring-2 focus:ring-blue-600 focus:outline-none"
               title="Exportar a CSV"
             >
               <span className="material-symbols-outlined text-base leading-none">download</span>
@@ -388,62 +388,62 @@ export const TableView: React.FC<TableViewProps> = ({
       {/* 4 KPIs Compactos */}
       <section className="px-3 sm:px-6 py-1.5 flex-shrink-0">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
-          <div className="bg-white px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-1.5">
+          <div className="bg-white dark:bg-[#0E2A52] px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E3F73] shadow-2xs flex items-center justify-between gap-1.5 transition-colors">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block leading-tight">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[#94A9CC] block leading-tight">
                 Abiertos hoy
               </span>
               <div className="flex items-baseline gap-1.5 mt-0.5">
-                <span className="text-base font-bold text-slate-900">{kpis.openToday}</span>
-                <span className="text-xs font-semibold text-emerald-600">{kpis.openTodayDelta}</span>
+                <span className="text-base font-bold text-slate-900 dark:text-[#E8EEF9]">{kpis.openToday}</span>
+                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">{kpis.openTodayDelta}</span>
               </div>
             </div>
-            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-blue-50 text-blue-700 items-center justify-center flex-shrink-0">
+            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-lg leading-none">inbox</span>
             </div>
           </div>
 
-          <div className="bg-white px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-1.5">
+          <div className="bg-white dark:bg-[#0E2A52] px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E3F73] shadow-2xs flex items-center justify-between gap-1.5 transition-colors">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block leading-tight">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[#94A9CC] block leading-tight">
                 Tiempo 1ª respuesta
               </span>
               <div className="flex items-baseline gap-1.5 mt-0.5">
-                <span className="text-base font-bold text-slate-900">{kpis.firstResponseTime}</span>
-                <span className="text-xs font-medium text-slate-500">{kpis.firstResponseTarget}</span>
+                <span className="text-base font-bold text-slate-900 dark:text-[#E8EEF9]">{kpis.firstResponseTime}</span>
+                <span className="text-xs font-medium text-slate-500 dark:text-[#94A9CC]">{kpis.firstResponseTarget}</span>
               </div>
             </div>
-            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 items-center justify-center flex-shrink-0">
+            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-lg leading-none">speed</span>
             </div>
           </div>
 
-          <div className="bg-white px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-1.5">
+          <div className="bg-white dark:bg-[#0E2A52] px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E3F73] shadow-2xs flex items-center justify-between gap-1.5 transition-colors">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block leading-tight">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[#94A9CC] block leading-tight">
                 Cumplimiento SLA
               </span>
               <div className="flex items-baseline gap-1.5 mt-0.5">
-                <span className="text-base font-bold text-blue-700">{kpis.slaCompliancePercent}%</span>
-                <span className="text-xs font-semibold text-emerald-600">En rango</span>
+                <span className="text-base font-bold text-blue-700 dark:text-blue-400">{kpis.slaCompliancePercent}%</span>
+                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">En rango</span>
               </div>
             </div>
-            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-blue-50 text-blue-700 items-center justify-center flex-shrink-0">
+            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-lg leading-none">verified</span>
             </div>
           </div>
 
-          <div className="bg-white px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-1.5">
+          <div className="bg-white dark:bg-[#0E2A52] px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E3F73] shadow-2xs flex items-center justify-between gap-1.5 transition-colors">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-rose-600 block leading-tight">
+              <span className="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 block leading-tight">
                 Críticos en riesgo
               </span>
               <div className="flex items-baseline gap-1.5 mt-0.5">
-                <span className="text-base font-bold text-rose-600">{kpis.criticalAtRisk} tickets</span>
-                <span className="text-xs font-bold text-rose-500">{kpis.criticalAtRiskDetail}</span>
+                <span className="text-base font-bold text-rose-600 dark:text-rose-400">{kpis.criticalAtRisk} tickets</span>
+                <span className="text-xs font-bold text-rose-500 dark:text-rose-300">{kpis.criticalAtRiskDetail}</span>
               </div>
             </div>
-            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-rose-50 text-rose-600 items-center justify-center flex-shrink-0">
+            <div className="hidden sm:flex w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-lg leading-none animate-pulse">alarm</span>
             </div>
           </div>
@@ -452,10 +452,10 @@ export const TableView: React.FC<TableViewProps> = ({
 
       {/* Barra de Filtros con Persistencia en URL */}
       <section className="px-3 sm:px-6 py-2 flex-shrink-0">
-        <div className="bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-2xs flex flex-wrap items-center justify-between gap-3">
+        <div className="bg-white dark:bg-[#0E2A52] px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E3F73] shadow-2xs flex flex-wrap items-center justify-between gap-3 transition-colors">
           {/* Buscador local */}
           <div className="relative flex-1 min-w-0 sm:min-w-[220px] basis-full sm:basis-auto">
-            <span className="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-sm">
+            <span className="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 dark:text-[#94A9CC] text-sm">
               filter_alt
             </span>
             <input
@@ -464,7 +464,7 @@ export const TableView: React.FC<TableViewProps> = ({
                 onSetFilterParam('busqueda', e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all font-sans"
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-lg text-slate-800 dark:text-[#E8EEF9] placeholder:text-slate-400 dark:placeholder:text-[#94A9CC]/60 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all font-sans"
               placeholder="Filtrar por asunto, código o contacto..."
               type="text"
             />
@@ -476,8 +476,8 @@ export const TableView: React.FC<TableViewProps> = ({
               onClick={() => setFilterPopoverOpen(!filterPopoverOpen)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer border focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                 activeFiltersCount > 0
-                  ? 'bg-blue-50 text-blue-700 border-blue-300'
-                  : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                  ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700/60'
+                  : 'bg-slate-50 dark:bg-[#081B3A] hover:bg-slate-100 dark:hover:bg-[#081B3A]/80 text-slate-700 dark:text-[#E8EEF9] border-slate-200 dark:border-[#1E3F73]'
               }`}
             >
               <span className="material-symbols-outlined text-base">tune</span>
@@ -491,13 +491,13 @@ export const TableView: React.FC<TableViewProps> = ({
 
             {/* Popover con filtros */}
             {filterPopoverOpen && (
-              <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-1.5rem)] bg-white rounded-2xl shadow-xl border border-slate-200 p-4 z-40 text-xs animate-in fade-in slide-in-from-top-2">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                  <span className="font-bold text-slate-900 text-xs">Filtros avanzados</span>
+              <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-[#0E2A52] rounded-2xl shadow-xl border border-slate-200 dark:border-[#1E3F73] p-4 z-40 text-xs animate-in fade-in slide-in-from-top-2">
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#1E3F73] pb-2 mb-3">
+                  <span className="font-bold text-slate-900 dark:text-[#E8EEF9] text-xs">Filtros avanzados</span>
                   {activeFiltersCount > 0 && (
                     <button
                       onClick={onClearAllFilters}
-                      className="text-xs text-blue-600 hover:underline cursor-pointer"
+                      className="text-xs text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                     >
                       Limpiar todos
                     </button>
@@ -506,7 +506,7 @@ export const TableView: React.FC<TableViewProps> = ({
 
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                    <label className="block text-[11px] font-semibold text-slate-500 dark:text-[#94A9CC] uppercase tracking-wider mb-1">
                       Empresa cliente
                     </label>
                     <select
@@ -515,7 +515,7 @@ export const TableView: React.FC<TableViewProps> = ({
                         onSetFilterParam('empresa', e.target.value);
                         setCurrentPage(1);
                       }}
-                      className="w-full py-1.5 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                      className="w-full py-1.5 px-2 bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-lg text-xs text-slate-800 dark:text-[#E8EEF9] focus:ring-2 focus:ring-blue-600 focus:outline-none"
                     >
                       <option value="">Todas las empresas</option>
                       {COMPANIES_LIST.map(comp => (
@@ -525,7 +525,7 @@ export const TableView: React.FC<TableViewProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                    <label className="block text-[11px] font-semibold text-slate-500 dark:text-[#94A9CC] uppercase tracking-wider mb-1">
                       Agente asignado
                     </label>
                     <select
@@ -534,7 +534,7 @@ export const TableView: React.FC<TableViewProps> = ({
                         onSetFilterParam('agente', e.target.value);
                         setCurrentPage(1);
                       }}
-                      className="w-full py-1.5 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                      className="w-full py-1.5 px-2 bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-lg text-xs text-slate-800 dark:text-[#E8EEF9] focus:ring-2 focus:ring-blue-600 focus:outline-none"
                     >
                       <option value="">Todos los agentes</option>
                       {AGENTS_LIST.map(agent => (
@@ -544,7 +544,7 @@ export const TableView: React.FC<TableViewProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                    <label className="block text-[11px] font-semibold text-slate-500 dark:text-[#94A9CC] uppercase tracking-wider mb-1">
                       Prioridad
                     </label>
                     <select
@@ -553,7 +553,7 @@ export const TableView: React.FC<TableViewProps> = ({
                         onSetFilterParam('prioridad', e.target.value);
                         setCurrentPage(1);
                       }}
-                      className="w-full py-1.5 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                      className="w-full py-1.5 px-2 bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-lg text-xs text-slate-800 dark:text-[#E8EEF9] focus:ring-2 focus:ring-blue-600 focus:outline-none"
                     >
                       <option value="">Todas las prioridades</option>
                       <option value="Crítica">Crítica</option>
@@ -564,7 +564,7 @@ export const TableView: React.FC<TableViewProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                    <label className="block text-[11px] font-semibold text-slate-500 dark:text-[#94A9CC] uppercase tracking-wider mb-1">
                       Categoría
                     </label>
                     <select
@@ -573,7 +573,7 @@ export const TableView: React.FC<TableViewProps> = ({
                         onSetFilterParam('categoria', e.target.value);
                         setCurrentPage(1);
                       }}
-                      className="w-full py-1.5 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                      className="w-full py-1.5 px-2 bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-lg text-xs text-slate-800 dark:text-[#E8EEF9] focus:ring-2 focus:ring-blue-600 focus:outline-none"
                     >
                       <option value="">Todas las categorías</option>
                       {CATEGORIES_LIST.map(cat => (
@@ -583,7 +583,7 @@ export const TableView: React.FC<TableViewProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                    <label className="block text-[11px] font-semibold text-slate-500 dark:text-[#94A9CC] uppercase tracking-wider mb-1">
                       Estado de SLA
                     </label>
                     <select
@@ -592,7 +592,7 @@ export const TableView: React.FC<TableViewProps> = ({
                         onSetFilterParam('sla', e.target.value);
                         setCurrentPage(1);
                       }}
-                      className="w-full py-1.5 px-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                      className="w-full py-1.5 px-2 bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-lg text-xs text-slate-800 dark:text-[#E8EEF9] focus:ring-2 focus:ring-blue-600 focus:outline-none"
                     >
                       <option value="">Todos los estados de SLA</option>
                       <option value="rango">En rango (&gt; 50 % restante)</option>
@@ -603,7 +603,7 @@ export const TableView: React.FC<TableViewProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-100 flex justify-end mt-3">
+                <div className="pt-3 border-t border-slate-100 dark:border-[#1E3F73] flex justify-end mt-3">
                   <button
                     onClick={() => setFilterPopoverOpen(false)}
                     className="px-3 py-1 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-semibold cursor-pointer"
@@ -619,14 +619,14 @@ export const TableView: React.FC<TableViewProps> = ({
         {/* Chips de Filtros Activos con botón "Limpiar" */}
         {(activeFiltersCount > 0 || filters.filtroRapido || filters.busqueda) && (
           <div className="flex items-center gap-1.5 flex-wrap pt-2 px-1">
-            <span className="text-xs text-slate-500 font-medium mr-1">Filtros aplicados:</span>
+            <span className="text-xs text-slate-500 dark:text-[#94A9CC] font-medium mr-1">Filtros aplicados:</span>
 
             {filters.filtroRapido && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/50">
                 <span>Rápido: {filters.filtroRapido === 'urgentes' ? 'Urgentes' : filters.filtroRapido === 'sla_riesgo' ? 'SLA en riesgo' : 'Esperando cliente'}</span>
                 <button
                   onClick={() => onSetFiltroRapido('')}
-                  className="hover:text-rose-900 cursor-pointer"
+                  className="hover:text-rose-900 dark:hover:text-rose-100 cursor-pointer"
                   title="Eliminar filtro"
                 >
                   <span className="material-symbols-outlined text-xs">close</span>
@@ -635,11 +635,11 @@ export const TableView: React.FC<TableViewProps> = ({
             )}
 
             {filters.empresa && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] border border-slate-200 dark:border-[#1E3F73]">
                 <span>Empresa: {filters.empresa}</span>
                 <button
                   onClick={() => onSetFilterParam('empresa', '')}
-                  className="hover:text-rose-600 cursor-pointer"
+                  className="hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer"
                   title="Eliminar filtro"
                 >
                   <span className="material-symbols-outlined text-xs">close</span>
@@ -648,11 +648,11 @@ export const TableView: React.FC<TableViewProps> = ({
             )}
 
             {filters.agente && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] border border-slate-200 dark:border-[#1E3F73]">
                 <span>Agente: {filters.agente}</span>
                 <button
                   onClick={() => onSetFilterParam('agente', '')}
-                  className="hover:text-rose-600 cursor-pointer"
+                  className="hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer"
                   title="Eliminar filtro"
                 >
                   <span className="material-symbols-outlined text-xs">close</span>
@@ -661,11 +661,11 @@ export const TableView: React.FC<TableViewProps> = ({
             )}
 
             {filters.prioridad && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] border border-slate-200 dark:border-[#1E3F73]">
                 <span>Prioridad: {filters.prioridad}</span>
                 <button
                   onClick={() => onSetFilterParam('prioridad', '')}
-                  className="hover:text-rose-600 cursor-pointer"
+                  className="hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer"
                   title="Eliminar filtro"
                 >
                   <span className="material-symbols-outlined text-xs">close</span>
@@ -674,11 +674,11 @@ export const TableView: React.FC<TableViewProps> = ({
             )}
 
             {filters.categoria && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] border border-slate-200 dark:border-[#1E3F73]">
                 <span>Categoría: {filters.categoria}</span>
                 <button
                   onClick={() => onSetFilterParam('categoria', '')}
-                  className="hover:text-rose-600 cursor-pointer"
+                  className="hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer"
                   title="Eliminar filtro"
                 >
                   <span className="material-symbols-outlined text-xs">close</span>
@@ -687,11 +687,11 @@ export const TableView: React.FC<TableViewProps> = ({
             )}
 
             {filters.sla && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] border border-slate-200 dark:border-[#1E3F73]">
                 <span>SLA: {filters.sla}</span>
                 <button
                   onClick={() => onSetFilterParam('sla', '')}
-                  className="hover:text-rose-600 cursor-pointer"
+                  className="hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer"
                   title="Eliminar filtro"
                 >
                   <span className="material-symbols-outlined text-xs">close</span>
@@ -700,11 +700,11 @@ export const TableView: React.FC<TableViewProps> = ({
             )}
 
             {filters.busqueda && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] border border-slate-200 dark:border-[#1E3F73]">
                 <span>Búsqueda: "{filters.busqueda}"</span>
                 <button
                   onClick={() => onSetFilterParam('busqueda', '')}
-                  className="hover:text-rose-600 cursor-pointer"
+                  className="hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer"
                   title="Eliminar filtro"
                 >
                   <span className="material-symbols-outlined text-xs">close</span>
@@ -714,7 +714,7 @@ export const TableView: React.FC<TableViewProps> = ({
 
             <button
               onClick={onClearAllFilters}
-              className="text-xs font-semibold text-blue-700 hover:text-blue-900 hover:underline cursor-pointer ml-1 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+              className="text-xs font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 hover:underline cursor-pointer ml-1 focus:ring-2 focus:ring-blue-600 focus:outline-none"
             >
               Limpiar
             </button>
@@ -724,26 +724,26 @@ export const TableView: React.FC<TableViewProps> = ({
 
       {/* TABLA DE TICKETS */}
       <section className="flex-1 min-h-0 px-3 sm:px-6 pb-2.5 flex flex-col">
-        <div className="flex-1 min-h-0 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+        <div className="flex-1 min-h-0 bg-white dark:bg-[#0E2A52] rounded-xl border border-slate-200 dark:border-[#1E3F73] shadow-sm flex flex-col overflow-hidden transition-colors">
           {/* ============ MÓVIL: lista de tarjetas (la tabla de 8 columnas no cabe) ============ */}
           <div className="flex-1 overflow-y-auto custom-scrollbar md:hidden">
             {paginatedTickets.length === 0 ? (
-              <div className="py-12 px-4 text-center text-slate-400">
+              <div className="py-12 px-4 text-center text-slate-400 dark:text-[#94A9CC]">
                 <div className="flex flex-col items-center justify-center gap-2">
-                  <span className="material-symbols-outlined text-4xl text-slate-300">inbox</span>
-                  <p className="font-semibold text-slate-600 text-xs leading-relaxed">
+                  <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-[#94A9CC]/40">inbox</span>
+                  <p className="font-semibold text-slate-600 dark:text-[#E8EEF9] text-xs leading-relaxed">
                     No se encontraron tickets en esta bandeja o con los filtros aplicados
                   </p>
                   <button
                     onClick={onClearAllFilters}
-                    className="mt-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                    className="mt-1 px-4 py-2 bg-slate-100 dark:bg-[#081B3A] hover:bg-slate-200 dark:hover:bg-[#1E3F73] active:bg-slate-300 text-slate-700 dark:text-[#E8EEF9] rounded-lg text-xs font-semibold cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
                   >
                     Limpiar filtros
                   </button>
                 </div>
               </div>
             ) : (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-slate-100 dark:divide-[#1E3F73]/50">
                 {paginatedTickets.map((ticket) => {
                   const isSelected = selectedIds.includes(ticket.id);
                   const isBreached = ticket.isBreached;
@@ -752,13 +752,13 @@ export const TableView: React.FC<TableViewProps> = ({
                   return (
                     <li
                       key={ticket.id}
-                      className={`px-3.5 py-3 transition-colors active:bg-blue-50/60 ${
+                      className={`px-3.5 py-3 transition-colors active:bg-blue-50/60 dark:active:bg-blue-950/40 ${
                         isSelected
-                          ? 'bg-blue-50/60'
+                          ? 'bg-blue-50/60 dark:bg-blue-950/50'
                           : isBreached
-                          ? 'bg-rose-50/25'
+                          ? 'bg-rose-50/25 dark:bg-rose-950/30'
                           : ticket.status === 'Nuevo'
-                          ? 'bg-amber-50/20'
+                          ? 'bg-amber-50/20 dark:bg-amber-950/20'
                           : ''
                       }`}
                     >
@@ -778,7 +778,7 @@ export const TableView: React.FC<TableViewProps> = ({
                             <span
                               onClick={() => onSetVista('detalle', ticket.id)}
                               className={`font-mono font-bold text-xs hover:underline cursor-pointer ${
-                                isBreached ? 'text-rose-600' : 'text-blue-700'
+                                isBreached ? 'text-rose-600 dark:text-rose-400' : 'text-blue-700 dark:text-blue-400'
                               }`}
                             >
                               {ticket.code}
@@ -786,10 +786,10 @@ export const TableView: React.FC<TableViewProps> = ({
                             <span
                               className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold border ${
                                 ticket.priority === 'Crítica'
-                                  ? 'bg-rose-100 text-rose-800 border-rose-200'
+                                  ? 'bg-rose-100 dark:bg-rose-950/50 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800/50'
                                   : ticket.priority === 'Alta'
-                                  ? 'bg-orange-100 text-orange-800 border-orange-200'
-                                  : 'bg-slate-100 text-slate-700 border-slate-200'
+                                  ? 'bg-orange-100 dark:bg-orange-950/50 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800/50'
+                                  : 'bg-slate-100 dark:bg-[#081B3A] text-slate-700 dark:text-[#94A9CC] border-slate-200 dark:border-[#1E3F73]'
                               }`}
                             >
                               {ticket.priority}
@@ -812,17 +812,17 @@ export const TableView: React.FC<TableViewProps> = ({
                           {/* Fila 2: asunto (toca para abrir el detalle) */}
                           <button
                             onClick={() => onSetVista('detalle', ticket.id)}
-                            className="block w-full text-left text-sm font-semibold leading-snug text-slate-900 hover:text-blue-700 cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none rounded"
+                            className="block w-full text-left text-sm font-semibold leading-snug text-slate-900 dark:text-[#E8EEF9] hover:text-blue-700 dark:hover:text-blue-400 cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none rounded"
                           >
                             {ticket.title}
                           </button>
 
                           {/* Fila 3: empresa + categoría */}
-                          <div className="flex items-center gap-1.5 text-[11px] text-slate-500 min-w-0">
-                            <span className="material-symbols-outlined text-xs text-slate-400 flex-shrink-0">
+                          <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-[#94A9CC] min-w-0">
+                            <span className="material-symbols-outlined text-xs text-slate-400 dark:text-[#94A9CC]/70 flex-shrink-0">
                               corporate_fare
                             </span>
-                            <span className="font-medium text-slate-600 truncate">{ticket.company}</span>
+                            <span className="font-medium text-slate-600 dark:text-[#E8EEF9] truncate">{ticket.company}</span>
                             <span className="flex-shrink-0">·</span>
                             <span className="truncate">{ticket.category}</span>
                           </div>
@@ -833,15 +833,15 @@ export const TableView: React.FC<TableViewProps> = ({
                               <div className="flex items-center gap-1.5 min-w-0">
                                 <img
                                   alt={ticket.assignedAgent.name}
-                                  className="w-4 h-4 rounded-full object-cover ring-1 ring-slate-200 flex-shrink-0"
+                                  className="w-4 h-4 rounded-full object-cover ring-1 ring-slate-200 dark:ring-[#1E3F73] flex-shrink-0"
                                   src={ticket.assignedAgent.avatar}
                                 />
-                                <span className="text-[11px] text-slate-600 truncate">
+                                <span className="text-[11px] text-slate-600 dark:text-[#E8EEF9] truncate">
                                   {ticket.assignedAgent.name}
                                 </span>
                               </div>
                             ) : (
-                              <span className="text-[11px] text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                              <span className="text-[11px] text-amber-700 dark:text-amber-300 font-semibold bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/50">
                                 Sin asignar
                               </span>
                             )}
@@ -850,7 +850,7 @@ export const TableView: React.FC<TableViewProps> = ({
                               {!ticket.assignedAgent && (
                                 <button
                                   onClick={() => takeTicket(ticket.id)}
-                                  className="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 active:bg-amber-200 text-amber-800 text-[11px] font-semibold border border-amber-200 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                                  className="px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 active:bg-amber-200 text-amber-800 dark:text-amber-300 text-[11px] font-semibold border border-amber-200 dark:border-amber-800/50 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                                 >
                                   Tomar
                                 </button>
@@ -864,7 +864,7 @@ export const TableView: React.FC<TableViewProps> = ({
                                     y: rect.bottom + 4
                                   });
                                 }}
-                                className="p-1.5 -mr-1 rounded text-slate-400 hover:text-slate-800 hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                                className="p-1.5 -mr-1 rounded text-slate-400 dark:text-[#94A9CC] hover:text-slate-800 dark:hover:text-[#E8EEF9] hover:bg-slate-100 dark:hover:bg-[#081B3A] active:bg-slate-200 dark:active:bg-[#1E3F73] transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
                                 aria-label={`Más opciones para ${ticket.code}`}
                               >
                                 <span className="material-symbols-outlined text-base">more_vert</span>
@@ -883,8 +883,8 @@ export const TableView: React.FC<TableViewProps> = ({
           {/* ============ ESCRITORIO Y TABLET: tabla completa ============ */}
           <div className="hidden md:block flex-1 overflow-y-auto custom-scrollbar">
             <table className="w-full text-left border-collapse">
-              <thead className="sticky top-0 bg-slate-100/95 backdrop-blur-xs border-b border-slate-200 z-10 select-none">
-                <tr className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+              <thead className="sticky top-0 bg-slate-100/95 dark:bg-[#081B3A]/95 backdrop-blur-xs border-b border-slate-200 dark:border-[#1E3F73] z-10 select-none">
+                <tr className="text-xs font-bold text-slate-600 dark:text-[#94A9CC] uppercase tracking-wider">
                   <th className="py-2.5 pl-3.5 pr-2 w-8">
                     <input
                       type="checkbox"
@@ -908,18 +908,18 @@ export const TableView: React.FC<TableViewProps> = ({
                   <th className="py-2.5 pr-3.5 pl-2 text-right w-20">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
+              <tbody className="divide-y divide-slate-100 dark:divide-[#1E3F73]/50 text-xs">
                 {paginatedTickets.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="py-12 text-center text-slate-400">
+                    <td colSpan={8} className="py-12 text-center text-slate-400 dark:text-[#94A9CC]">
                       <div className="flex flex-col items-center justify-center gap-2">
-                        <span className="material-symbols-outlined text-4xl text-slate-300">inbox</span>
-                        <p className="font-semibold text-slate-600 text-xs">
+                        <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-[#94A9CC]/40">inbox</span>
+                        <p className="font-semibold text-slate-600 dark:text-[#E8EEF9] text-xs">
                           No se encontraron tickets en esta bandeja o con los filtros aplicados
                         </p>
                         <button
                           onClick={onClearAllFilters}
-                          className="mt-1 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                          className="mt-1 px-3 py-1 bg-slate-100 dark:bg-[#081B3A] hover:bg-slate-200 dark:hover:bg-[#1E3F73] text-slate-700 dark:text-[#E8EEF9] rounded-lg text-xs font-semibold cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
                         >
                           Limpiar filtros
                         </button>
@@ -938,12 +938,12 @@ export const TableView: React.FC<TableViewProps> = ({
                         key={ticket.id}
                         className={`transition-colors group ${
                           isSelected
-                            ? 'bg-blue-50/60'
+                            ? 'bg-blue-50/60 dark:bg-blue-950/50'
                             : isBreached
-                            ? 'bg-rose-50/25 hover:bg-rose-50/40'
+                            ? 'bg-rose-50/25 dark:bg-rose-950/30 hover:bg-rose-50/40 dark:hover:bg-rose-950/40'
                             : ticket.status === 'Nuevo'
-                            ? 'bg-amber-50/20 hover:bg-amber-50/30'
-                            : 'hover:bg-blue-50/30'
+                            ? 'bg-amber-50/20 dark:bg-amber-950/20 hover:bg-amber-50/30 dark:hover:bg-amber-950/30'
+                            : 'hover:bg-blue-50/30 dark:hover:bg-blue-950/20'
                         }`}
                       >
                         {/* Checkbox por tarjeta */}
@@ -962,7 +962,7 @@ export const TableView: React.FC<TableViewProps> = ({
                           <span
                             onClick={() => onSetVista('detalle', ticket.id)}
                             className={`font-mono font-bold hover:underline cursor-pointer ${
-                              isBreached ? 'text-rose-600' : 'text-blue-700'
+                              isBreached ? 'text-rose-600 dark:text-rose-400' : 'text-blue-700 dark:text-blue-400'
                             }`}
                           >
                             {ticket.code}
@@ -976,17 +976,17 @@ export const TableView: React.FC<TableViewProps> = ({
                               onClick={() => onSetVista('detalle', ticket.id)}
                               className={`font-semibold cursor-pointer truncate max-w-md ${
                                 isBreached
-                                  ? 'text-rose-700 hover:text-rose-800'
-                                  : 'text-slate-900 group-hover:text-blue-700'
+                                  ? 'text-rose-700 dark:text-rose-300 hover:text-rose-800'
+                                  : 'text-slate-900 dark:text-[#E8EEF9] group-hover:text-blue-700 dark:group-hover:text-blue-400'
                               }`}
                             >
                               {ticket.title}
                             </span>
-                            <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-0.5">
-                              <span className="material-symbols-outlined text-xs text-slate-400">corporate_fare</span>
-                              <span className="font-medium text-slate-600 truncate max-w-[180px]">{ticket.company}</span>
+                            <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-[#94A9CC] mt-0.5">
+                              <span className="material-symbols-outlined text-xs text-slate-400 dark:text-[#94A9CC]/70">corporate_fare</span>
+                              <span className="font-medium text-slate-600 dark:text-[#E8EEF9] truncate max-w-[180px]">{ticket.company}</span>
                               <span>·</span>
-                              <span className="text-slate-500">{ticket.category}</span>
+                              <span className="text-slate-500 dark:text-[#94A9CC]">{ticket.category}</span>
                             </div>
                           </div>
                         </td>
@@ -996,12 +996,12 @@ export const TableView: React.FC<TableViewProps> = ({
                           <span
                             className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold border ${
                               isCritical
-                                ? 'bg-rose-100 text-rose-800 border-rose-200'
+                                ? 'bg-rose-100 dark:bg-rose-950/50 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800/50'
                                 : ticket.priority === 'Alta'
-                                ? 'bg-orange-100 text-orange-800 border-orange-200'
+                                ? 'bg-orange-100 dark:bg-orange-950/50 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800/50'
                                 : ticket.priority === 'Media'
-                                ? 'bg-slate-100 text-slate-700 border-slate-200'
-                                : 'bg-slate-100 text-slate-600 border-slate-200'
+                                ? 'bg-slate-100 dark:bg-[#081B3A] text-slate-700 dark:text-[#94A9CC] border-slate-200 dark:border-[#1E3F73]'
+                                : 'bg-slate-100 dark:bg-[#081B3A] text-slate-600 dark:text-[#94A9CC] border-slate-200 dark:border-[#1E3F73]'
                             }`}
                           >
                             {ticket.priority}
@@ -1025,15 +1025,15 @@ export const TableView: React.FC<TableViewProps> = ({
                             <div className="flex items-center gap-2">
                               <img
                                 alt={ticket.assignedAgent.name}
-                                className="w-5 h-5 rounded-full object-cover ring-1 ring-slate-200"
+                                className="w-5 h-5 rounded-full object-cover ring-1 ring-slate-200 dark:ring-[#1E3F73]"
                                 src={ticket.assignedAgent.avatar}
                               />
-                              <span className="font-medium text-slate-800 text-xs truncate max-w-[120px]">
+                              <span className="font-medium text-slate-800 dark:text-[#E8EEF9] text-xs truncate max-w-[120px]">
                                 {ticket.assignedAgent.name}
                               </span>
                             </div>
                           ) : (
-                            <span className="text-xs text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                            <span className="text-xs text-amber-700 dark:text-amber-300 font-semibold bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/50">
                               Sin asignar
                             </span>
                           )}
@@ -1055,7 +1055,7 @@ export const TableView: React.FC<TableViewProps> = ({
                             {!ticket.assignedAgent && (
                               <button
                                 onClick={() => takeTicket(ticket.id)}
-                                className="px-2 py-0.5 rounded bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                                className="px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-amber-800 dark:text-amber-300 text-xs font-semibold border border-amber-200 dark:border-amber-800/50 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                                 title="Tomar ticket"
                               >
                                 Tomar
@@ -1070,7 +1070,7 @@ export const TableView: React.FC<TableViewProps> = ({
                                   y: rect.bottom + 4
                                 });
                               }}
-                              className="p-1 rounded text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                              className="p-1 rounded text-slate-400 dark:text-[#94A9CC] hover:text-slate-800 dark:hover:text-[#E8EEF9] hover:bg-slate-100 dark:hover:bg-[#081B3A] transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
                               title="Más opciones"
                             >
                               <span className="material-symbols-outlined text-base">more_vert</span>
@@ -1086,14 +1086,14 @@ export const TableView: React.FC<TableViewProps> = ({
           </div>
 
           {/* Footer de Paginación */}
-          <footer className="p-3 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-600 flex-shrink-0 select-none">
+          <footer className="p-3 border-t border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-600 dark:text-[#94A9CC] flex-shrink-0 select-none transition-colors">
             <div className="flex items-center gap-3 min-w-0">
               <span className="truncate">
-                Mostrando <strong className="text-slate-900 font-semibold">{totalTickets === 0 ? 0 : (currentPage - 1) * pageSize + 1}</strong> a{' '}
-                <strong className="text-slate-900 font-semibold">{Math.min(currentPage * pageSize, totalTickets)}</strong> de{' '}
-                <strong className="text-slate-900 font-semibold">{totalTickets}</strong>
+                Mostrando <strong className="text-slate-900 dark:text-[#E8EEF9] font-semibold">{totalTickets === 0 ? 0 : (currentPage - 1) * pageSize + 1}</strong> a{' '}
+                <strong className="text-slate-900 dark:text-[#E8EEF9] font-semibold">{Math.min(currentPage * pageSize, totalTickets)}</strong> de{' '}
+                <strong className="text-slate-900 dark:text-[#E8EEF9] font-semibold">{totalTickets}</strong>
               </span>
-              <div className="hidden sm:flex items-center gap-1.5 pl-3 border-l border-slate-200">
+              <div className="hidden sm:flex items-center gap-1.5 pl-3 border-l border-slate-200 dark:border-[#1E3F73]">
                 <span>Por página:</span>
                 <select
                   value={pageSize}
@@ -1101,7 +1101,7 @@ export const TableView: React.FC<TableViewProps> = ({
                     setPageSize(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-xs text-slate-700 cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] rounded px-1.5 py-0.5 text-xs text-slate-700 dark:text-[#E8EEF9] cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 >
                   <option value={8}>8</option>
                   <option value={12}>12</option>
@@ -1114,7 +1114,7 @@ export const TableView: React.FC<TableViewProps> = ({
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(1)}
-                className="hidden sm:flex w-7 h-7 rounded items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                className="hidden sm:flex w-7 h-7 rounded items-center justify-center border border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#0E2A52] text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9] hover:bg-slate-100 dark:hover:bg-[#081B3A] active:bg-slate-200 dark:active:bg-[#1E3F73] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 title="Primera página"
               >
                 <span className="material-symbols-outlined text-sm">first_page</span>
@@ -1122,21 +1122,21 @@ export const TableView: React.FC<TableViewProps> = ({
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                className="w-8 h-8 sm:w-7 sm:h-7 rounded flex items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                className="w-8 h-8 sm:w-7 sm:h-7 rounded flex items-center justify-center border border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#0E2A52] text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9] hover:bg-slate-100 dark:hover:bg-[#081B3A] active:bg-slate-200 dark:active:bg-[#1E3F73] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 title="Página anterior"
                 aria-label="Página anterior"
               >
                 <span className="material-symbols-outlined text-sm">chevron_left</span>
               </button>
 
-              <span className="px-2 font-medium text-slate-700 whitespace-nowrap">
+              <span className="px-2 font-medium text-slate-700 dark:text-[#E8EEF9] whitespace-nowrap">
                 {currentPage} / {totalPages}
               </span>
 
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                className="w-8 h-8 sm:w-7 sm:h-7 rounded flex items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                className="w-8 h-8 sm:w-7 sm:h-7 rounded flex items-center justify-center border border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#0E2A52] text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9] hover:bg-slate-100 dark:hover:bg-[#081B3A] active:bg-slate-200 dark:active:bg-[#1E3F73] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 title="Página siguiente"
                 aria-label="Página siguiente"
               >
@@ -1145,7 +1145,7 @@ export const TableView: React.FC<TableViewProps> = ({
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(totalPages)}
-                className="hidden sm:flex w-7 h-7 rounded items-center justify-center border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                className="hidden sm:flex w-7 h-7 rounded items-center justify-center border border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#0E2A52] text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9] hover:bg-slate-100 dark:hover:bg-[#081B3A] active:bg-slate-200 dark:active:bg-[#1E3F73] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 title="Última página"
               >
                 <span className="material-symbols-outlined text-sm">last_page</span>
@@ -1160,11 +1160,11 @@ export const TableView: React.FC<TableViewProps> = ({
         <div
           ref={rowMenuRef}
           style={{ top: `${rowMenuTicket.y}px`, left: `${rowMenuTicket.x}px` }}
-          className="fixed z-50 w-52 bg-white rounded-xl shadow-xl border border-slate-200 py-1 text-xs animate-in fade-in zoom-in-95 duration-100 select-none"
+          className="fixed z-50 w-52 bg-white dark:bg-[#0E2A52] rounded-xl shadow-xl border border-slate-200 dark:border-[#1E3F73] py-1 text-xs animate-in fade-in zoom-in-95 duration-100 select-none transition-colors"
         >
-          <div className="px-3 py-1.5 border-b border-slate-100 bg-slate-50">
-            <span className="font-mono font-bold text-slate-900 block">{rowMenuTicket.ticket.code}</span>
-            <span className="text-xs text-slate-500 block truncate">{rowMenuTicket.ticket.title}</span>
+          <div className="px-3 py-1.5 border-b border-slate-100 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A]">
+            <span className="font-mono font-bold text-slate-900 dark:text-[#E8EEF9] block">{rowMenuTicket.ticket.code}</span>
+            <span className="text-xs text-slate-500 dark:text-[#94A9CC] block truncate">{rowMenuTicket.ticket.title}</span>
           </div>
 
           <button
@@ -1173,9 +1173,9 @@ export const TableView: React.FC<TableViewProps> = ({
               setRowMenuTicket(null);
               onSetVista('detalle', t.id);
             }}
-            className="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer"
+            className="w-full text-left px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-[#081B3A] flex items-center gap-2 text-slate-700 dark:text-[#E8EEF9] cursor-pointer"
           >
-            <span className="material-symbols-outlined text-sm text-blue-600">open_in_new</span>
+            <span className="material-symbols-outlined text-sm text-blue-600 dark:text-blue-400">open_in_new</span>
             <span>Ver detalle completo</span>
           </button>
 
@@ -1185,9 +1185,9 @@ export const TableView: React.FC<TableViewProps> = ({
                 takeTicket(rowMenuTicket.ticket.id);
                 setRowMenuTicket(null);
               }}
-              className="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer"
+              className="w-full text-left px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-[#081B3A] flex items-center gap-2 text-slate-700 dark:text-[#E8EEF9] cursor-pointer"
             >
-              <span className="material-symbols-outlined text-sm text-amber-600">person_add</span>
+              <span className="material-symbols-outlined text-sm text-amber-600 dark:text-amber-400">person_add</span>
               <span>Asignar a mí</span>
             </button>
           )}
@@ -1197,9 +1197,9 @@ export const TableView: React.FC<TableViewProps> = ({
               moveTicket(rowMenuTicket.ticket.id, 'Resuelto');
               setRowMenuTicket(null);
             }}
-            className="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2 text-emerald-700 font-semibold cursor-pointer"
+            className="w-full text-left px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-[#081B3A] flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-semibold cursor-pointer"
           >
-            <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
+            <span className="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400">check_circle</span>
             <span>Marcar como resuelto</span>
           </button>
 
@@ -1208,9 +1208,9 @@ export const TableView: React.FC<TableViewProps> = ({
               moveTicket(rowMenuTicket.ticket.id, 'En espera del cliente');
               setRowMenuTicket(null);
             }}
-            className="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2 text-sky-700 cursor-pointer"
+            className="w-full text-left px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-[#081B3A] flex items-center gap-2 text-sky-700 dark:text-sky-400 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-sm text-sky-600">hourglass_empty</span>
+            <span className="material-symbols-outlined text-sm text-sky-600 dark:text-sky-400">hourglass_empty</span>
             <span>En espera del cliente</span>
           </button>
         </div>
@@ -1252,31 +1252,31 @@ export const TableView: React.FC<TableViewProps> = ({
               </button>
 
               {statusMenuOpen && (
-                <div className="absolute bottom-full mb-2 left-0 w-48 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs animate-in fade-in slide-in-from-bottom-2">
+                <div className="absolute bottom-full mb-2 left-0 w-48 bg-white dark:bg-[#0E2A52] text-slate-800 dark:text-[#E8EEF9] rounded-xl shadow-xl border border-slate-200 dark:border-[#1E3F73] py-1.5 z-50 text-xs animate-in fade-in slide-in-from-bottom-2 transition-colors">
                   <button
                     onClick={() => triggerBulkChangeStatus('En progreso')}
-                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2 cursor-pointer"
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-[#081B3A] flex items-center gap-2 cursor-pointer text-slate-700 dark:text-[#E8EEF9]"
                   >
                     <span className="w-2 h-2 rounded-full bg-blue-600"></span>
                     <span>En progreso</span>
                   </button>
                   <button
                     onClick={() => triggerBulkChangeStatus('En espera del cliente')}
-                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2 cursor-pointer"
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-[#081B3A] flex items-center gap-2 cursor-pointer text-slate-700 dark:text-[#E8EEF9]"
                   >
                     <span className="w-2 h-2 rounded-full bg-sky-500"></span>
                     <span>En espera del cliente</span>
                   </button>
                   <button
                     onClick={() => triggerBulkChangeStatus('Asignado')}
-                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2 cursor-pointer"
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-[#081B3A] flex items-center gap-2 cursor-pointer text-slate-700 dark:text-[#E8EEF9]"
                   >
                     <span className="w-2 h-2 rounded-full bg-slate-500"></span>
                     <span>Asignado</span>
                   </button>
                   <button
                     onClick={() => triggerBulkChangeStatus('Resuelto')}
-                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-emerald-700 font-semibold flex items-center gap-2 cursor-pointer"
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-[#081B3A] text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-2 cursor-pointer"
                   >
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     <span>Marcar resuelto</span>
@@ -1307,19 +1307,19 @@ export const TableView: React.FC<TableViewProps> = ({
 
       {/* Diálogo de Confirmación para Acciones por Lote */}
       {confirmDialog && confirmDialog.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md p-5 animate-in fade-in zoom-in-95 duration-150 pb-safe sm:pb-5">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/50 backdrop-blur-xs select-none">
+          <div className="bg-white dark:bg-[#0E2A52] rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-[#1E3F73] w-full max-w-md p-5 animate-in fade-in zoom-in-95 duration-150 pb-safe sm:pb-5 transition-colors">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 flex items-center justify-center flex-shrink-0">
                 <span className="material-symbols-outlined text-xl">help</span>
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900">{confirmDialog.title}</h3>
-                <p className="text-xs text-slate-500">Confirmación de acción por lote</p>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-[#E8EEF9]">{confirmDialog.title}</h3>
+                <p className="text-xs text-slate-500 dark:text-[#94A9CC]">Confirmación de acción por lote</p>
               </div>
             </div>
 
-            <p className="text-xs text-slate-700 leading-relaxed mb-5">
+            <p className="text-xs text-slate-700 dark:text-[#E8EEF9] leading-relaxed mb-5">
               {confirmDialog.message}
             </p>
 
@@ -1327,7 +1327,7 @@ export const TableView: React.FC<TableViewProps> = ({
               <button
                 type="button"
                 onClick={() => setConfirmDialog(null)}
-                className="px-3.5 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-[#1E3F73] hover:bg-slate-50 dark:hover:bg-[#081B3A] text-xs font-semibold text-slate-700 dark:text-[#94A9CC] transition-colors cursor-pointer"
               >
                 Cancelar
               </button>

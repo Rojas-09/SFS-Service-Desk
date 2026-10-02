@@ -19,24 +19,24 @@ export const MetricsModal: React.FC<MetricsModalProps> = ({ isOpen, onClose, tic
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
+      <div className="bg-white dark:bg-[#0E2A52] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-[#1E3F73] w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 transition-colors">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">analytics</span>
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 leading-tight">
+              <h3 className="text-base font-bold text-slate-900 dark:text-[#E8EEF9] leading-tight">
                 Métricas operativas y acuerdos SLA
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-[#94A9CC] mt-0.5">
                 Panel analítico en tiempo real · Software Factory and Services
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+            className="p-1.5 rounded-xl text-slate-400 dark:text-[#94A9CC] hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-[#1E3F73]/50 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
           >
             <span className="material-symbols-outlined text-xl">close</span>
           </button>
@@ -45,97 +45,97 @@ export const MetricsModal: React.FC<MetricsModalProps> = ({ isOpen, onClose, tic
         <div className="p-4 sm:p-6 space-y-5 flex-1 overflow-y-auto custom-scrollbar">
           {/* 4 Indicadores Principales */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+            <div className="p-3.5 bg-slate-50 dark:bg-[#081B3A] rounded-2xl border border-slate-200 dark:border-[#1E3F73]">
+              <span className="text-xs font-bold text-slate-500 dark:text-[#94A9CC] uppercase tracking-wider block">
                 Total incidentes
               </span>
-              <span className="text-2xl font-bold font-mono text-slate-900 block mt-1">
+              <span className="text-2xl font-bold font-mono text-slate-900 dark:text-[#E8EEF9] block mt-1">
                 {total}
               </span>
-              <span className="text-xs text-blue-600 font-semibold">100 % monitoreados</span>
+              <span className="text-xs text-blue-600 dark:text-blue-400 font-semibold">100 % monitoreados</span>
             </div>
 
-            <div className="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-200">
-              <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider block">
+            <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-200 dark:border-emerald-800/60">
+              <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider block">
                 Cumplimiento SLA
               </span>
-              <span className="text-2xl font-bold font-mono text-emerald-700 block mt-1">
+              <span className="text-2xl font-bold font-mono text-emerald-700 dark:text-emerald-400 block mt-1">
                 {compliance}%
               </span>
-              <span className="text-xs text-emerald-600 font-semibold">Meta &gt; 96.0 %</span>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Meta &gt; 96.0 %</span>
             </div>
 
-            <div className="p-3.5 bg-blue-50 rounded-2xl border border-blue-200">
-              <span className="text-xs font-bold text-blue-800 uppercase tracking-wider block">
+            <div className="p-3.5 bg-blue-50 dark:bg-blue-950/40 rounded-2xl border border-blue-200 dark:border-blue-800/60">
+              <span className="text-xs font-bold text-blue-800 dark:text-blue-300 uppercase tracking-wider block">
                 En atención activa
               </span>
-              <span className="text-2xl font-bold font-mono text-blue-700 block mt-1">
+              <span className="text-2xl font-bold font-mono text-blue-700 dark:text-blue-400 block mt-1">
                 {inProgress}
               </span>
-              <span className="text-xs text-blue-600 font-semibold">{resolved} resueltos</span>
+              <span className="text-xs text-blue-600 dark:text-blue-400 font-semibold">{resolved} resueltos</span>
             </div>
 
-            <div className="p-3.5 bg-rose-50 rounded-2xl border border-rose-200">
-              <span className="text-xs font-bold text-rose-800 uppercase tracking-wider block">
+            <div className="p-3.5 bg-rose-50 dark:bg-rose-950/40 rounded-2xl border border-rose-200 dark:border-rose-800/60">
+              <span className="text-xs font-bold text-rose-800 dark:text-rose-300 uppercase tracking-wider block">
                 Casos en riesgo
               </span>
-              <span className="text-2xl font-bold font-mono text-rose-700 block mt-1">
+              <span className="text-2xl font-bold font-mono text-rose-700 dark:text-rose-400 block mt-1">
                 {breached}
               </span>
-              <span className="text-xs text-rose-600 font-semibold">&lt; 20 % o vencido</span>
+              <span className="text-xs text-rose-600 dark:text-rose-400 font-semibold">&lt; 20 % o vencido</span>
             </div>
           </div>
 
           {/* Desglose por Niveles de Severidad */}
-          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3">
-            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+          <div className="bg-slate-50 dark:bg-[#081B3A] rounded-2xl p-4 border border-slate-200 dark:border-[#1E3F73] space-y-3">
+            <h4 className="text-xs font-bold text-slate-800 dark:text-[#E8EEF9] uppercase tracking-wider">
               Distribución por nivel de severidad (Acuerdos de servicio)
             </h4>
             <div className="space-y-2 text-xs">
               <div>
                 <div className="flex justify-between font-semibold mb-1">
-                  <span className="text-rose-700">Crítica (SLA: 45 min)</span>
-                  <span className="font-mono text-slate-700">
+                  <span className="text-rose-700 dark:text-rose-400">Crítica (SLA: 45 min)</span>
+                  <span className="font-mono text-slate-700 dark:text-[#94A9CC]">
                     {tickets.filter(t => t.priority === 'Crítica').length} casos
                   </span>
                 </div>
-                <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
                   <div className="bg-rose-600 h-2 rounded-full" style={{ width: '25%' }}></div>
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between font-semibold mb-1">
-                  <span className="text-orange-700">Alta (SLA: 2 h 00 min)</span>
-                  <span className="font-mono text-slate-700">
+                  <span className="text-orange-700 dark:text-orange-400">Alta (SLA: 2 h 00 min)</span>
+                  <span className="font-mono text-slate-700 dark:text-[#94A9CC]">
                     {tickets.filter(t => t.priority === 'Alta').length} casos
                   </span>
                 </div>
-                <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
                   <div className="bg-[#F37021] h-2 rounded-full" style={{ width: '45%' }}></div>
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between font-semibold mb-1">
-                  <span className="text-blue-700">Media (SLA: 6 h 00 min)</span>
-                  <span className="font-mono text-slate-700">
+                  <span className="text-blue-700 dark:text-blue-400">Media (SLA: 6 h 00 min)</span>
+                  <span className="font-mono text-slate-700 dark:text-[#94A9CC]">
                     {tickets.filter(t => t.priority === 'Media').length} casos
                   </span>
                 </div>
-                <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
                   <div className="bg-blue-600 h-2 rounded-full" style={{ width: '60%' }}></div>
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between font-semibold mb-1">
-                  <span className="text-slate-700">Baja (SLA: 24 h 00 min)</span>
-                  <span className="font-mono text-slate-700">
+                  <span className="text-slate-700 dark:text-[#94A9CC]">Baja (SLA: 24 h 00 min)</span>
+                  <span className="font-mono text-slate-700 dark:text-[#94A9CC]">
                     {tickets.filter(t => t.priority === 'Baja').length} casos
                   </span>
                 </div>
-                <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
                   <div className="bg-slate-500 h-2 rounded-full" style={{ width: '80%' }}></div>
                 </div>
               </div>
@@ -143,7 +143,7 @@ export const MetricsModal: React.FC<MetricsModalProps> = ({ isOpen, onClose, tic
           </div>
         </div>
 
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
@@ -197,24 +197,24 @@ export const AnnouncementsModal: React.FC<AnnouncementsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
+      <div className="bg-white dark:bg-[#0E2A52] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-[#1E3F73] w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 transition-colors">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">campaign</span>
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 leading-tight">
+              <h3 className="text-base font-bold text-slate-900 dark:text-[#E8EEF9] leading-tight">
                 Anuncios y comunicados oficiales
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-[#94A9CC] mt-0.5">
                 Difusión operativa a clientes y equipo técnico SFS
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+            className="p-1.5 rounded-xl text-slate-400 dark:text-[#94A9CC] hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-[#1E3F73]/50 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
           >
             <span className="material-symbols-outlined text-xl">close</span>
           </button>
@@ -223,12 +223,12 @@ export const AnnouncementsModal: React.FC<AnnouncementsModalProps> = ({
         <div className="p-4 sm:p-6 space-y-4 flex-1 overflow-y-auto custom-scrollbar pb-safe">
           {/* Barra de cabecera con botón crear */}
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-700 dark:text-[#E8EEF9] uppercase tracking-wider">
               Comunicados activos ({announcements.length})
             </span>
             <button
               onClick={() => setShowCreateForm(!showCreateForm)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl text-xs font-semibold border border-blue-200 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-xl text-xs font-semibold border border-blue-200 dark:border-blue-800/60 transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">
                 {showCreateForm ? 'close' : 'add'}
@@ -239,49 +239,49 @@ export const AnnouncementsModal: React.FC<AnnouncementsModalProps> = ({
 
           {/* Formulario para publicar nuevo anuncio */}
           {showCreateForm && (
-            <form onSubmit={handleSubmit} className="p-4 rounded-2xl border border-blue-200 bg-blue-50/30 space-y-3 animate-in fade-in duration-150">
-              <h4 className="text-xs font-bold text-slate-900">Nuevo comunicado operativo</h4>
+            <form onSubmit={handleSubmit} className="p-4 rounded-2xl border border-blue-200 dark:border-blue-800/60 bg-blue-50/30 dark:bg-[#081B3A] space-y-3 animate-in fade-in duration-150">
+              <h4 className="text-xs font-bold text-slate-900 dark:text-[#E8EEF9]">Nuevo comunicado operativo</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
-                  <label className="block text-slate-600 font-medium mb-1">Título del anuncio</label>
+                  <label className="block text-slate-600 dark:text-[#94A9CC] font-medium mb-1">Título del anuncio</label>
                   <input
                     type="text"
                     required
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Ej. Ventana de mantenimiento nocturno ERP"
-                    className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                    className="w-full p-2 bg-white dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] text-slate-900 dark:text-[#E8EEF9] rounded-lg text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none placeholder-slate-400 dark:placeholder-[#94A9CC]/60"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-600 font-medium mb-1">Categoría</label>
+                  <label className="block text-slate-600 dark:text-[#94A9CC] font-medium mb-1">Categoría</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                    className="w-full p-2 bg-white dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] text-slate-900 dark:text-[#E8EEF9] rounded-lg text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none"
                   >
-                    <option value="Mantenimiento programado">Mantenimiento programado</option>
-                    <option value="Actualización de seguridad">Actualización de seguridad</option>
-                    <option value="Aviso DIAN / Facturación">Aviso DIAN / Facturación</option>
-                    <option value="Nuevo servicio">Nuevo servicio</option>
+                    <option value="Mantenimiento programado" className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">Mantenimiento programado</option>
+                    <option value="Actualización de seguridad" className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">Actualización de seguridad</option>
+                    <option value="Aviso DIAN / Facturación" className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">Aviso DIAN / Facturación</option>
+                    <option value="Nuevo servicio" className="bg-white dark:bg-[#081B3A] text-slate-900 dark:text-[#E8EEF9]">Nuevo servicio</option>
                   </select>
                 </div>
               </div>
 
               <div className="text-xs">
-                <label className="block text-slate-600 font-medium mb-1">Mensaje para clientes y agentes</label>
+                <label className="block text-slate-600 dark:text-[#94A9CC] font-medium mb-1">Mensaje para clientes y agentes</label>
                 <textarea
                   required
                   rows={3}
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Detalles sobre el alcance, horarios y servicios afectados..."
-                  className="w-full p-2 bg-white border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none"
+                  className="w-full p-2 bg-white dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] text-slate-900 dark:text-[#E8EEF9] rounded-lg text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none placeholder-slate-400 dark:placeholder-[#94A9CC]/60"
                 />
               </div>
 
               <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                <label className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-[#E8EEF9] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={priority === 'Alta'}
@@ -306,35 +306,35 @@ export const AnnouncementsModal: React.FC<AnnouncementsModalProps> = ({
             {announcements.map((ann) => (
               <div
                 key={ann.id}
-                className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 transition-all shadow-2xs space-y-2"
+                className="p-4 rounded-2xl border border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#081B3A] hover:border-slate-300 dark:hover:border-slate-600 transition-all shadow-2xs space-y-2"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span
                       className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                         ann.priority === 'Alta'
-                          ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                          : 'bg-blue-50 text-blue-700 border border-blue-200'
+                          ? 'bg-rose-100 dark:bg-rose-950/50 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60'
+                          : 'bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60'
                       }`}
                     >
                       {ann.category}
                     </span>
                     {ann.priority === 'Alta' && (
-                      <span className="text-xs font-bold text-rose-600 uppercase flex items-center gap-0.5">
+                      <span className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase flex items-center gap-0.5">
                         <span className="material-symbols-outlined text-xs">warning</span>
                         Prioridad alta
                       </span>
                     )}
                   </div>
-                  <span className="text-xs text-slate-400 font-medium">{ann.date}</span>
+                  <span className="text-xs text-slate-400 dark:text-[#94A9CC] font-medium">{ann.date}</span>
                 </div>
 
-                <h4 className="text-sm font-bold text-slate-900 leading-snug">{ann.title}</h4>
-                <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-wrap">{ann.content}</p>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-[#E8EEF9] leading-snug">{ann.title}</h4>
+                <p className="text-xs text-slate-600 dark:text-[#94A9CC] leading-relaxed whitespace-pre-wrap">{ann.content}</p>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                <div className="pt-2 border-t border-slate-100 dark:border-[#1E3F73] flex items-center justify-between text-xs text-slate-400 dark:text-[#94A9CC]">
                   <span>Publicado por: {ann.author}</span>
-                  <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">
+                  <span className="text-emerald-700 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full">
                     Activo
                   </span>
                 </div>
@@ -343,10 +343,10 @@ export const AnnouncementsModal: React.FC<AnnouncementsModalProps> = ({
           </div>
         </div>
 
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-semibold cursor-pointer"
+            className="px-4 py-2 bg-slate-200 dark:bg-[#1E3F73] hover:bg-slate-300 dark:hover:bg-[#1E3F73]/80 text-slate-800 dark:text-[#E8EEF9] rounded-xl text-xs font-semibold cursor-pointer"
           >
             Cerrar
           </button>
@@ -419,24 +419,24 @@ export const CompaniesModal: React.FC<CompaniesModalProps> = ({ isOpen, onClose,
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
+      <div className="bg-white dark:bg-[#0E2A52] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-[#1E3F73] w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 transition-colors">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">corporate_fare</span>
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 leading-tight">
+              <h3 className="text-base font-bold text-slate-900 dark:text-[#E8EEF9] leading-tight">
                 Empresas cliente con convenio SLA
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-[#94A9CC] mt-0.5">
                 Cartera de cuentas corporativas activas en Software Factory and Services
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+            className="p-1.5 rounded-xl text-slate-400 dark:text-[#94A9CC] hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-[#1E3F73]/50 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
           >
             <span className="material-symbols-outlined text-xl">close</span>
           </button>
@@ -446,27 +446,27 @@ export const CompaniesModal: React.FC<CompaniesModalProps> = ({ isOpen, onClose,
           {companies.map((c) => (
             <div
               key={c.name}
-              className="p-4 rounded-2xl border border-slate-200 hover:border-blue-400 hover:bg-blue-50/20 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs"
+              className="p-4 rounded-2xl border border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#081B3A] hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/20 dark:hover:bg-blue-950/20 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs"
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <h4 className="font-bold text-sm text-slate-900">{c.name}</h4>
-                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-[#E8EEF9]">{c.name}</h4>
+                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
                     {c.tier}
                   </span>
                 </div>
-                <div className="text-xs text-slate-500 flex items-center gap-3">
-                  <span>NIT: <strong className="font-mono text-slate-700">{c.nit}</strong></span>
+                <div className="text-xs text-slate-500 dark:text-[#94A9CC] flex items-center gap-3">
+                  <span>NIT: <strong className="font-mono text-slate-700 dark:text-[#E8EEF9]">{c.nit}</strong></span>
                   <span>·</span>
                   <span>{c.sede}</span>
                 </div>
-                <p className="text-xs text-slate-600 font-medium">
+                <p className="text-xs text-slate-600 dark:text-[#94A9CC] font-medium">
                   Contacto: {c.contact}
                 </p>
               </div>
 
               <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
-                <span className="px-2.5 py-1 rounded-xl bg-slate-100 text-slate-800 text-xs font-mono font-bold">
+                <span className="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-[#1E3F73]/50 text-slate-800 dark:text-[#E8EEF9] text-xs font-mono font-bold">
                   {c.activeTickets} tickets
                 </span>
                 <button
@@ -483,10 +483,10 @@ export const CompaniesModal: React.FC<CompaniesModalProps> = ({ isOpen, onClose,
           ))}
         </div>
 
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-semibold cursor-pointer"
+            className="px-4 py-2 bg-slate-200 dark:bg-[#1E3F73] hover:bg-slate-300 dark:hover:bg-[#1E3F73]/80 text-slate-800 dark:text-[#E8EEF9] rounded-xl text-xs font-semibold cursor-pointer"
           >
             Cerrar
           </button>
@@ -556,24 +556,24 @@ export const UsersModal: React.FC<UsersModalProps> = ({ isOpen, onClose, onSwitc
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
+      <div className="bg-white dark:bg-[#0E2A52] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-[#1E3F73] w-full max-w-2xl max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 transition-colors">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">group</span>
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 leading-tight">
+              <h3 className="text-base font-bold text-slate-900 dark:text-[#E8EEF9] leading-tight">
                 Directorio de usuarios y agentes de soporte
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-[#94A9CC] mt-0.5">
                 Equipo técnico activo en la mesa operativa de Software Factory and Services
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+            className="p-1.5 rounded-xl text-slate-400 dark:text-[#94A9CC] hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-[#1E3F73]/50 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
           >
             <span className="material-symbols-outlined text-xl">close</span>
           </button>
@@ -583,17 +583,17 @@ export const UsersModal: React.FC<UsersModalProps> = ({ isOpen, onClose, onSwitc
           {usersList.map((u) => (
             <div
               key={u.email}
-              className="p-3.5 rounded-2xl border border-slate-200 hover:border-slate-300 transition-all flex items-center justify-between gap-3 shadow-2xs"
+              className="p-3.5 rounded-2xl border border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#081B3A] hover:border-slate-300 dark:hover:border-slate-600 transition-all flex items-center justify-between gap-3 shadow-2xs"
             >
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <img
                     src={u.avatar}
                     alt={u.name}
-                    className="w-11 h-11 rounded-full object-cover ring-2 ring-blue-100"
+                    className="w-11 h-11 rounded-full object-cover ring-2 ring-blue-100 dark:ring-blue-900"
                   />
                   <span
-                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ring-2 ring-white ${
+                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ring-2 ring-white dark:ring-[#081B3A] ${
                       u.status === 'En línea'
                         ? 'bg-emerald-500'
                         : u.status === 'En descanso'
@@ -603,14 +603,14 @@ export const UsersModal: React.FC<UsersModalProps> = ({ isOpen, onClose, onSwitc
                   ></span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-slate-900">{u.name}</h4>
-                  <span className="text-xs text-slate-600 block">{u.roleLabel}</span>
-                  <span className="text-xs text-slate-400 block font-mono">{u.email}</span>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-[#E8EEF9]">{u.name}</h4>
+                  <span className="text-xs text-slate-600 dark:text-[#94A9CC] block">{u.roleLabel}</span>
+                  <span className="text-xs text-slate-400 dark:text-[#94A9CC]/70 block font-mono">{u.email}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-700">
+                <span className="px-2 py-0.5 rounded text-xs bg-slate-100 dark:bg-[#1E3F73]/50 text-slate-700 dark:text-[#E8EEF9]">
                   {u.activeCases} asignados
                 </span>
                 <button
@@ -618,7 +618,7 @@ export const UsersModal: React.FC<UsersModalProps> = ({ isOpen, onClose, onSwitc
                     onSwitchUser(u.role);
                     onClose();
                   }}
-                  className="px-3 py-1 bg-slate-100 hover:bg-blue-50 text-slate-800 hover:text-blue-700 border border-slate-200 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+                  className="px-3 py-1 bg-slate-100 dark:bg-[#1E3F73] hover:bg-blue-50 dark:hover:bg-blue-900/40 text-slate-800 dark:text-[#E8EEF9] hover:text-blue-700 dark:hover:text-blue-300 border border-slate-200 dark:border-[#1E3F73] rounded-xl text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Cambiar
                 </button>
@@ -627,7 +627,7 @@ export const UsersModal: React.FC<UsersModalProps> = ({ isOpen, onClose, onSwitc
           ))}
         </div>
 
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex justify-end gap-2 flex-shrink-0 pb-safe sm:pb-4">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold cursor-pointer"
@@ -662,36 +662,36 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs select-none">
-      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 flex-shrink-0">
+      <div className="bg-white dark:bg-[#0E2A52] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-200 dark:border-[#1E3F73] w-full max-w-lg max-h-[95dvh] sm:max-h-none flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 transition-colors">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex items-center justify-between gap-3 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
               <span className="material-symbols-outlined text-2xl">settings</span>
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 leading-tight">
+              <h3 className="text-base font-bold text-slate-900 dark:text-[#E8EEF9] leading-tight">
                 Configuración del sistema
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-[#94A9CC] mt-0.5">
                 Parámetros de SLA, alertas y canales de notificación
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
+            className="p-1.5 rounded-xl text-slate-400 dark:text-[#94A9CC] hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-[#1E3F73]/50 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none"
           >
             <span className="material-symbols-outlined text-xl">close</span>
           </button>
         </div>
 
         <div className="p-4 sm:p-6 space-y-4 text-xs flex-1 overflow-y-auto custom-scrollbar pb-safe">
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73]">
             <div>
-              <span className="font-bold text-slate-800 block text-xs">
+              <span className="font-bold text-slate-800 dark:text-[#E8EEF9] block text-xs">
                 Alertas sonoras para incidentes críticos
               </span>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-500 dark:text-[#94A9CC]">
                 Emitir aviso acústico ante nuevos tickets de prioridad crítica
               </span>
             </div>
@@ -703,32 +703,32 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
             />
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73]">
             <div>
-              <span className="font-bold text-slate-800 block text-xs">
+              <span className="font-bold text-slate-800 dark:text-[#E8EEF9] block text-xs">
                 Umbral de advertencia pre-vencimiento SLA
               </span>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-500 dark:text-[#94A9CC]">
                 Tiempo antes de expiración para activar el semáforo rojo
               </span>
             </div>
             <select
               value={slaWarningHours}
               onChange={(e) => setSlaWarningHours(e.target.value)}
-              className="bg-white border border-slate-200 rounded-lg px-2.5 py-1 font-semibold text-slate-800"
+              className="bg-white dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-lg px-2.5 py-1 font-semibold text-slate-800 dark:text-[#E8EEF9]"
             >
-              <option value="0.5">30 minutos</option>
-              <option value="1">1 hora</option>
-              <option value="2">2 horas</option>
+              <option value="0.5" className="bg-white dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9]">30 minutos</option>
+              <option value="1" className="bg-white dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9]">1 hora</option>
+              <option value="2" className="bg-white dark:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9]">2 horas</option>
             </select>
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73]">
             <div>
-              <span className="font-bold text-slate-800 block text-xs">
+              <span className="font-bold text-slate-800 dark:text-[#E8EEF9] block text-xs">
                 Asignación automática inteligente
               </span>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-500 dark:text-[#94A9CC]">
                 Distribuir automáticamente casos nuevos entre agentes disponibles
               </span>
             </div>
@@ -740,12 +740,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
             />
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73]">
             <div>
-              <span className="font-bold text-slate-800 block text-xs">
+              <span className="font-bold text-slate-800 dark:text-[#E8EEF9] block text-xs">
                 Notificaciones por correo a clientes
               </span>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-slate-500 dark:text-[#94A9CC]">
                 Enviar correo automático ante cambios de estado o respuestas
               </span>
             </div>
@@ -758,12 +758,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
           </div>
         </div>
 
-        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between gap-2 flex-wrap flex-shrink-0 pb-safe sm:pb-4">
-          <span className="text-xs text-slate-500 font-medium">Software Factory and Services</span>
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex items-center justify-between gap-2 flex-wrap flex-shrink-0 pb-safe sm:pb-4">
+          <span className="text-xs text-slate-500 dark:text-[#94A9CC] font-medium">Software Factory and Services</span>
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="px-3.5 py-2 text-slate-600 hover:bg-slate-200 rounded-xl font-semibold cursor-pointer text-xs"
+              className="px-3.5 py-2 text-slate-600 dark:text-[#94A9CC] hover:bg-slate-200 dark:hover:bg-[#1E3F73]/50 rounded-xl font-semibold cursor-pointer text-xs"
             >
               Cancelar
             </button>

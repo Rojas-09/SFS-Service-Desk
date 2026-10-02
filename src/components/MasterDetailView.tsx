@@ -41,9 +41,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
     return filteredList.filter(t => t.status !== 'Resuelto' && t.status !== 'Cerrado').length;
   }, [filteredList]);
 
-  // Ticket seleccionado. Si la URL trae ticketId se busca ese; si no existe,
-  // se devuelve null (NO se cae a otro ticket). Sin ticketId en la URL se
-  // preselecciona el primero de la lista, que es el comportamiento de escritorio.
+  // Ticket seleccionado: si está en URL (filters.ticketId), se usa ese; sino el primero de la lista o tickets[0]
   const selectedTicket: Ticket | null = useMemo(() => {
     if (filters.ticketId) {
       const found = tickets.find(t => t.id === filters.ticketId);
@@ -73,36 +71,35 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
   const selectedSlaBadge = selectedTicket ? formatSlaBadge(selectedTicket) : null;
 
-  // En móvil los dos paneles (lista e inspector) son `w-full`, así que solo
-  // puede verse uno a la vez. La lista se oculta cuando hay un ticket abierto
-  // explícitamente; el inspector, en cambio, se oculta cuando NO lo hay.
-  // Sin esto el inspector se colaba en móvil mostrando el primer ticket de la
-  // lista (#SFS-1001) sin que el usuario hubiera tocado nada.
+  // En móvil el inspector ocupa toda la pantalla, pero solo cuando el usuario
+  // ha abierto un ticket explícitamente. `selectedTicket` cae por defecto al
+  // primer elemento de la lista, así que hay que mirar el ticketId de la URL:
+  // si no, la lista nunca se vería en el móvil.
   const hasExplicitSelection = Boolean(filters.ticketId && selectedTicket && selectedTicket.id === filters.ticketId);
 
   return (
-    <div className="flex-1 flex flex-row min-h-0 h-full overflow-hidden select-none bg-[#F5F7FB]">
+    <div className="flex-1 flex flex-row min-h-0 h-full overflow-hidden select-none bg-[#F5F7FB] dark:bg-[#081B3A] transition-colors duration-200">
       {/* ================= PANEL CENTRAL (60%): BANDEJA / LISTA DE TICKETS ================= */}
       <section
-        className={`w-full lg:w-[58%] xl:w-[60%] flex flex-col h-full bg-[#F5F7FB] overflow-hidden lg:border-r lg:border-slate-200 ${
+        className={`w-full lg:w-[58%] xl:w-[60%] flex flex-col h-full bg-[#F5F7FB] dark:bg-[#081B3A] overflow-hidden lg:border-r lg:border-slate-200 dark:lg:border-[#1E3F73] transition-colors ${
           hasExplicitSelection ? 'hidden lg:flex' : 'flex'
         }`}
       >
         {/* Header de la Bandeja: Título según ?bandeja + Contador de activos + Selector de Vistas */}
-        <div className="p-3 sm:p-3.5 bg-white border-b border-slate-200 flex-shrink-0 space-y-2.5">
+        <div className="p-3 sm:p-3.5 bg-white dark:bg-[#0E2A52] border-b border-slate-200 dark:border-[#1E3F73] flex-shrink-0 space-y-2.5 transition-colors">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-[#E8EEF9] tracking-tight truncate">
                 {getBandejaTitle(filters.bandeja)}
               </h2>
-              <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold flex-shrink-0">
+              <span className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700/60 text-xs font-semibold flex-shrink-0">
                 {activeCountInView} activos
               </span>
             </div>
 
             <div className="flex items-center gap-1.5">
               {/* Selector de vistas con links que conservan bandeja y filtros (Requirement 2 & 3) */}
-              <div className="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200 text-xs flex-shrink-0">
+              <div className="flex items-center bg-slate-100 dark:bg-[#081B3A] p-0.5 rounded-xl border border-slate-200 dark:border-[#1E3F73] text-xs flex-shrink-0 transition-colors">
                 <a
                   href={getVistaHref('tabla')}
                   onClick={(e) => {
@@ -111,8 +108,8 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                   }}
                   className={`px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline ${
                     filters.vista === 'tabla'
-                      ? 'bg-white text-blue-700 shadow-xs font-semibold'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-white dark:bg-[#0E2A52] text-blue-700 dark:text-blue-400 shadow-xs font-semibold'
+                      : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                   }`}
                   title="Cambiar a vista tabla"
                 >
@@ -127,8 +124,8 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                   }}
                   className={`px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1 focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline ${
                     filters.vista === 'detalle'
-                      ? 'bg-white text-blue-700 shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-white dark:bg-[#0E2A52] text-blue-700 dark:text-blue-400 shadow-xs'
+                      : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                   }`}
                   title="Vista detalle activa"
                 >
@@ -143,8 +140,8 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                   }}
                   className={`px-2.5 py-1 rounded-lg font-medium flex items-center gap-1 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline ${
                     filters.vista === 'kanban'
-                      ? 'bg-white text-blue-700 shadow-xs font-semibold'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-white dark:bg-[#0E2A52] text-blue-700 dark:text-blue-400 shadow-xs font-semibold'
+                      : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                   }`}
                   title="Cambiar a tablero kanban"
                 >
@@ -158,13 +155,13 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
           {/* Buscador local */}
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
-              <span className="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-sm">
+              <span className="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 dark:text-[#94A9CC] text-sm">
                 search
               </span>
               <input
                 value={filters.busqueda || ''}
                 onChange={(e) => onSetFilterParam('busqueda', e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none font-sans"
+                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-lg text-xs text-slate-900 dark:text-[#E8EEF9] placeholder:text-slate-400 dark:placeholder:text-[#94A9CC]/60 focus:bg-white dark:focus:bg-[#081B3A] focus:border-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none font-sans transition-colors"
                 placeholder="Buscar por ID, asunto o solicitante..."
                 type="text"
               />
@@ -178,7 +175,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
               className={`px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                 filters.filtroRapido === 'urgentes'
                   ? 'bg-rose-700 text-white shadow-xs'
-                  : 'bg-white border border-slate-200 text-rose-700 hover:bg-rose-50'
+                  : 'bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40'
               }`}
             >
               <span className="material-symbols-outlined text-xs">warning</span>
@@ -190,7 +187,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
               className={`px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                 filters.filtroRapido === 'sla_riesgo'
                   ? 'bg-amber-600 text-white font-semibold shadow-xs'
-                  : 'bg-white border border-slate-200 text-amber-700 hover:bg-amber-50'
+                  : 'bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40'
               }`}
             >
               <span className="material-symbols-outlined text-xs">alarm</span>
@@ -202,7 +199,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
               className={`px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                 filters.filtroRapido === 'esperando'
                   ? 'bg-sky-600 text-white font-semibold shadow-xs'
-                  : 'bg-white border border-slate-200 text-sky-700 hover:bg-sky-50'
+                  : 'bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] text-sky-700 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/40'
               }`}
             >
               <span className="material-symbols-outlined text-xs">hourglass_empty</span>
@@ -212,7 +209,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
             {filters.filtroRapido && (
               <button
                 onClick={() => onSetFiltroRapido('')}
-                className="text-xs text-blue-600 hover:underline font-semibold ml-1 cursor-pointer"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-semibold ml-1 cursor-pointer"
               >
                 Limpiar
               </button>
@@ -223,61 +220,43 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
         {/* Lista Desplazable de Tarjetas de Tickets */}
         <div className="flex-1 overflow-y-auto p-3 sm:p-3.5 space-y-2.5 custom-scrollbar">
           {filteredList.length === 0 ? (
-            <div className="text-center py-16 text-slate-400">
-              <span className="material-symbols-outlined text-4xl text-slate-300">inbox</span>
-              <p className="mt-2 text-xs font-semibold text-slate-600">No hay tickets en este segmento</p>
+            <div className="text-center py-16 text-slate-400 dark:text-[#94A9CC]">
+              <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-[#94A9CC]/50">inbox</span>
+              <p className="mt-2 text-xs font-semibold text-slate-600 dark:text-[#E8EEF9]">No hay tickets en este segmento</p>
             </div>
           ) : (
             filteredList.map((ticket) => {
-              const isSelected = Boolean(selectedTicket && ticket.id === selectedTicket.id);
+              const isSelected = selectedTicket && ticket.id === selectedTicket.id;
               const isCritical = ticket.priority === 'Crítica';
               const slaBadge = formatSlaBadge(ticket);
-
-              // El resalte azul se aplica:
-              //  - siempre en escritorio (lg+), donde lista e inspector conviven
-              //    y el primero queda preseleccionado en el inspector;
-              //  - en móvil solo con selección explícita, para no aparentar que
-              //    hay un ticket abierto sin que el usuario haya tocado nada.
-              const selectedHighlight =
-                'border-blue-600 ring-2 ring-blue-600/20 shadow-sm';
-              const selectedHighlightDesktopOnly =
-                'lg:border-blue-600 lg:ring-2 lg:ring-blue-600/20 lg:shadow-sm';
-              const neutralCard =
-                'bg-white border-slate-200 hover:border-slate-300 hover:shadow-xs';
-
-              const cardStateClass = !isSelected
-                ? neutralCard
-                : hasExplicitSelection
-                ? `bg-white ${selectedHighlight}`
-                : `${neutralCard} ${selectedHighlightDesktopOnly}`;
 
               return (
                 <div
                   key={ticket.id}
                   onClick={() => onSetFilterParam('ticketId', ticket.id)}
-                  className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer relative shadow-2xs active:bg-slate-50 ${cardStateClass}`}
+                  className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer relative shadow-2xs active:bg-slate-50 dark:active:bg-[#081B3A] ${
+                    isSelected
+                      ? 'bg-white dark:bg-[#0E2A52] border-blue-600 dark:border-blue-500 ring-2 ring-blue-600/20 shadow-sm'
+                      : 'bg-white dark:bg-[#0E2A52] border-slate-200 dark:border-[#1E3F73] hover:border-slate-300 dark:hover:border-[#2a5596] hover:shadow-xs'
+                  }`}
                 >
                   {/* Indicador lateral azul para seleccionado */}
                   {isSelected && (
-                    <div
-                      className={`absolute left-0 top-3 bottom-3 w-1 bg-blue-600 rounded-r-md ${
-                        hasExplicitSelection ? '' : 'hidden lg:block'
-                      }`}
-                    />
+                    <div className="absolute left-0 top-3 bottom-3 w-1 bg-blue-600 dark:bg-blue-500 rounded-r-md" />
                   )}
 
                   <div className="flex items-center justify-between gap-2 mb-1.5 pl-1.5 flex-wrap">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-blue-700">
+                      <span className="font-mono text-xs font-bold text-blue-700 dark:text-blue-400">
                         {ticket.code || ticket.id}
                       </span>
                       <span
                         className={`px-2 py-0.5 rounded text-xs font-semibold border ${
                           isCritical
-                            ? 'bg-rose-100 text-rose-800 border-rose-200'
+                            ? 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800/50'
                             : ticket.priority === 'Alta'
-                            ? 'bg-orange-100 text-orange-800 border-orange-200'
-                            : 'bg-slate-100 text-slate-700 border-slate-200'
+                            ? 'bg-orange-100 dark:bg-orange-950/40 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800/50'
+                            : 'bg-slate-100 dark:bg-[#081B3A] text-slate-700 dark:text-[#E8EEF9] border-slate-200 dark:border-[#1E3F73]'
                         }`}
                       >
                         {ticket.priority}
@@ -301,16 +280,16 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                     </span>
                   </div>
 
-                  <h3 className="text-xs font-semibold text-slate-900 leading-snug line-clamp-2 pl-1.5 mb-2">
+                  <h3 className="text-xs font-semibold text-slate-900 dark:text-[#E8EEF9] leading-snug line-clamp-2 pl-1.5 mb-2">
                     {ticket.title}
                   </h3>
 
-                  <div className="flex items-center justify-between text-xs text-slate-500 pl-1.5 pt-1.5 border-t border-slate-100">
+                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-[#94A9CC] pl-1.5 pt-1.5 border-t border-slate-100 dark:border-[#1E3F73]">
                     <div className="flex items-center gap-1.5 truncate">
-                      <span className="material-symbols-outlined text-xs text-slate-400">corporate_fare</span>
-                      <span className="font-medium text-slate-700 truncate">{ticket.company}</span>
+                      <span className="material-symbols-outlined text-xs text-slate-400 dark:text-[#94A9CC]">corporate_fare</span>
+                      <span className="font-medium text-slate-700 dark:text-[#E8EEF9] truncate">{ticket.company}</span>
                     </div>
-                    <span className="text-slate-400 flex-shrink-0 ml-2">{ticket.createdHoursAgo}</span>
+                    <span className="text-slate-400 dark:text-[#94A9CC] flex-shrink-0 ml-2">{ticket.createdHoursAgo}</span>
                   </div>
                 </div>
               );
@@ -321,16 +300,12 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
       {/* ================= PANEL DERECHO (40%): INSPECTOR DETALLADO ================= */}
       {selectedTicket && (
-        <aside
-          className={`w-full lg:w-[42%] xl:w-[40%] flex-col h-full bg-white overflow-hidden flex-shrink-0 shadow-lg lg:border-l lg:border-slate-200 ${
-            hasExplicitSelection ? 'flex' : 'hidden lg:flex'
-          }`}
-        >
+        <aside className="w-full lg:w-[42%] xl:w-[40%] flex flex-col h-full bg-white dark:bg-[#0E2A52] overflow-hidden flex-shrink-0 shadow-lg lg:border-l lg:border-slate-200 dark:lg:border-[#1E3F73] transition-colors">
           {/* Cabecera del Inspector */}
-          <div className="p-3 sm:p-4 border-b border-slate-200 flex-shrink-0 space-y-2">
+          <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-[#1E3F73] flex-shrink-0 space-y-2 transition-colors">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
-                <span className="font-mono text-sm font-bold text-blue-700 flex-shrink-0">
+                <span className="font-mono text-sm font-bold text-blue-700 dark:text-blue-400 flex-shrink-0">
                   {selectedTicket.code || selectedTicket.id}
                 </span>
                 <span
@@ -346,7 +321,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                 {/* Volver a la lista: solo en móvil, donde el inspector es pantalla completa */}
                 <button
                   onClick={() => onSetFilterParam('ticketId', '')}
-                  className="lg:hidden p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 active:bg-slate-200 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="lg:hidden p-1.5 rounded-lg text-slate-500 dark:text-[#94A9CC] hover:text-slate-800 dark:hover:text-[#E8EEF9] hover:bg-slate-100 dark:hover:bg-[#081B3A] active:bg-slate-200 dark:active:bg-[#1E3F73] cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                   title="Volver a la lista"
                   aria-label="Volver a la lista de tickets"
                 >
@@ -359,7 +334,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                     e.preventDefault();
                     onSetVista('tabla');
                   }}
-                  className="hidden lg:flex p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline"
+                  className="hidden lg:flex p-1 rounded text-slate-400 dark:text-[#94A9CC] hover:text-slate-700 dark:hover:text-[#E8EEF9] hover:bg-slate-100 dark:hover:bg-[#081B3A] cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none no-underline"
                   title="Volver a tabla general"
                 >
                   <span className="material-symbols-outlined text-base">close</span>
@@ -367,7 +342,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
               </div>
             </div>
 
-            <h2 className="text-sm font-bold text-slate-900 leading-snug">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-[#E8EEF9] leading-snug">
               {selectedTicket.title}
             </h2>
 
@@ -380,21 +355,21 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                       selectedTicket.isBreached || selectedTicket.slaMinutesRemaining <= 0
-                        ? 'bg-rose-100 text-rose-700'
+                        ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300'
                         : selectedTicket.slaRemainingPercent < 20
-                        ? 'bg-rose-100 text-rose-700'
+                        ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300'
                         : selectedTicket.slaRemainingPercent <= 50
-                        ? 'bg-amber-100 text-amber-700'
-                        : 'bg-emerald-100 text-emerald-700'
+                        ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                        : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
                     }`}
                   >
                     <span className="material-symbols-outlined text-base">schedule</span>
                   </div>
                   <div>
-                    <span className="text-xs uppercase font-bold text-slate-600 tracking-wider block">
+                    <span className="text-xs uppercase font-bold text-slate-600 dark:text-[#94A9CC] tracking-wider block">
                       Límite SLA de resolución
                     </span>
-                    <span className="text-xs font-semibold text-slate-900">
+                    <span className="text-xs font-semibold text-slate-900 dark:text-[#E8EEF9]">
                       {selectedTicket.slaLimit}
                     </span>
                   </div>
@@ -404,7 +379,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                   <span className={`text-sm font-bold block leading-tight ${selectedSlaBadge.colorClass}`}>
                     {selectedSlaBadge.text}
                   </span>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-slate-500 dark:text-[#94A9CC]">
                     {selectedTicket.status === 'Resuelto' || selectedTicket.status === 'Cerrado'
                       ? 'Registrado'
                       : 'Restante'}
@@ -415,33 +390,33 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
           </div>
 
           {/* Ficha de Información: Categoría, Etiquetas y Estado (Requirement 10) */}
-          <div className="px-3 sm:px-4 py-3 bg-slate-50 border-b border-slate-200 text-xs space-y-2 flex-shrink-0">
+          <div className="px-3 sm:px-4 py-3 bg-slate-50 dark:bg-[#081B3A] border-b border-slate-200 dark:border-[#1E3F73] text-xs space-y-2 flex-shrink-0 transition-colors">
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <span className="text-slate-400 block text-[11px]">Empresa</span>
-                <span className="font-semibold text-slate-900">{selectedTicket.company}</span>
+                <span className="text-slate-400 dark:text-[#94A9CC] block text-[11px]">Empresa</span>
+                <span className="font-semibold text-slate-900 dark:text-[#E8EEF9]">{selectedTicket.company}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px]">Solicitante</span>
-                <span className="font-semibold text-slate-900">{selectedTicket.requesterName}</span>
+                <span className="text-slate-400 dark:text-[#94A9CC] block text-[11px]">Solicitante</span>
+                <span className="font-semibold text-slate-900 dark:text-[#E8EEF9]">{selectedTicket.requesterName}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px]">Categoría</span>
-                <span className="font-semibold text-blue-700">{selectedTicket.category}</span>
+                <span className="text-slate-400 dark:text-[#94A9CC] block text-[11px]">Categoría</span>
+                <span className="font-semibold text-blue-700 dark:text-blue-400">{selectedTicket.category}</span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px]">Módulo</span>
-                <span className="font-medium text-slate-800">{selectedTicket.module}</span>
+                <span className="text-slate-400 dark:text-[#94A9CC] block text-[11px]">Módulo</span>
+                <span className="font-medium text-slate-800 dark:text-[#E8EEF9]">{selectedTicket.module}</span>
               </div>
             </div>
 
             {/* Etiquetas */}
-            <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-slate-200/60">
-              <span className="text-slate-400 text-[11px] mr-1">Etiquetas:</span>
+            <div className="flex items-center gap-1.5 flex-wrap pt-1 border-t border-slate-200/60 dark:border-[#1E3F73]">
+              <span className="text-slate-400 dark:text-[#94A9CC] text-[11px] mr-1">Etiquetas:</span>
               {selectedTicket.tags.map(tag => (
                 <span
                   key={tag}
-                  className="px-2 py-0.5 rounded text-[11px] font-medium bg-white border border-slate-200 text-slate-700"
+                  className="px-2 py-0.5 rounded text-[11px] font-medium bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] text-slate-700 dark:text-[#E8EEF9]"
                 >
                   #{tag}
                 </span>
@@ -449,21 +424,21 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
             </div>
 
             {/* Agente Asignado & Reasignación */}
-            <div className="flex items-center justify-between pt-1 border-t border-slate-200/60">
+            <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 dark:border-[#1E3F73]">
               <div className="flex items-center gap-2">
                 {selectedTicket.assignedAgent ? (
                   <>
                     <img
                       alt={selectedTicket.assignedAgent.name}
-                      className="w-6 h-6 rounded-full object-cover ring-1 ring-slate-200"
+                      className="w-6 h-6 rounded-full object-cover ring-1 ring-slate-200 dark:ring-[#1E3F73]"
                       src={selectedTicket.assignedAgent.avatar}
                     />
-                    <span className="font-medium text-slate-800 text-xs">
+                    <span className="font-medium text-slate-800 dark:text-[#E8EEF9] text-xs">
                       {selectedTicket.assignedAgent.name}
                     </span>
                   </>
                 ) : (
-                  <span className="text-xs text-amber-800 font-semibold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                  <span className="text-xs text-amber-800 dark:text-amber-300 font-semibold bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/50">
                     Sin asignar
                   </span>
                 )}
@@ -472,15 +447,15 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setShowReassignModal(!showReassignModal)}
-                  className="px-2 py-1 text-xs border border-slate-200 hover:bg-white rounded-lg font-semibold text-slate-700 flex items-center gap-1 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="px-2 py-1 text-xs border border-slate-200 dark:border-[#1E3F73] hover:bg-white dark:hover:bg-[#0E2A52] rounded-lg font-semibold text-slate-700 dark:text-[#E8EEF9] flex items-center gap-1 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                 >
                   <span className="material-symbols-outlined text-sm">swap_horiz</span>
                   <span>Reasignar</span>
                 </button>
 
                 {showReassignModal && (
-                  <div className="absolute right-0 bottom-full mb-1 w-52 max-w-[calc(100vw-2rem)] bg-white border border-slate-200 rounded-xl shadow-xl py-1 z-30 text-xs animate-in fade-in slide-in-from-bottom-2">
-                    <span className="px-3 py-1 text-xs uppercase font-bold text-slate-400 block border-b border-slate-100">
+                  <div className="absolute right-0 bottom-full mb-1 w-52 max-w-[calc(100vw-2rem)] bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] rounded-xl shadow-xl py-1 z-30 text-xs animate-in fade-in slide-in-from-bottom-2">
+                    <span className="px-3 py-1 text-xs uppercase font-bold text-slate-400 dark:text-[#94A9CC] block border-b border-slate-100 dark:border-[#1E3F73]">
                       Seleccionar agente
                     </span>
                     {AGENTS_LIST.map(agentName => (
@@ -490,7 +465,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                           reassignAgent(selectedTicket.id, agentName);
                           setShowReassignModal(false);
                         }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 flex items-center gap-2 cursor-pointer transition-colors"
+                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-[#081B3A] text-slate-800 dark:text-[#E8EEF9] flex items-center gap-2 cursor-pointer transition-colors"
                       >
                         <span>{agentName}</span>
                       </button>
@@ -502,18 +477,18 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
           </div>
 
           {/* Pestañas del Inspector: Conversación | Historial | Relacionados (Requirement 10) */}
-          <div className="flex border-b border-slate-200 bg-white px-2 sm:px-4 text-xs font-semibold flex-shrink-0 overflow-x-auto custom-scrollbar">
+          <div className="flex border-b border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#0E2A52] px-2 sm:px-4 text-xs font-semibold flex-shrink-0 overflow-x-auto custom-scrollbar transition-colors">
             <button
               onClick={() => setInspectorTab('conversacion')}
               className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                 inspectorTab === 'conversacion'
-                  ? 'border-blue-600 text-blue-700'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'border-blue-600 dark:border-blue-400 text-blue-700 dark:text-blue-400'
+                  : 'border-transparent text-slate-500 dark:text-[#94A9CC] hover:text-slate-800 dark:hover:text-[#E8EEF9]'
               }`}
             >
               <span className="material-symbols-outlined text-base">forum</span>
               <span>Conversación</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 text-[11px]">
+              <span className="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-[#081B3A] text-slate-600 dark:text-[#94A9CC] text-[11px]">
                 {selectedTicket.messages.length}
               </span>
             </button>
@@ -522,13 +497,13 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
               onClick={() => setInspectorTab('historial')}
               className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                 inspectorTab === 'historial'
-                  ? 'border-blue-600 text-blue-700'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'border-blue-600 dark:border-blue-400 text-blue-700 dark:text-blue-400'
+                  : 'border-transparent text-slate-500 dark:text-[#94A9CC] hover:text-slate-800 dark:hover:text-[#E8EEF9]'
               }`}
             >
               <span className="material-symbols-outlined text-base">history</span>
               <span>Historial</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 text-[11px]">
+              <span className="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-[#081B3A] text-slate-600 dark:text-[#94A9CC] text-[11px]">
                 {selectedTicket.history?.length || 0}
               </span>
             </button>
@@ -537,13 +512,13 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
               onClick={() => setInspectorTab('relacionados')}
               className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                 inspectorTab === 'relacionados'
-                  ? 'border-blue-600 text-blue-700'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  ? 'border-blue-600 dark:border-blue-400 text-blue-700 dark:text-blue-400'
+                  : 'border-transparent text-slate-500 dark:text-[#94A9CC] hover:text-slate-800 dark:hover:text-[#E8EEF9]'
               }`}
             >
               <span className="material-symbols-outlined text-base">link</span>
               <span>Relacionados</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 text-[11px]">
+              <span className="px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-[#081B3A] text-slate-600 dark:text-[#94A9CC] text-[11px]">
                 {relatedTickets.length}
               </span>
             </button>
@@ -553,8 +528,8 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
           <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 custom-scrollbar">
             {inspectorTab === 'conversacion' && (
               <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs text-slate-500 pb-1">
-                  <span className="font-semibold text-slate-700">
+                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-[#94A9CC] pb-1">
+                  <span className="font-semibold text-slate-700 dark:text-[#E8EEF9]">
                     {selectedTicket.messages.length === 1
                       ? '1 mensaje registrado'
                       : `${selectedTicket.messages.length} mensajes registrados`}
@@ -562,19 +537,19 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                 </div>
 
                 {selectedTicket.messages.length === 0 ? (
-                  <div className="p-4 rounded-xl bg-slate-50 text-center text-slate-400 text-xs">
+                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#081B3A] text-center text-slate-400 dark:text-[#94A9CC] text-xs">
                     No hay mensajes aún en este ticket. Sé el primero en responder.
                   </div>
                 ) : (
                   selectedTicket.messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`p-3.5 rounded-xl border text-xs leading-relaxed space-y-1.5 shadow-2xs ${
+                      className={`p-3.5 rounded-xl border text-xs leading-relaxed space-y-1.5 shadow-2xs transition-colors ${
                         msg.isInternal
-                          ? 'bg-amber-50 border-amber-200 text-amber-950'
+                          ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/50 text-amber-950 dark:text-amber-200'
                           : msg.senderRole === 'soporte'
-                          ? 'bg-blue-50/70 border-blue-100 text-slate-800'
-                          : 'bg-slate-50 border-slate-200 text-slate-800'
+                          ? 'bg-blue-50/70 dark:bg-blue-950/40 border-blue-100 dark:border-blue-900/50 text-slate-800 dark:text-[#E8EEF9]'
+                          : 'bg-slate-50 dark:bg-[#081B3A] border-slate-200 dark:border-[#1E3F73] text-slate-800 dark:text-[#E8EEF9]'
                       }`}
                     >
                       <div className="flex items-center justify-between text-xs">
@@ -584,26 +559,26 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                               msg.isInternal
                                 ? 'bg-amber-500'
                                 : msg.senderRole === 'soporte'
-                                ? 'bg-emerald-500'
-                                : 'bg-blue-500'
+                                ? 'bg-emerald-500 dark:bg-emerald-400'
+                                : 'bg-blue-500 dark:bg-blue-400'
                             }`}
                           />
                           {msg.senderName}
                           {msg.isInternal && (
-                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[11px] bg-amber-200 text-amber-900 font-semibold">
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[11px] bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 font-semibold">
                               <span className="material-symbols-outlined text-[12px]">lock</span>
                               Nota interna
                             </span>
                           )}
                         </span>
-                        <span className="text-slate-400 font-medium">{msg.time}</span>
+                        <span className="text-slate-400 dark:text-[#94A9CC] font-medium">{msg.time}</span>
                       </div>
 
                       <p className="leading-relaxed whitespace-pre-wrap">{msg.content}</p>
 
                       {msg.attachment && (
                         <div className="pt-1.5 flex items-center gap-2">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 hover:text-blue-700 cursor-pointer shadow-xs transition-colors">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] text-xs text-slate-700 dark:text-[#E8EEF9] hover:text-blue-700 dark:hover:text-blue-400 cursor-pointer shadow-xs transition-colors">
                             <span className="material-symbols-outlined text-xs">attach_file</span>
                             {msg.attachment.name} ({msg.attachment.size})
                           </span>
@@ -617,24 +592,24 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
             {inspectorTab === 'historial' && (
               <div className="space-y-3">
-                <span className="text-xs font-semibold text-slate-700 block mb-2">
+                <span className="text-xs font-semibold text-slate-700 dark:text-[#E8EEF9] block mb-2">
                   Línea de tiempo de cambios
                 </span>
                 {(!selectedTicket.history || selectedTicket.history.length === 0) ? (
-                  <div className="p-4 rounded-xl bg-slate-50 text-center text-slate-400 text-xs">
+                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#081B3A] text-center text-slate-400 dark:text-[#94A9CC] text-xs">
                     No hay eventos registrados en el historial.
                   </div>
                 ) : (
-                  <div className="relative pl-5 border-l-2 border-slate-200 space-y-4 my-2">
+                  <div className="relative pl-5 border-l-2 border-slate-200 dark:border-[#1E3F73] space-y-4 my-2">
                     {selectedTicket.history.map((evt) => (
                       <div key={evt.id} className="relative text-xs">
-                        <span className="absolute -left-[27px] top-0.5 w-3 h-3 rounded-full bg-blue-600 ring-4 ring-white" />
+                        <span className="absolute -left-[27px] top-0.5 w-3 h-3 rounded-full bg-blue-600 ring-4 ring-white dark:ring-[#0E2A52]" />
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-slate-900">{evt.action}</span>
-                          <span className="text-slate-400 font-medium">{evt.time}</span>
+                          <span className="font-bold text-slate-900 dark:text-[#E8EEF9]">{evt.action}</span>
+                          <span className="text-slate-400 dark:text-[#94A9CC] font-medium">{evt.time}</span>
                         </div>
-                        <p className="text-slate-600 mt-0.5 leading-snug">{evt.detail}</p>
-                        <span className="text-[11px] text-slate-400 font-medium">Por: {evt.user}</span>
+                        <p className="text-slate-600 dark:text-[#94A9CC] mt-0.5 leading-snug">{evt.detail}</p>
+                        <span className="text-[11px] text-slate-400 dark:text-[#94A9CC] font-medium">Por: {evt.user}</span>
                       </div>
                     ))}
                   </div>
@@ -644,11 +619,11 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
             {inspectorTab === 'relacionados' && (
               <div className="space-y-2.5">
-                <div className="text-xs text-slate-500 mb-2">
-                  Tickets de la misma empresa (<strong className="text-slate-800">{selectedTicket.company}</strong>):
+                <div className="text-xs text-slate-500 dark:text-[#94A9CC] mb-2">
+                  Tickets de la misma empresa (<strong className="text-slate-800 dark:text-[#E8EEF9]">{selectedTicket.company}</strong>):
                 </div>
                 {relatedTickets.length === 0 ? (
-                  <div className="p-4 rounded-xl bg-slate-50 text-center text-slate-400 text-xs">
+                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#081B3A] text-center text-slate-400 dark:text-[#94A9CC] text-xs">
                     No hay otros tickets registrados para esta empresa.
                   </div>
                 ) : (
@@ -658,10 +633,10 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                       <div
                         key={rel.id}
                         onClick={() => onSetFilterParam('ticketId', rel.id)}
-                        className="p-3 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-slate-50/50 transition-all cursor-pointer text-xs"
+                        className="p-3 rounded-xl border border-slate-200 dark:border-[#1E3F73] hover:border-blue-400 dark:hover:border-blue-400 hover:bg-slate-50/50 dark:hover:bg-[#081B3A]/50 transition-all cursor-pointer text-xs bg-white dark:bg-[#0E2A52]"
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-mono font-bold text-blue-700">{rel.code}</span>
+                          <span className="font-mono font-bold text-blue-700 dark:text-blue-400">{rel.code}</span>
                           <span
                             className={`px-2 py-0.5 rounded-full text-[11px] font-semibold border ${getStatusBadgeStyle(
                               rel.status
@@ -670,8 +645,8 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                             {rel.status}
                           </span>
                         </div>
-                        <h4 className="font-semibold text-slate-900 line-clamp-1 mb-1">{rel.title}</h4>
-                        <div className="flex items-center justify-between text-[11px] text-slate-500">
+                        <h4 className="font-semibold text-slate-900 dark:text-[#E8EEF9] line-clamp-1 mb-1">{rel.title}</h4>
+                        <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-[#94A9CC]">
                           <span>{rel.category}</span>
                           <span className={`font-semibold ${relSla.colorClass}`}>{relSla.text}</span>
                         </div>
@@ -684,18 +659,18 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
           </div>
 
           {/* Compositor con Pestañas: [Respuesta al cliente] | [Nota interna] (Requirement 9) */}
-          <div className="p-3.5 border-t border-slate-200 bg-slate-50 flex-shrink-0">
+          <div className="p-3.5 border-t border-slate-200 dark:border-[#1E3F73] bg-slate-50 dark:bg-[#081B3A] flex-shrink-0 transition-colors">
             <div className="space-y-2">
               {/* Pestañas del Compositor */}
               <div className="flex items-center justify-between">
-                <div className="inline-flex p-0.5 bg-slate-200/80 rounded-xl text-xs font-semibold">
+                <div className="inline-flex p-0.5 bg-slate-200/80 dark:bg-[#0E2A52] rounded-xl text-xs font-semibold">
                   <button
                     type="button"
                     onClick={() => setCompositorTab('cliente')}
                     className={`px-3 py-1 rounded-lg transition-all cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                       compositorTab === 'cliente'
-                        ? 'bg-white text-blue-700 shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                        ? 'bg-white dark:bg-[#081B3A] text-blue-700 dark:text-blue-400 shadow-xs'
+                        : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                     }`}
                   >
                     Respuesta al cliente
@@ -705,8 +680,8 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                     onClick={() => setCompositorTab('interna')}
                     className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1 cursor-pointer focus:ring-2 focus:ring-blue-600 focus:outline-none ${
                       compositorTab === 'interna'
-                        ? 'bg-amber-100 text-amber-900 shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                        ? 'bg-amber-100 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 shadow-xs'
+                        : 'text-slate-600 dark:text-[#94A9CC] hover:text-slate-900 dark:hover:text-[#E8EEF9]'
                     }`}
                   >
                     <span className="material-symbols-outlined text-xs">lock</span>
@@ -716,7 +691,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
                 {/* Aviso para nota interna */}
                 {compositorTab === 'interna' && (
-                  <span className="inline-flex items-center gap-1 text-[11px] text-amber-800 font-semibold bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-full">
+                  <span className="inline-flex items-center gap-1 text-[11px] text-amber-800 dark:text-amber-300 font-semibold bg-amber-100 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800/60 px-2 py-0.5 rounded-full">
                     <span className="material-symbols-outlined text-xs">visibility_off</span>
                     <span>Solo visible para SFS</span>
                   </span>
@@ -733,10 +708,10 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                       handleSendReply(false);
                     }
                   }}
-                  className={`w-full h-24 sm:h-20 p-2.5 border rounded-xl text-[16px] sm:text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none shadow-xs font-sans ${
+                  className={`w-full h-24 sm:h-20 p-2.5 border rounded-xl text-[16px] sm:text-xs text-slate-800 dark:text-[#E8EEF9] placeholder:text-slate-400 dark:placeholder:text-[#94A9CC]/60 focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none shadow-xs font-sans transition-colors ${
                     compositorTab === 'interna'
-                      ? 'border-amber-300 bg-amber-50/80 text-amber-950 focus:border-amber-500'
-                      : 'border-slate-200 bg-white focus:border-blue-600'
+                      ? 'border-amber-300 dark:border-amber-700/60 bg-amber-50/80 dark:bg-amber-950/30 text-amber-950 dark:text-amber-100 focus:border-amber-500'
+                      : 'border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#0E2A52] focus:border-blue-600'
                   }`}
                   placeholder={
                     compositorTab === 'interna'
@@ -748,25 +723,25 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
 
               {/* Barra de Acciones del Compositor */}
               <div className="flex items-center justify-between gap-2 pt-1 flex-wrap">
-                <div className="flex items-center gap-1.5 text-slate-500 relative">
+                <div className="flex items-center gap-1.5 text-slate-500 dark:text-[#94A9CC] relative">
                   {/* Botón Respuestas Predefinidas con Menú de Macros (Requirement 9) */}
                   <button
                     type="button"
                     onClick={() => setShowMacrosMenu(!showMacrosMenu)}
-                    className="flex items-center gap-1 px-2 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-xs text-slate-700 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                    className="flex items-center gap-1 px-2 py-1 rounded-lg border border-slate-200 dark:border-[#1E3F73] bg-white dark:bg-[#0E2A52] hover:bg-slate-100 dark:hover:bg-[#081B3A] text-xs text-slate-700 dark:text-[#E8EEF9] cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                     title="Insertar respuesta predefinida"
                   >
-                    <span className="material-symbols-outlined text-sm text-blue-600">text_snippet</span>
+                    <span className="material-symbols-outlined text-sm text-blue-600 dark:text-blue-400">text_snippet</span>
                     <span className="hidden sm:inline">Respuestas predefinidas</span>
                   </button>
 
                   {/* Menú de Macros */}
                   {showMacrosMenu && (
-                    <div className="absolute left-0 bottom-full mb-1 w-72 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-xl border border-slate-200 p-1.5 z-40 text-xs animate-in fade-in slide-in-from-bottom-2">
-                      <span className="px-2.5 py-1 text-[11px] uppercase font-bold text-slate-400 block border-b border-slate-100">
+                    <div className="absolute left-0 bottom-full mb-1 w-72 max-w-[calc(100vw-2rem)] bg-white dark:bg-[#0E2A52] rounded-xl shadow-xl border border-slate-200 dark:border-[#1E3F73] p-1.5 z-40 text-xs animate-in fade-in slide-in-from-bottom-2">
+                      <span className="px-2.5 py-1 text-[11px] uppercase font-bold text-slate-400 dark:text-[#94A9CC] block border-b border-slate-100 dark:border-[#1E3F73]">
                         Macros de respuesta rápida
                       </span>
-                      <div className="divide-y divide-slate-100 max-h-48 overflow-y-auto custom-scrollbar">
+                      <div className="divide-y divide-slate-100 dark:divide-[#1E3F73] max-h-48 overflow-y-auto custom-scrollbar">
                         {MACROS_PREDEFINIDAS.map((macro) => (
                           <button
                             key={macro.id}
@@ -775,10 +750,10 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                               setReplyText(macro.text);
                               setShowMacrosMenu(false);
                             }}
-                            className="w-full text-left p-2 hover:bg-blue-50 rounded-lg text-slate-800 transition-colors cursor-pointer"
+                            className="w-full text-left p-2 hover:bg-blue-50 dark:hover:bg-[#081B3A] rounded-lg text-slate-800 dark:text-[#E8EEF9] transition-colors cursor-pointer"
                           >
-                            <span className="font-semibold block text-blue-700">{macro.label}</span>
-                            <span className="text-[11px] text-slate-500 line-clamp-2 mt-0.5 leading-snug">
+                            <span className="font-semibold block text-blue-700 dark:text-blue-400">{macro.label}</span>
+                            <span className="text-[11px] text-slate-500 dark:text-[#94A9CC] line-clamp-2 mt-0.5 leading-snug">
                               {macro.text}
                             </span>
                           </button>
@@ -791,7 +766,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                   <button
                     type="button"
                     onClick={() => setReplyText(t => t + ' [Registro diagnóstico adjuntado]')}
-                    className="p-2 -ml-1 hover:text-slate-700 rounded-md hover:bg-white active:bg-slate-100 cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                    className="p-2 -ml-1 hover:text-slate-700 dark:hover:text-[#E8EEF9] rounded-md hover:bg-white dark:hover:bg-[#0E2A52] active:bg-slate-100 dark:active:bg-[#081B3A] cursor-pointer transition-colors focus:ring-2 focus:ring-blue-600 focus:outline-none"
                     title="Adjuntar archivo"
                   >
                     <span className="material-symbols-outlined text-base">attach_file</span>
@@ -816,7 +791,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                       <button
                         type="button"
                         onClick={() => handleSendReply(false)}
-                        className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-xs font-semibold shadow-2xs transition-all flex items-center gap-1 cursor-pointer active:scale-95 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                        className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#0E2A52] hover:bg-slate-200 dark:hover:bg-[#1E3F73] text-slate-700 dark:text-[#E8EEF9] border border-slate-300 dark:border-[#1E3F73] text-xs font-semibold shadow-2xs transition-all flex items-center gap-1 cursor-pointer active:scale-95 focus:ring-2 focus:ring-blue-600 focus:outline-none"
                       >
                         <span className="material-symbols-outlined text-sm">send</span>
                         <span>Enviar</span>
@@ -826,7 +801,7 @@ export const MasterDetailView: React.FC<MasterDetailViewProps> = ({
                       <button
                         type="button"
                         onClick={() => handleSendReply(true)}
-                        className="px-3.5 py-1.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1 cursor-pointer active:scale-95 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                        className="px-3.5 py-1.5 rounded-lg bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1 cursor-pointer active:scale-95 focus:ring-2 focus:ring-blue-600 focus:outline-none"
                       >
                         <span className="material-symbols-outlined text-sm">check_circle</span>
                         <span>Enviar y resolver</span>

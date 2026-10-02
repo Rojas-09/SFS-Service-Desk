@@ -3,6 +3,7 @@ import { Ticket, User } from '../types';
 import { SfsLogo } from './SfsLogo';
 import { getStatusBadgeStyle, formatSlaBadge } from './TableView';
 import { useTickets } from '../context/TicketsContext';
+import { ThemeSelector } from './ThemeSelector';
 
 interface ClientPortalViewProps {
   currentUser: User;
@@ -71,17 +72,17 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#F5F7FB] font-sans antialiased text-slate-800 select-none">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#F5F7FB] dark:bg-[#081B3A] font-sans antialiased text-slate-800 dark:text-[#E8EEF9] select-none transition-colors duration-200">
       {/* Topbar del Portal del Cliente */}
-      <header className="h-auto min-h-16 bg-white border-b border-slate-200 px-3 sm:px-6 py-2 sm:py-0 flex flex-wrap items-center justify-between gap-2 flex-shrink-0 z-30 shadow-2xs pt-safe">
+      <header className="h-auto min-h-16 bg-white dark:bg-[#0E2A52] border-b border-slate-200 dark:border-[#1E3F73] px-3 sm:px-6 py-2 sm:py-0 flex flex-wrap items-center justify-between gap-2 flex-shrink-0 z-30 shadow-2xs pt-safe transition-colors duration-200">
         <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-          <div className="bg-white py-1 px-2 rounded-xl flex-shrink-0">
+          <div className="bg-white dark:bg-[#081B3A] py-1 px-2.5 rounded-xl border border-transparent dark:border-[#1E3F73] flex-shrink-0 transition-colors">
             <SfsLogo className="w-full max-w-[130px] sm:max-w-[170px] h-auto object-contain" />
           </div>
-          <span className="hidden sm:inline-block h-5 w-px bg-slate-200 flex-shrink-0" />
+          <span className="hidden sm:inline-block h-5 w-px bg-slate-200 dark:bg-[#1E3F73] flex-shrink-0" />
           <div className="hidden sm:block min-w-0">
-            <span className="text-xs font-bold text-slate-900 block">Portal corporativo</span>
-            <span className="text-[11px] text-slate-500 font-medium block truncate">{clientCompany}</span>
+            <span className="text-xs font-bold text-slate-900 dark:text-[#E8EEF9] block">Portal corporativo</span>
+            <span className="text-[11px] text-slate-500 dark:text-[#94A9CC] font-medium block truncate">{clientCompany}</span>
           </div>
         </div>
 
@@ -90,7 +91,9 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           <button
             onClick={() => onNavigate('/portal')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
-              subPath === 'inicio' ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100'
+              subPath === 'inicio'
+                ? 'bg-blue-50 text-blue-700 dark:bg-[#081B3A] dark:text-blue-400'
+                : 'text-slate-600 dark:text-[#94A9CC] hover:bg-slate-100 dark:hover:bg-[#081B3A]'
             }`}
           >
             Inicio
@@ -99,8 +102,8 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             onClick={() => onNavigate('/portal/tickets')}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap flex-shrink-0 ${
               subPath === 'tickets' || subPath === 'detalle'
-                ? 'bg-blue-50 text-blue-700'
-                : 'text-slate-600 hover:bg-slate-100'
+                ? 'bg-blue-50 text-blue-700 dark:bg-[#081B3A] dark:text-blue-400'
+                : 'text-slate-600 dark:text-[#94A9CC] hover:bg-slate-100 dark:hover:bg-[#081B3A]'
             }`}
           >
             Mis solicitudes ({myCompanyTickets.length})
@@ -114,26 +117,29 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           </button>
         </div>
 
-        {/* Menú de Usuario (Requirement 12) */}
-        <div className="relative ml-auto sm:ml-2 flex-shrink-0">
+        {/* Zona Derecha: Selector de tema + Menú de Usuario */}
+        <div className="flex items-center gap-2 ml-auto sm:ml-2 flex-shrink-0">
+          <ThemeSelector />
+
+          <div className="relative flex-shrink-0">
             <button
               onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-              className="flex items-center gap-2 p-1 rounded-2xl hover:bg-slate-100 transition-colors cursor-pointer"
+              className="flex items-center gap-2 p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-[#081B3A] transition-colors cursor-pointer"
             >
               <img
                 src={currentUser.avatar}
                 alt={currentUser.name}
                 className="w-8 h-8 rounded-full object-cover ring-2 ring-blue-600/30"
               />
-              <span className="material-symbols-outlined text-slate-400 text-sm">expand_more</span>
+              <span className="material-symbols-outlined text-slate-400 dark:text-[#94A9CC] text-sm">expand_more</span>
             </button>
 
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-1.5rem)] bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs animate-in fade-in slide-in-from-top-2">
-                <div className="px-4 py-2.5 border-b border-slate-100">
-                  <span className="font-bold text-slate-900 block">{currentUser.name}</span>
-                  <span className="text-xs text-slate-500 block truncate">{currentUser.email}</span>
-                  <span className="mt-1 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/60">
+              <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-1.5rem)] bg-white dark:bg-[#0E2A52] rounded-2xl shadow-xl border border-slate-200 dark:border-[#1E3F73] py-1.5 z-50 text-xs animate-in fade-in slide-in-from-top-2">
+                <div className="px-4 py-2.5 border-b border-slate-100 dark:border-[#1E3F73]">
+                  <span className="font-bold text-slate-900 dark:text-[#E8EEF9] block">{currentUser.name}</span>
+                  <span className="text-xs text-slate-500 dark:text-[#94A9CC] block truncate">{currentUser.email}</span>
+                  <span className="mt-1 inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-700/60">
                     Cliente · {clientCompany}
                   </span>
                 </div>
@@ -144,9 +150,9 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                       setProfileDropdownOpen(false);
                       onNavigateToChangePassword();
                     }}
-                    className="w-full text-left px-4 py-2 hover:bg-slate-50 flex items-center gap-2 cursor-pointer transition-colors text-slate-700 font-medium"
+                    className="w-full text-left px-4 py-2 hover:bg-slate-50 dark:hover:bg-[#081B3A] flex items-center gap-2 cursor-pointer transition-colors text-slate-700 dark:text-[#E8EEF9] font-medium"
                   >
-                    <span className="material-symbols-outlined text-base text-slate-400">lock_reset</span>
+                    <span className="material-symbols-outlined text-base text-slate-400 dark:text-[#94A9CC]">lock_reset</span>
                     <span>Cambiar contraseña</span>
                   </button>
 
@@ -155,7 +161,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                       setProfileDropdownOpen(false);
                       onLogout();
                     }}
-                    className="w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 font-medium flex items-center gap-2 cursor-pointer transition-colors"
+                    className="w-full text-left px-4 py-2 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 font-medium flex items-center gap-2 cursor-pointer transition-colors"
                   >
                     <span className="material-symbols-outlined text-base">logout</span>
                     <span>Cerrar sesión</span>
@@ -163,6 +169,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                 </div>
               </div>
             )}
+          </div>
         </div>
       </header>
 
@@ -174,13 +181,13 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <button
                 onClick={() => onNavigate('/portal/tickets')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer shadow-2xs"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0E2A52] border border-slate-200 dark:border-[#1E3F73] text-xs font-semibold text-slate-700 dark:text-[#E8EEF9] hover:bg-slate-50 dark:hover:bg-[#081B3A] transition-colors cursor-pointer shadow-2xs"
               >
                 <span className="material-symbols-outlined text-base leading-none">arrow_back</span>
                 <span>Volver a mis solicitudes</span>
               </button>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs font-bold text-blue-700">
+                <span className="font-mono text-xs font-bold text-blue-700 dark:text-blue-400">
                   {activeDetailTicket.code}
                 </span>
                 <span
@@ -194,67 +201,67 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             </div>
 
             {/* Cabecera del ticket */}
-            <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
+            <div className="bg-white dark:bg-[#0E2A52] rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-[#1E3F73] shadow-sm space-y-4 transition-colors">
               <div>
-                <h1 className="text-base sm:text-xl font-bold text-slate-900 leading-tight">
+                <h1 className="text-base sm:text-xl font-bold text-slate-900 dark:text-[#E8EEF9] leading-tight">
                   {activeDetailTicket.title}
                 </h1>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed whitespace-pre-wrap">
+                <p className="text-xs text-slate-600 dark:text-[#94A9CC] mt-2 leading-relaxed whitespace-pre-wrap">
                   {activeDetailTicket.description}
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-slate-100 text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-slate-100 dark:border-[#1E3F73] text-xs">
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Categoría</span>
-                  <span className="font-semibold text-blue-700">{activeDetailTicket.category}</span>
+                  <span className="text-slate-400 dark:text-[#94A9CC] block text-[11px]">Categoría</span>
+                  <span className="font-semibold text-blue-700 dark:text-blue-400">{activeDetailTicket.category}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Módulo</span>
-                  <span className="font-medium text-slate-800">{activeDetailTicket.module}</span>
+                  <span className="text-slate-400 dark:text-[#94A9CC] block text-[11px]">Módulo</span>
+                  <span className="font-medium text-slate-800 dark:text-[#E8EEF9]">{activeDetailTicket.module}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Fecha de radicación</span>
-                  <span className="font-medium text-slate-800">{activeDetailTicket.createdAt}</span>
+                  <span className="text-slate-400 dark:text-[#94A9CC] block text-[11px]">Fecha de radicación</span>
+                  <span className="font-medium text-slate-800 dark:text-[#E8EEF9]">{activeDetailTicket.createdAt}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[11px]">SLA de atención</span>
-                  <span className="font-semibold text-emerald-700">{activeDetailTicket.slaLimit}</span>
+                  <span className="text-slate-400 dark:text-[#94A9CC] block text-[11px]">SLA de atención</span>
+                  <span className="font-semibold text-emerald-700 dark:text-emerald-400">{activeDetailTicket.slaLimit}</span>
                 </div>
               </div>
             </div>
 
             {/* Conversación pública (Sin notas internas) */}
-            <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
-              <h2 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">
+            <div className="bg-white dark:bg-[#0E2A52] rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-[#1E3F73] shadow-sm space-y-4 transition-colors">
+              <h2 className="text-sm font-bold text-slate-900 dark:text-[#E8EEF9] border-b border-slate-100 dark:border-[#1E3F73] pb-2">
                 Respuestas y seguimiento
               </h2>
 
               <div className="space-y-3">
                 {activeDetailTicket.messages.length === 0 ? (
-                  <p className="text-xs text-slate-400 py-4 text-center">
+                  <p className="text-xs text-slate-400 dark:text-[#94A9CC] py-4 text-center">
                     No hay mensajes adicionales. Nuestro equipo técnico responderá pronto.
                   </p>
                 ) : (
                   activeDetailTicket.messages.map((m) => (
                     <div
                       key={m.id}
-                      className={`p-4 rounded-2xl border text-xs leading-relaxed space-y-1 ${
+                      className={`p-4 rounded-2xl border text-xs leading-relaxed space-y-1 transition-colors ${
                         m.senderRole === 'soporte'
-                          ? 'bg-blue-50/80 border-blue-200 text-slate-900'
-                          : 'bg-slate-50 border-slate-200 text-slate-800'
+                          ? 'bg-blue-50/80 dark:bg-blue-950/40 border-blue-200 dark:border-blue-900/60 text-slate-900 dark:text-[#E8EEF9]'
+                          : 'bg-slate-50 dark:bg-[#081B3A] border-slate-200 dark:border-[#1E3F73] text-slate-800 dark:text-[#E8EEF9]'
                       }`}
                     >
                       <div className="flex items-center justify-between font-bold">
                         <span className="flex items-center gap-1.5">
                           <span
                             className={`w-2 h-2 rounded-full ${
-                              m.senderRole === 'soporte' ? 'bg-blue-600' : 'bg-emerald-500'
+                              m.senderRole === 'soporte' ? 'bg-blue-600 dark:bg-blue-400' : 'bg-emerald-500 dark:bg-emerald-400'
                             }`}
                           />
                           {m.senderName}
                         </span>
-                        <span className="text-slate-400 font-normal">{m.time}</span>
+                        <span className="text-slate-400 dark:text-[#94A9CC] font-normal">{m.time}</span>
                       </div>
                       <p className="whitespace-pre-wrap pt-1">{m.content}</p>
                     </div>
@@ -263,20 +270,20 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               </div>
 
               {/* Responder */}
-              <form onSubmit={handleSendClientReply} className="pt-3 border-t border-slate-100 space-y-2.5">
-                <label className="block text-xs font-semibold text-slate-700">
+              <form onSubmit={handleSendClientReply} className="pt-3 border-t border-slate-100 dark:border-[#1E3F73] space-y-2.5">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-[#E8EEF9]">
                   Agregar comentario o información adicional
                 </label>
                 <textarea
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
-                  className="w-full h-24 sm:h-20 p-3 bg-slate-50 border border-slate-200 rounded-2xl text-[16px] sm:text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none font-sans"
+                  className="w-full h-24 sm:h-20 p-3 bg-slate-50 dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-2xl text-[16px] sm:text-xs text-slate-800 dark:text-[#E8EEF9] placeholder:text-slate-400 dark:placeholder:text-[#94A9CC]/60 focus:bg-white dark:focus:bg-[#081B3A] focus:ring-2 focus:ring-blue-600 focus:outline-none resize-none font-sans transition-colors"
                   placeholder="Escribe tu mensaje para el equipo de soporte SFS..."
                 />
                 <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+                    className="px-4 py-2 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
                   >
                     Enviar respuesta
                   </button>
@@ -289,10 +296,10 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           <div className="max-w-5xl mx-auto space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h1 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
+                <h1 className="text-base sm:text-xl font-bold text-slate-900 dark:text-[#E8EEF9] tracking-tight">
                   Solicitudes de {clientCompany}
                 </h1>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-[#94A9CC] mt-0.5">
                   Historial completo y estado de tus requerimientos radicados
                 </p>
               </div>
@@ -304,9 +311,9 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                     value={ticketSearch}
                     onChange={(e) => setTicketSearch(e.target.value)}
                     placeholder="Buscar solicitud..."
-                    className="pl-8 pr-3 py-1.5 text-[16px] sm:text-xs bg-white border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-blue-600 focus:outline-none w-full sm:w-56 font-sans"
+                    className="pl-8 pr-3 py-1.5 text-[16px] sm:text-xs bg-white dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-xl text-slate-800 dark:text-[#E8EEF9] placeholder:text-slate-400 dark:placeholder:text-[#94A9CC]/60 focus:ring-2 focus:ring-blue-600 focus:outline-none w-full sm:w-56 font-sans transition-colors"
                   />
-                  <span className="material-symbols-outlined text-slate-400 text-base absolute left-2 top-1.5">
+                  <span className="material-symbols-outlined text-slate-400 dark:text-[#94A9CC] text-base absolute left-2 top-1.5">
                     search
                   </span>
                 </div>
@@ -314,7 +321,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="py-1.5 px-3 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-blue-600 focus:outline-none cursor-pointer"
+                  className="py-1.5 px-3 bg-white dark:bg-[#081B3A] border border-slate-200 dark:border-[#1E3F73] rounded-xl text-xs text-slate-800 dark:text-[#E8EEF9] focus:ring-2 focus:ring-blue-600 focus:outline-none cursor-pointer transition-colors"
                 >
                   <option value="todos">Todos los estados</option>
                   <option value="activos">Solo activos</option>
@@ -326,9 +333,9 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             {/* Listado */}
             <div className="space-y-3">
               {filteredTickets.length === 0 ? (
-                <div className="p-12 text-center bg-white rounded-3xl border border-slate-200 text-slate-400">
-                  <span className="material-symbols-outlined text-4xl text-slate-300">inbox</span>
-                  <p className="text-xs font-semibold text-slate-600 mt-2">
+                <div className="p-12 text-center bg-white dark:bg-[#0E2A52] rounded-3xl border border-slate-200 dark:border-[#1E3F73] text-slate-400 dark:text-[#94A9CC] transition-colors">
+                  <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-[#94A9CC]/50">inbox</span>
+                  <p className="text-xs font-semibold text-slate-600 dark:text-[#E8EEF9] mt-2">
                     No se encontraron solicitudes con los filtros actuales
                   </p>
                 </div>
@@ -339,11 +346,11 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                     <div
                       key={t.id}
                       onClick={() => onNavigate(`/portal/tickets/${t.id}`)}
-                      className="p-4 bg-white rounded-2xl border border-slate-200 hover:border-blue-400 hover:shadow-xs transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                      className="p-4 bg-white dark:bg-[#0E2A52] rounded-2xl border border-slate-200 dark:border-[#1E3F73] hover:border-blue-400 dark:hover:border-blue-400 hover:shadow-xs transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
                     >
                       <div className="space-y-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-mono font-bold text-blue-700">{t.code}</span>
+                          <span className="font-mono font-bold text-blue-700 dark:text-blue-400">{t.code}</span>
                           <span
                             className={`px-2 py-0.5 rounded-full text-[11px] font-semibold border ${getStatusBadgeStyle(
                               t.status
@@ -351,11 +358,11 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                           >
                             {t.status}
                           </span>
-                          <span className="text-slate-400">·</span>
-                          <span className="text-slate-500">{t.category}</span>
+                          <span className="text-slate-400 dark:text-[#94A9CC]">·</span>
+                          <span className="text-slate-500 dark:text-[#94A9CC]">{t.category}</span>
                         </div>
-                        <h3 className="font-semibold text-slate-900 leading-snug">{t.title}</h3>
-                        <span className="text-[11px] text-slate-400 block">
+                        <h3 className="font-semibold text-slate-900 dark:text-[#E8EEF9] leading-snug">{t.title}</h3>
+                        <span className="text-[11px] text-slate-400 dark:text-[#94A9CC] block">
                           Radicado el {t.createdAt}
                         </span>
                       </div>
@@ -367,7 +374,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                           <span className={`w-1.5 h-1.5 rounded-full ${sla.dotClass}`} />
                           <span>{sla.text}</span>
                         </span>
-                        <span className="material-symbols-outlined text-slate-400 text-base">
+                        <span className="material-symbols-outlined text-slate-400 dark:text-[#94A9CC] text-base">
                           chevron_right
                         </span>
                       </div>
@@ -381,18 +388,18 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           /* SUBRUTA INICIO (/portal) */
           <div className="max-w-6xl mx-auto w-full space-y-6">
             {/* Banner de Bienvenida del Cliente */}
-            <div className="bg-gradient-to-r from-[#0B2A5B] to-[#1565C0] rounded-3xl p-5 sm:p-7 text-white shadow-xl shadow-blue-950/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-5">
+            <div className="bg-gradient-to-r from-[#0B2A5B] to-[#1565C0] dark:from-[#081B3A] dark:to-[#0E2A52] border border-transparent dark:border-[#1E3F73] rounded-3xl p-5 sm:p-7 text-white shadow-xl shadow-blue-950/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-5 transition-colors">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#F37021] text-white shadow-2xs">
                     Portal corporativo
                   </span>
-                  <span className="text-xs text-blue-200">Atención bajo SLA</span>
+                  <span className="text-xs text-blue-200 dark:text-blue-300">Atención bajo SLA</span>
                 </div>
                 <h1 className="text-xl sm:text-3xl font-bold tracking-tight">
                   Bienvenido, {currentUser.name}
                 </h1>
-                <p className="text-xs text-blue-100 max-w-xl leading-relaxed">
+                <p className="text-xs text-blue-100 dark:text-[#E8EEF9]/80 max-w-xl leading-relaxed">
                   Canal oficial de atención para incidentes, requerimientos y soporte técnico especializado de Software Factory and Services para {clientCompany}.
                 </p>
               </div>
@@ -410,91 +417,91 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
 
             {/* 3 Métricas del Cliente */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-white p-4.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between hover:border-slate-300 transition-colors">
+              <div className="bg-white dark:bg-[#0E2A52] p-4.5 rounded-2xl border border-slate-200 dark:border-[#1E3F73] shadow-2xs flex items-center justify-between hover:border-slate-300 dark:hover:border-[#2a5596] transition-colors">
                 <div>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                  <span className="text-xs font-bold text-slate-500 dark:text-[#94A9CC] uppercase tracking-wider block">
                     Solicitudes activas
                   </span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-2xl font-bold text-slate-900">
+                    <span className="text-2xl font-bold text-slate-900 dark:text-[#E8EEF9]">
                       {myCompanyTickets.filter(t => t.status !== 'Resuelto' && t.status !== 'Cerrado').length}
                     </span>
-                    <span className="text-xs text-blue-600 font-semibold">En seguimiento</span>
+                    <span className="text-xs text-blue-600 dark:text-blue-400 font-semibold">En seguimiento</span>
                   </div>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
                   <span className="material-symbols-outlined text-xl leading-none">pending_actions</span>
                 </div>
               </div>
 
-              <div className="bg-white p-4.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between hover:border-slate-300 transition-colors">
+              <div className="bg-white dark:bg-[#0E2A52] p-4.5 rounded-2xl border border-slate-200 dark:border-[#1E3F73] shadow-2xs flex items-center justify-between hover:border-slate-300 dark:hover:border-[#2a5596] transition-colors">
                 <div>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                  <span className="text-xs font-bold text-slate-500 dark:text-[#94A9CC] uppercase tracking-wider block">
                     Tiempo promedio de respuesta
                   </span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-2xl font-bold text-slate-900">{kpis.firstResponseTime}</span>
-                    <span className="text-xs text-emerald-600 font-semibold">Calculado</span>
+                    <span className="text-2xl font-bold text-slate-900 dark:text-[#E8EEF9]">{kpis.firstResponseTime}</span>
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Calculado</span>
                   </div>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
                   <span className="material-symbols-outlined text-xl leading-none">speed</span>
                 </div>
               </div>
 
-              <div className="bg-white p-4.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between hover:border-slate-300 transition-colors">
+              <div className="bg-white dark:bg-[#0E2A52] p-4.5 rounded-2xl border border-slate-200 dark:border-[#1E3F73] shadow-2xs flex items-center justify-between hover:border-slate-300 dark:hover:border-[#2a5596] transition-colors">
                 <div>
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                  <span className="text-xs font-bold text-slate-500 dark:text-[#94A9CC] uppercase tracking-wider block">
                     Cumplimiento SLA mensual
                   </span>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="text-2xl font-bold text-emerald-600">
+                    <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                       {kpis.slaCompliancePercent.toFixed(1)}%
                     </span>
-                    <span className="text-xs text-emerald-600 font-semibold">Calculado</span>
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Calculado</span>
                   </div>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
                   <span className="material-symbols-outlined text-xl leading-none">verified</span>
                 </div>
               </div>
             </div>
 
             {/* Listado de Casos Recientes */}
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-2xs overflow-hidden">
-              <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
+            <div className="bg-white dark:bg-[#0E2A52] rounded-3xl border border-slate-200 dark:border-[#1E3F73] shadow-2xs overflow-hidden transition-colors">
+              <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-[#1E3F73] flex items-center justify-between">
                 <div>
-                  <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                  <h2 className="text-base font-bold text-slate-900 dark:text-[#E8EEF9] tracking-tight">
                     Solicitudes recientes
                   </h2>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-500 dark:text-[#94A9CC]">
                     Últimos tickets reportados para {clientCompany}
                   </p>
                 </div>
                 <button
                   onClick={() => onNavigate('/portal/tickets')}
-                  className="text-xs font-semibold text-blue-700 hover:text-blue-900 hover:underline cursor-pointer"
+                  className="text-xs font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 hover:underline cursor-pointer"
                 >
                   Ver todas ({myCompanyTickets.length})
                 </button>
               </div>
 
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-slate-100 dark:divide-[#1E3F73]">
                 {myCompanyTickets.slice(0, 5).map((ticket) => (
                   <div
                     key={ticket.id}
                     onClick={() => onNavigate(`/portal/tickets/${ticket.id}`)}
-                    className="p-4 hover:bg-slate-50/80 transition-colors flex items-center justify-between gap-4 cursor-pointer text-xs"
+                    className="p-4 hover:bg-slate-50/80 dark:hover:bg-[#081B3A]/60 transition-colors flex items-center justify-between gap-4 cursor-pointer text-xs"
                   >
                     <div className="flex items-center gap-3.5 min-w-0">
-                      <span className="font-mono text-xs font-bold text-blue-700 flex-shrink-0">
+                      <span className="font-mono text-xs font-bold text-blue-700 dark:text-blue-400 flex-shrink-0">
                         {ticket.code}
                       </span>
                       <div className="min-w-0">
-                        <span className="font-semibold text-slate-900 block truncate">
+                        <span className="font-semibold text-slate-900 dark:text-[#E8EEF9] block truncate">
                           {ticket.title}
                         </span>
-                        <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+                        <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-[#94A9CC] mt-0.5">
                           <span>{ticket.module}</span>
                           <span>·</span>
                           <span>{ticket.createdHoursAgo}</span>
@@ -510,7 +517,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                       >
                         {ticket.status}
                       </span>
-                      <span className="material-symbols-outlined text-slate-400 text-sm">
+                      <span className="material-symbols-outlined text-slate-400 dark:text-[#94A9CC] text-sm">
                         arrow_forward
                       </span>
                     </div>
